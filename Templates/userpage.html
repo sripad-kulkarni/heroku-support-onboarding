@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<img src="https://cdn57.androidauthority.net/wp-content/uploads/2015/11/00-best-backgrounds-and-wallpaper-apps-for-android.jpg.webp">
+	<img src="https://cdn57.androidauthority.net/wp-content/uploads/2015/11/00-best-backgrounds-and-wallpaper-apps-for-android.jpg.webp">
+	<img src="https://cdn57.androidauthority.net/wp-content/uploads/2015/11/00-best-backgrounds-and-wallpaper-apps-for-android.jpg.webp">
+	<img src="https://cdn57.androidauthority.net/wp-content/uploads/2015/11/00-best-backgrounds-and-wallpaper-apps-for-android.jpg.webp">
+
+	<div class="container-md reg_page" >
+		<div class="row border" style="padding: 10px;">
+
+			<div class="col border border border-dark user_table">
+				<h5>Support Engineers</h5>
+				<table class="table table-sm table-hover table-responsive">
+					<thead class="thead">
+						<tr>
+							<th scope="col">Name</th>
+						</tr>
+					</thead>
+					<tbody>
+					{% if eng %}
+					{% for eng in eng %}
+					<tr>
+						<td>{{eng.firstname}} {{eng.lastname}}</td>
+					</tr>
+					{% endfor %}
+					{% else %}
+						<tr><td>
+							<div id="overlay">
+							  <div id="text">No Support Engineers Exist</div>
+							</div>
+						</td></tr>
+					{% endif %}
+					</tbody>
+				</table>
+			</div>
+
+			<div class="col border border border-dark user_table">
+				<h5>New Hires</h5>
+				<table class="table table-sm table-hover table-responsive">
+					<thead class="thead">
+						<tr>
+							<th scope="col">Name</th>
+						</tr>
+					</thead>
+					<tbody>
+					{% if nh %}
+					{% for nh in nh %}
+					<tr>
+						<td>{{nh.firstname}} {{nh.lastname}}</td>
+					</tr>
+					{% endfor %}
+					{% else %}
+						<tr><td>
+							<div id="overlay">
+							  <div id="text">No New Hires Exist</div>
+							</div>
+						</td></tr>
+					{% endif %}
+					</tbody>
+				</table>
+			</div>
+
+			<div class="col border border border-dark user_table">
+				<h5>Managers</h5>
+				<table class="table table-sm table-hover table-responsive">
+					<thead class="thead">
+						<tr>
+							<th scope="col">Name</th>
+						</tr>
+					</thead>
+					<tbody>
+					{% if manager %}
+					{% for manager in manager %}
+					<tr>
+						<td>{{manager.firstname}} {{manager.lastname}}</td>
+					</tr>
+					{% endfor %}
+					{% else %}
+						<tr><td>
+							<div id="overlay">
+							  <div id="text">No Managers Created</div>
+							</div>
+						</td></tr>
+					{% endif %}
+					</tbody>
+				</table>
+			</div>
+
+		</div>
+	</div>
+
+{% endblock %}
