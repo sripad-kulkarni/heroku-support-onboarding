@@ -36,8 +36,25 @@ body {
 	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1), 0 0px 0px 0 rgba(0, 0, 0, 0.1);
 }
 
-.login-input {
-	margin: 10px;
+.form-control{
+	width: clamp(6rem, 12rem, 15rem);
+	margin: auto;
+	transition: .3s ease-out;
+	border-color: black;
+	background-color: rgba(250, 243, 243, 0.3);
+}
+
+.form-control::placeholder {
+	text-align: center;
+}
+
+.form-control:hover {
+	background-color: black;
+}
+
+.form-control:focus {
+	background-color: black;
+	color: white;
 }
 
 .title {

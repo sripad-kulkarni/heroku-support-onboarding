@@ -16,7 +16,7 @@ def test(request):
 @login_required(login_url='/login/')
 def register(request):
 	u = User.objects.get(username=request.user.username)
-	if u.profile.role=="Manager" or request.user.is_superuser:
+	if u.profile.role=="MANAGER" or request.user.is_superuser:
 	    form = UserRegisterForm(request.POST)
 	    if request.method == 'POST':
 		    if form.is_valid():
@@ -83,7 +83,7 @@ def welcome(request):
 	if user.profile.firstlogin:
 		user.profile.firstlogin = False
 		user.save()
-		return render(request, 'welcome.html', {'title': 'Welcome'})
+		return render(request, 'welcome.html', {'title': 'Welcome', 'user':user})
 	else:
 		return HttpResponseRedirect('/home/')
 
@@ -95,7 +95,7 @@ def home(request):
 
 @login_required(login_url='/login/')
 def viewsupportengineers(request):
-	if request.user.profile.role=="Manager" or request.user.is_superuser:
+	if request.user.profile.role=="MANAGER" or request.user.is_superuser:
 		eng = Profile.objects.filter(role='ENGINEER')
 		manager = Profile.objects.filter(role='MANAGER')
 		nh = Profile.objects.filter(role='NEW_HIRE')

@@ -36,7 +36,7 @@
 	        <li class="nav-item">
 	          <a class="nav-link fas fa-atlas" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Glossary" href="#"></a>
 	        </li>
-	        {% if user.profile.role == "Manager" or user.is_superuser %}
+	        {% if user.profile.role == "MANAGER" or user.is_superuser %}
 	        <li class="nav-item dropdown">
 	          <a class="nav-link dropdown-toggle fas fa-users" data-bs-toggle="dropdown" role="button" aria-expanded="false" title="Users"></a>
 	          <ul class="dropdown-menu">

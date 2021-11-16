@@ -25,9 +25,9 @@
 		<br>
 		<form method="POST" action="/authenticate/">
 			{% csrf_token %}
-			<input type="text" class="btn btn-outline-dark login-input" placeholder="Username" name="username">
+			<input type="text" type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
 			<br>
-			<input type="password" class="btn btn-outline-dark login-input" placeholder="Password" name="password">
+			<input type="password" class="form-control" id="inputPassword2" placeholder="Password">
 			<br>
 			<input type="submit" class="btn btn-outline-dark login-input" name="submit">
 		</form>
