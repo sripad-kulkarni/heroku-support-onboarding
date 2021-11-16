@@ -29,5 +29,7 @@ urlpatterns = [
     path('logout/', views.auth_logout),
     path('error/', views.error),
     path('', RedirectView.as_view(url='login/')),
-    path('manage_users/', views.viewsupportengineers)
+    path('manage_users/', views.viewsupportengineers),
+    path('profile/', views.profile_page),
+    path('profile/update_profile/', views.updateprofile),
 ]

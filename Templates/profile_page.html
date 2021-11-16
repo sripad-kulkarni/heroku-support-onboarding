@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container-md prof_page" >
+		<div class="row border" style="padding: 10px;">
+
+			<div class="col border border border-dark user_table">
+				<h5>Your Profile Information</h5>
+				<form id="form">
+					<table class="table table-hover table-responsive prof_table">
+						<tbody>
+						<tr>
+							<td>Username</td>
+							<td><input type="text" id="username" readonly class="form-control-plaintext" value={{prof.username}}></td>
+						</tr>
+						<tr>
+
+							<td>Name</td>
+							<td>
+								<div class="input-group">
+								  <input type="text" id="firstname" readonly class="form-control-plaintext" value={{prof.profile.firstname}}>
+								  <input type="text" id="lastname" readonly class="form-control-plaintext" value={{prof.profile.lastname}}>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>Email Id</td>
+							<td><input type="text" id="username" readonly class="form-control-plaintext" value={{prof.profile.email}}></td>
+						</tr>
+						<tr>
+							<td>Role</td>
+							<td><input type="text" id="username" readonly class="form-control-plaintext" value={{prof.profile.role}}></td>
+						</tr>
+						</tbody>
+					</table>
+
+					<center><input type="submit" id="submit" class="btn btn-primary btn-sm" value="submit" style="display: none;"></input></center>
+					</form>
+
+					<center><input type="submit" id="edit" class="btn btn-primary btn-sm" value="Edit"></input></center>
+
+
+			</div>
+
+		</div>
+	</div>
+	<script
+	  src="https://code.jquery.com/jquery-3.6.0.min.js"
+	  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+	  crossorigin="anonymous">
+	</script>
+	<script type="text/javascript">
+		$("#edit").on("click", function (e){
+			if (this.style.display != 'none') {
+				$("#firstname").removeAttr("readonly");
+				$("#lastname").removeAttr("readonly");
+				this.style.display = 'none';
+				document.getElementById('submit').style.display = 'block';
+			}
+		});
+		$(document).on("submit", "#form", function(e){
+			e.preventDefault();
+
+			$.ajax({
+				type: 'POST',
+				url: 'update_profile/',
+				data: {
+					firstname: $('#firstname').val(),
+					lastname: $('#lastname').val(),
+					csrfmiddlewaretoken: '{{ csrf_token }}',
+				},
+				success: function(){ 
+					console.log("success");
+				}
+			});
+		});
+	</script>
+
+{% endblock %}

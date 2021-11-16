@@ -1,5 +1,5 @@
 body {
-	background-color: #005A8D;
+	background-color: #a6bac6;
 	background-image: linear-gradient(0deg, #A7BBC7 5%, #f6fafb 50%);
 	font-family: 'Roboto', sans-serif;
 	height: 100%;
@@ -50,6 +50,7 @@ body {
 
 .form-control:hover {
 	background-color: black;
+	color: white;
 }
 
 .form-control:focus {
@@ -236,4 +237,24 @@ th {
   50% { height: 100%;}
   75% { height: 100%;}
   100% { height: 0%;}
+}
+
+.prof_page {
+	margin: auto;
+	margin-top: 5%;
+	min-width: fit-content;
+	max-width: 50rem;
+}
+
+.prof_table {
+	vertical-align: middle;
+}
+
+.form-control-plaintext{
+	width: clamp(6rem, 12rem, 15rem);
+	padding: 2px;
+}
+
+#submit, #edit {
+	width: 10rem;
 }

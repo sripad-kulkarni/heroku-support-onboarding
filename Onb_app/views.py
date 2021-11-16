@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from .forms import UserRegisterForm
 from django.contrib import messages
 from .models import Profile
@@ -104,3 +104,20 @@ def viewsupportengineers(request):
 		logout(request)
 		messages.error(request, "Your account does not have sufficient privileges to perform this action. If you think this is an error, please contact your manager.")
 		return redirect('/error/')
+
+@login_required(login_url='/login/')
+def profile_page(request):
+		prof = User.objects.get(username=request.user.username)
+		return render(request, 'profile_page.html', {'prof':prof})
+
+@login_required(login_url='/login')
+def updateprofile(request):
+	if request.method == 'POST':
+		firstname = request.POST['firstname']
+		lastname = request.POST['lastname']
+		user = User.objects.get(username=request.user.username)
+		user.profile.firstname = firstname
+		user.profile.lastname = lastname
+		user.save()
+		print(firstname, lastname)
+		return HttpResponse('')
