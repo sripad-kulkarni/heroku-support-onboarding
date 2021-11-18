@@ -90,6 +90,7 @@ h1 {
 .reg_page {
 	margin: auto;
 	margin-top: 5%;
+	min-width: 350px;
 }
 
 .navbar {
@@ -116,7 +117,7 @@ h1 {
 
 .fa-power-off:hover {
   	color: rgba(255, 91, 88, 1);
-  	text-shadow: 0 5px 15px rgba(145, 92, 182, .8);
+  	text-shadow: 0 5px 15px rgba(255, 91, 88, 1);
 }
 
 .fas{
@@ -125,7 +126,7 @@ h1 {
 }
 
 .fas:hover {
-	text-shadow: 0 5px 15px rgba(145, 92, 182, .4);
+	text-shadow: 0 5px 15px rgba(61, 91, 110, .4);
 }
 
 .currentuser {
@@ -134,7 +135,7 @@ h1 {
 
 .currentuser:hover {
 	color: black;
-	text-shadow: 0 5px 15px rgba(145, 92, 182, .4);
+	text-shadow: 0 5px 15px rgba(61, 91, 110, .4);
 }
 
 .summary {
@@ -142,7 +143,8 @@ h1 {
 }
 
 .table-custom tr td:nth-child(1){
-	text-align: right;
+	text-align: left;
+	font-size: 0.9rem;
 }
 
 .table-custom tr td:nth-child(2){
@@ -250,11 +252,63 @@ th {
 	vertical-align: middle;
 }
 
-.form-control-plaintext{
+.form-control-plaintext {
+	border-radius: 2pt;
 	width: clamp(6rem, 12rem, 15rem);
 	padding: 2px;
+	transition: .09s;
+}
+
+.form-control-plaintext:focus {
+	outline: solid;
+	outline-width: 2px;
+	outline-color: rgba(167, 187, 199);
+	box-shadow: 0 0 3pt 2pt rgba(167, 187, 199, .7);
 }
 
 #submit, #edit {
 	width: 10rem;
+}
+
+.btn-colour {
+	background-color: rgba(167, 187, 199, 0.6);
+	transition: 0.3s ease-out;
+}
+
+.countup {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.countup .timeel {
+  display: inline-block;
+  padding: 10px;
+  background: #151515;
+  margin: 0;
+  color: white;
+  min-width: 2.6rem;
+  margin-left: 13px;
+  border-radius: 10px 0 0 10px;
+}
+.countup span[class*="timeRef"] {
+  border-radius: 0 10px 10px 0;
+  margin-left: 0;
+  background: #e8c152;
+  color: black;
+}
+
+.btn-colour:hover {
+	background-color: rgba(134, 163, 181, 1.0);
+	box-shadow: 0 2px 5px rgba(61, 91, 110, .4);
+}
+
+.toast-bg {
+	background-color: rgba(167, 187, 199, 0.4);
+}
+
+.days_total {
+	transform: rotate(180deg);
+}
+
+.week-col {
+	max-width: 30px;
 }

@@ -4,8 +4,10 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 from .forms import UserRegisterForm
 from django.contrib import messages
-from .models import Profile
+from .models import *
 from django.contrib.auth.models import User
+import datetime
+
 
 # Create your views here.
 
@@ -26,6 +28,8 @@ def register(request):
 		        user.profile.lastname = form.cleaned_data.get('lastname')
 		        user.profile.email = form.cleaned_data.get('email')
 		        user.profile.role = form.cleaned_data.get('role')
+		        user.profile.startdate = form.cleaned_data.get('startdate')
+		        user.profile.enddate = form.cleaned_data.get('enddate')
 		        user.save()
 		        messages.success(request, "User creation successful!")
 		        return redirect('/register/')
@@ -90,7 +94,8 @@ def welcome(request):
 	
 @login_required(login_url='/login/')
 def home(request):
-	return render(request, 'home.html', {'title': 'Onboarding Home'})
+	prof = User.objects.get(username=request.user.username)
+	return render(request, 'home.html', {'title': 'Onboarding Home', 'prof':prof})
 
 
 @login_required(login_url='/login/')
@@ -121,3 +126,9 @@ def updateprofile(request):
 		user.save()
 		print(firstname, lastname)
 		return HttpResponse('')
+
+@login_required(login_url='/login')
+def weeks(request):
+	week = weeks_data.objects.all()
+	user = User.objects.get(username=request.user)
+	return render(request, 'weeks.html', {'week':week, 'user':user})

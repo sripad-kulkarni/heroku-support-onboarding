@@ -6,20 +6,46 @@
 		<h4>Welcome Back, {{ user.profile.firstname }}!</h4>
 	</div>
 	<div class="container-md border rounded">
-		<div class="row border rounded">
-			<div class="col-md-8">
-				<h5>Here's your activity summary:</h5>
-			</div>
+		<div class="col-md-8">
+			<h5><strong>Here's your onboarding summary</strong></h5>
 		</div>
+	</div>
+	<div class="container-md border rounded" style="margin: auto;">
+
 		<div class="row border rounded">
 			<div class="col-md-8 border">
 				<h5>Hello</h5>
 			</div>
 			<div class="col-md-4 border">
-				<h5>Helloo</h5>
-				<h5>Hello</h5>
+				<p id="demo"></p>
+				<small id="demo-a"></small>
 			</div>
 		</div>
 	</div>
+	<script>
+	sd = "{{prof.profile.startdate|date:'M d, Y'}}";
+	cd = "{{prof.profile.enddate|date:'M d, Y'}}";
+
+	var countDownDate = new Date(cd).getDate();
+	var startDate = new Date(sd).getDate();
+
+	$(document).ready(function() {
+
+		$(".fa-home").addClass("active");
+
+	  var period = countDownDate - startDate;
+
+	  var now = new Date().getDate();
+
+	  var left = countDownDate - startDate;
+
+	  var current = period - left;
+
+	  	document.getElementById("demo").innerHTML = "Day " + (1+current) + " of " + (1+period) ;
+	  	document.getElementById("demo-a").innerHTML = "Onboarding ends on " + cd ;
+	  	console.log("Hello");
+	    
+	});
+	</script>
 
 {% endblock %}

@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	
+	<div class="container-md reg_page" >
+		<div class="row border" style="padding: 10px;">
+
+			<div class="col border border border-dark user_table">
+				<div class="row">
+					<div class="col"><h5>Weekly Plan</h5></div>
+					{% if user.profile.role == "MANAGER" %}
+					<div class="col" id="cancel" style="text-align: right;">
+						<button type="button" class="btn-close me-2 m-auto fas fa-tools" data-bs-dismiss="toast" aria-label="Close" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Refactor" style="btn-close= display: none;"></button>
+					</div>
+					{% endif %}
+				</div>
+				<table class="table table-sm table-hover table-responsive">
+					<thead class="thead">
+						<tr>
+							<th scope="col">Week #</th>
+							<th scope="col">Action</th>
+							<th scope="col">Completed</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><small>You'll find the week number and progress of that week here</small></td>
+							<td></td>
+							<td> </td>
+
+						</tr>
+					{% if week %}
+					{% for eng in week %}
+					<tr>
+						<td> Week {{week.id}}</td>
+						<td><i class="far fa-eye"></i></td>
+						<td><i class="far fa-eye"></i></td>
+
+					</tr>
+					{% endfor %}
+					{% else %}
+						<tr><td colspan="3">
+							<div id="overlay">
+							  <div id="text">No Plan Found</div>
+							</div>
+						</td></tr>
+					{% endif %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$(".fa-calendar-week").addClass("active");
+		});
+</script>
+
+
+{% endblock %}

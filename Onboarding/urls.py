@@ -32,4 +32,5 @@ urlpatterns = [
     path('manage_users/', views.viewsupportengineers),
     path('profile/', views.profile_page),
     path('profile/update_profile/', views.updateprofile),
+    path('weeks/', views.weeks),
 ]

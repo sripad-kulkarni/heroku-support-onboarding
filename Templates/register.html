@@ -28,7 +28,7 @@
 		{% endif %}
 		<form method="POST">
 			{% csrf_token %}
-			<table class="table table-borderless table-responsive table-custom">
+			<table class="table table-borderless table-responsive table-custom" >
 				<tr>
 					<td><label>Username</label></td>
 					<td>{{form.username}}</td>
@@ -62,6 +62,17 @@
 				<tr>
 					<td><label>Role</label></td>
 					<td>{{form.role}}</td>
+					<td><label style="font-size: 10px;">*Required</label></td>
+				</tr>
+				<tr>
+					<td><label>Date of Joining</label></td>
+					<td>{{form.startdate}}</td>
+					<td><label style="font-size: 10px;">*Required</label></td>
+				</tr>
+				<tr>
+					<td><label>Onboarding End Date</label></td>
+					<td>{{form.enddate}}</td>
+					<td><label style="font-size: 10px;">*Required</label></td>
 				</tr>
 			</table>
 
@@ -94,6 +105,10 @@
 		<br>
 		</div>
 	</div>
-
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$(".fa-users").addClass("active");
+		});
+	</script>
 
 {% endblock %}
