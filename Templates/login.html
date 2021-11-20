@@ -25,11 +25,11 @@
 		<br>
 		<form method="POST" action="/authenticate/">
 			{% csrf_token %}
-			<input type="text" type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" name="username" autofocus>
+			<input type="text" type="text" class="form-control login-input" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" name="username" autofocus>
 			<br>
-			<input type="password" class="form-control" id="inputPassword2" placeholder="Password" name="password">
+			<input type="password" class="form-control login-input" id="inputPassword2" placeholder="Password" name="password">
 			<br>
-			<input type="submit" class="btn btn-outline-dark login-input" name="submit">
+			<input type="submit" class="btn btn-outline-dark" name="submit">
 		</form>
 		<center>
 		<div class="container-md">

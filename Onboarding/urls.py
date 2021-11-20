@@ -33,4 +33,6 @@ urlpatterns = [
     path('profile/', views.profile_page),
     path('profile/update_profile/', views.updateprofile),
     path('weeks/', views.weeks),
+    path('weeks/add_week/', views.add_week),
+    path('weeks/del_week/', views.del_week),
 ]

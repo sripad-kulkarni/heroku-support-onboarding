@@ -2,59 +2,173 @@
 
 {% block content %}
 	
-	<div class="container-md reg_page" >
-		<div class="row border" style="padding: 10px;">
-
-			<div class="col border border border-dark user_table">
-				<div class="row">
-					<div class="col"><h5>Weekly Plan</h5></div>
-					{% if user.profile.role == "MANAGER" %}
-					<div class="col" id="cancel" style="text-align: right;">
-						<button type="button" class="btn-close me-2 m-auto fas fa-tools" data-bs-dismiss="toast" aria-label="Close" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Refactor" style="btn-close= display: none;"></button>
+<div id="weekstable" class="container-md reg_page" >
+	<div class="row border" style="padding: 10px;">
+		<div class="col border border border-dark user_table">
+			<div class="row">
+				<div class="col"><h5>Weekly Plan</h5></div>
+				{% if user.profile.role == "MANAGER" or user.is_superuser %}
+					<div class="col" id="edit" style="text-align: right; display: block;">
+						<button type="button" class="btn-close me-2 m-auto fas fa-tools" aria-label="Close" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Refactor" ></button>
 					</div>
-					{% endif %}
+					<div id="cancel" class="col" style="text-align: right; display: none;">
+						<button type="button" class="btn-close me-2 m-auto" aria-label="Close" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Cancel"></button>
+					</div>
+				{% endif %}
 				</div>
-				<table class="table table-sm table-hover table-responsive">
-					<thead class="thead">
-						<tr>
-							<th scope="col">Week #</th>
-							<th scope="col">Action</th>
-							<th scope="col">Completed</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td><small>You'll find the week number and progress of that week here</small></td>
-							<td></td>
-							<td> </td>
 
-						</tr>
-					{% if week %}
-					{% for eng in week %}
+			<br>
+
+			<table class="table table-sm table-hover table-responsive">
+				<thead class="thead">
 					<tr>
-						<td> Week {{week.id}}</td>
-						<td><i class="far fa-eye"></i></td>
-						<td><i class="far fa-eye"></i></td>
-
+						<th scope="col">Week #</th>
+						<th scope="col">Action</th>
+						<th scope="col">Completed</th>
 					</tr>
-					{% endfor %}
-					{% else %}
-						<tr><td colspan="3">
-							<div id="overlay">
-							  <div id="text">No Plan Found</div>
-							</div>
-						</td></tr>
-					{% endif %}
-					</tbody>
-				</table>
-			</div>
+				</thead>
+				<tbody>
+					<tr>
+						<td><small>You'll find the week number and progress of that week here</small></td>
+						<td></td>
+						<td></td>
+					</tr>
+				{% if week_data %}
+				{% for week_data in week_data %}
+					<tr>
+						<td> Week {{week_data.weekid}} - {{week_data.weektitle}}</td>
+						<td><a href="" class="far fa-eye" style="text-decoration:none;" aria-label="Close" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Explore"></a></td>
+						<td><input class="form-check-input" type="checkbox" id="flexCheckDefault"></td>
+						<td id="del_row" style="display: none;"><div id="del_week">
+						<button type="button" class="btn-close me-2 m-auto" aria-label="Close" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Cancel"></button>
+					</div></td>
+					</tr>
+				{% endfor %}
+				{% else %}
+					<tr><td colspan="3">
+						<div id="overlay">
+						  <div id="text">No Plan Found</div>
+						</div>
+					</td></tr>
+				{% endif %}
+				</tbody>
+			</table>
+
+			{% if user.profile.role == "MANAGER" or user.is_superuser %}
+				<center><button id="add-week" class="btn btn-colour btn-sm add-week" data-bs-toggle="modal" data-bs-target="#exampleModal" style="display: none;">Add Week</button></center>
+				<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+					<div class="modal-dialog modal-lg">
+				    	<div class="modal-content">
+				    		<form id="form" method="POST">
+		    					<div class="modal-header">
+		    						<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+		    						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		    			      	</div>
+		    			      	<div class="modal-body row g-3 justify-content-center">
+	    			      			<div class="col-sm-2">
+		    			      		  	<input type="text" id="week_id" class="form-control" placeholder="Week #" aria-label="Weel #" required>
+	    			      			</div>
+		    			      	  	<div class="col-sm-9">
+		    			      	  	  	<input type="text" id="title" class="form-control" placeholder="Title" aria-label="Title" required>
+		    			      	  	</div>
+		    			      	</div>
+		    			      	<div class="modal-footer">
+		    			        	<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+		    			        	<input id="dispose" type="submit" class="btn btn-colour" value="Save changes"></button>
+		    			      	</div>
+				    		</form>
+				    	</div>
+				  	</div>
+				</div>
+			{% endif %}
 		</div>
 	</div>
-	<script type="text/javascript">
-		$(document).ready(function() {
-			$(".fa-calendar-week").addClass("active");
-		});
-</script>
+</div>
+<div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center w-100">
+    <div class="toast border-0 position-absolute top-0 toast-bg" data-bs-delay="1500" role="alert" aria-live="assertive" aria-atomic="true" style="opacity: 1 !important;">
+	    <div class="d-flex">
+		    <div class="toast-body">
+		      
+		    </div>
+	    	<button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+	    </div>
+    </div>
+</div>
 
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(".fa-calendar-week").addClass("active");
+		$("#form").submit(function(e){
+			e.preventDefault();
+
+			$.ajax({
+				type: 'POST',
+				url: 'add_week/',
+				data: {
+					week_id: $('#week_id').val(),
+					title: $('#title').val(),
+					csrfmiddlewaretoken: '{{ csrf_token }}',
+				},
+				success: function(){ 
+					$('.modal').find('form').trigger('reset');
+					$('.modal').modal('hide');
+					$('div.toast-body').text('Week added successfully!');
+					var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+					var toastList = toastElList.map(function (toastEl) {
+						return new bootstrap.Toast(toastEl)
+					});
+					toastList.forEach(toast => toast.show());
+					$('#weekstable').load(document.URL +  ' #weekstable');
+				},
+				error: function() {
+					alert('Adding week failed!')
+				}
+			});
+		});
+	});
+
+	$(document).on('click','#del_week', function(e) {
+		e.preventDefault();
+
+		$.ajax({
+			type: 'POST',
+			url: 'del_week/',
+			data: {
+				week_id: $(this).closest('tr').index(),
+				csrfmiddlewaretoken: '{{ csrf_token }}',
+			},
+			success: function(){ 
+				$('div.toast-body').text('Week Deleted!');
+				var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+				var toastList = toastElList.map(function (toastEl) {
+					return new bootstrap.Toast(toastEl)
+				});
+				toastList.forEach(toast => toast.show());
+				$('#weekstable').load(document.URL +  ' #weekstable');
+			},
+			error: function() {
+				alert('Adding week failed!')
+			}
+		});
+	});
+
+	$("#edit").on("click", function() {
+		this.style.display = 'none';
+		document.getElementById("cancel").style.display = 'block';
+		document.getElementById("add-week").style.display = 'block';
+		document.getElementById("del_row").style.display = 'block';
+	});
+
+	$("#cancel").on("click", function() {
+		this.style.display = 'none';
+		document.getElementById("edit").style.display = 'block';
+		document.getElementById("add-week").style.display = 'none';
+		document.getElementById("del_row").style.display = 'none';
+
+	});
+
+
+
+</script>
 
 {% endblock %}

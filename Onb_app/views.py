@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from .forms import UserRegisterForm
 from django.contrib import messages
 from .models import *
@@ -110,10 +110,12 @@ def viewsupportengineers(request):
 		messages.error(request, "Your account does not have sufficient privileges to perform this action. If you think this is an error, please contact your manager.")
 		return redirect('/error/')
 
+
 @login_required(login_url='/login/')
 def profile_page(request):
 		prof = User.objects.get(username=request.user.username)
 		return render(request, 'profile_page.html', {'prof':prof})
+
 
 @login_required(login_url='/login')
 def updateprofile(request):
@@ -127,8 +129,40 @@ def updateprofile(request):
 		print(firstname, lastname)
 		return HttpResponse('')
 
+
 @login_required(login_url='/login')
 def weeks(request):
 	week = weeks_data.objects.all()
 	user = User.objects.get(username=request.user)
-	return render(request, 'weeks.html', {'week':week, 'user':user})
+	return render(request, 'weeks.html', {'week_data':week, 'user':user})
+
+@login_required(login_url='/login')
+def add_week(request):
+	if request.user.profile.role=="MANAGER" or request.user.is_superuser:
+		if request.method == 'POST':
+			week_id = request.POST['week_id']
+			title = request.POST['title']
+			if not weeks_data.objects.filter(weekid=week_id).exists():
+				w = weeks_data(weekid = week_id, weektitle = title)
+				w.save()
+				return HttpResponse('')
+			else:
+				return HttpResponseNotFound('Week ID already exists!')
+	else:
+		logout(request)
+		messages.error(request, "Your account does not have sufficient privileges to perform this action. If you think this is an error, please contact your manager.")
+		return redirect('/error/')
+
+@login_required(login_url='/login')
+def del_week(request):
+	if request.user.profile.role=="MANAGER" or request.user.is_superuser:
+		if request.method == 'POST':
+			week_id = request.POST['week_id']
+			print(week_id)
+			weeks_data.objects.filter(weekid=week_id).delete()
+			return HttpResponse('')
+	else:
+		logout(request)
+		messages.error(request, "Your account does not have sufficient privileges to perform this action. If you think this is an error, please contact your manager.")
+		return redirect('/error/')
+	

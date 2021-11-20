@@ -27,5 +27,11 @@ class onboarding(models.Model):
 
 class weeks_data(models.Model):
     weekid = models.IntegerField(primary_key=True)
-    title = models.CharField(max_length=200)
-    content = models.TextField()
+    weektitle = models.CharField(max_length=200, null=True)
+
+class week_content(models.Model):
+    weeks_data = models.ForeignKey(weeks_data, on_delete=models.CASCADE)
+    content = models.TextField(null=True)
+
+    def __str__(self):
+        return self.weeks_data.weekid

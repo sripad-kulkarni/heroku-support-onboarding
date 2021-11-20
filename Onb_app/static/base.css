@@ -36,7 +36,8 @@ body {
 	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1), 0 0px 0px 0 rgba(0, 0, 0, 0.1);
 }
 
-.form-control{
+
+.login-input{
 	width: clamp(6rem, 12rem, 15rem);
 	margin: auto;
 	transition: .3s ease-out;
@@ -44,16 +45,16 @@ body {
 	background-color: rgba(250, 243, 243, 0.3);
 }
 
-.form-control::placeholder {
+.login-input::placeholder {
 	text-align: center;
 }
 
-.form-control:hover {
+.login-input:hover {
 	background-color: black;
 	color: white;
 }
 
-.form-control:focus {
+.login-input:focus {
 	background-color: black;
 	color: white;
 }
@@ -127,6 +128,16 @@ h1 {
 
 .fas:hover {
 	text-shadow: 0 5px 15px rgba(61, 91, 110, .4);
+}
+
+.fa-eye{
+	transition: .3s ease-out;
+	color: black;
+}
+
+.fa-eye:hover {
+	text-shadow: 15px 1px 15px rgba(61, 91, 110, .9);
+	color: #006580;
 }
 
 .currentuser {
