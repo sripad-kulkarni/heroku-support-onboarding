@@ -27,25 +27,32 @@
 	sd = "{{prof.profile.startdate|date:'M d, Y'}}";
 	cd = "{{prof.profile.enddate|date:'M d, Y'}}";
 
-	var countDownDate = new Date(cd).getDate();
-	var startDate = new Date(sd).getDate();
+	var countDownDate = new Date(cd).getTime();
+	var startDate = new Date(sd).getTime();
+
+	var secondsInADay = 60 * 60 * 1000 * 24,
+	    secondsInAHour = 60 * 60 * 1000;
 
 	$(document).ready(function() {
-
+		
 		$(".fa-home").addClass("active");
 
-	  var period = countDownDate - startDate;
+	  	var period = Math.floor(((countDownDate - startDate)/ (secondsInADay) * 1) + 1);
 
-	  var now = new Date().getDate();
+	  	var now = new Date().getTime();
 
-	  var left = countDownDate - startDate;
+	  	var left = Math.floor(((countDownDate - now)/ (secondsInADay) * 1) + 1);
 
-	  var current = period - left;
+	  	var current = (period - left);
 
-	  	document.getElementById("demo").innerHTML = "Day " + (1+current) + " of " + (1+period) ;
+	  	document.getElementById("demo").innerHTML = "Day " + (current) + " of " + (period) ;
 	  	document.getElementById("demo-a").innerHTML = "Onboarding ends on " + cd ;
-	  	console.log("Hello");
-	    
+/*	  	console.log(period);
+	  	console.log(left);
+	  	console.log(now);
+	  	console.log(current);
+	  	console.log(countDownDate);
+*/	    
 	});
 	</script>
 
