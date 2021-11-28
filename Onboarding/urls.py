@@ -45,5 +45,4 @@ urlpatterns = [
     path('targets/del_target/', views.del_target),
 
 ]
-
 '''path('weeks/week_check/', views.week_check),'''
