@@ -19,6 +19,7 @@ from Onb_app import views
 from django.views.generic import RedirectView
 
 urlpatterns = [
+    path('', RedirectView.as_view(url='login/')),
     path('admin/', admin.site.urls),
     path('test/', views.test),
     path('welcome/', views.welcome),
@@ -28,11 +29,21 @@ urlpatterns = [
     path('register/', views.register),
     path('logout/', views.auth_logout),
     path('error/', views.error),
-    path('', RedirectView.as_view(url='login/')),
-    path('manage_users/', views.viewsupportengineers),
     path('profile/', views.profile_page),
     path('profile/update_profile/', views.updateprofile),
+    path('manage_users/', views.viewsupportengineers),
+    path('manage_users/onb_assign/', views.onb_assign),
+    path('manage_users/del_onb/', views.del_onb),
     path('weeks/', views.weeks),
     path('weeks/add_week/', views.add_week),
     path('weeks/del_week/', views.del_week),
+    path('weeks/<int:id>', views.week_content, name='content'),
+    path('weeks/add_content/', views.add_content),
+    path('weeks/del_content/', views.del_content),
+    path('targets/', views.show_targets),
+    path('targets/add_target/', views.add_target),
+    path('targets/del_target/', views.del_target),
+
 ]
+
+'''path('weeks/week_check/', views.week_check),'''

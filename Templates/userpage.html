@@ -2,8 +2,8 @@
 
 {% block content %}
 
-	<div class="container-md reg_page" >
-		<div class="row border" style="padding: 10px;">
+	<div class="container-md reg_page"  id="assignments">
+		<div class="row border" style="padding: 10px; max-height: 250px;">
 
 			<div class="col border border border-dark user_table">
 				<h5>Support Engineers</h5>
@@ -22,8 +22,8 @@
 					{% endfor %}
 					{% else %}
 						<tr><td>
-							<div id="overlay">
-							  <div id="text">No Support Engineers Exist</div>
+							<div class="overlay">
+							  <div class="text">No Support Engineers Exist</div>
 							</div>
 						</td></tr>
 					{% endif %}
@@ -48,8 +48,8 @@
 					{% endfor %}
 					{% else %}
 						<tr><td>
-							<div id="overlay">
-							  <div id="text">No New Hires Exist</div>
+							<div class="overlay">
+							  <div class="text">No New Hires Exist</div>
 							</div>
 						</td></tr>
 					{% endif %}
@@ -74,16 +74,229 @@
 					{% endfor %}
 					{% else %}
 						<tr><td>
-							<div id="overlay">
-							  <div id="text">No Managers Created</div>
+							<div class="overlay">
+							  <div class="text">No Managers Created</div>
 							</div>
 						</td></tr>
 					{% endif %}
 					</tbody>
 				</table>
 			</div>
+		</div>
+		<hr>
+		<div class="row border" style="padding: 10px; max-height: 250px;" >
+			<h5>Assign New Hires to Onboarding</h5>
+			<div class="col-md-4 border border border-dark user_table">
+				<h6>Submit here</h6>
+				<hr>
+				<div>
+					<form method="POST" id="form">{% csrf_token %}
 
+						<div class="input-group mb-3 input-group-sm">
+						  <label class="input-group-text" for="new_hire" style="width: 25%;">New Hire</label>
+						  <select class="form-select" id="new_hire" required>
+						  	<option value="" selected disabled hidden>Choose...</option>
+						    {% for nh in nh %}
+						    <option value="{{ nh.user.username }}">{{nh.firstname}} {{nh.lastname}}</option>
+						    {% endfor %}
+						  </select>
+						</div>
+						
+						<div class="input-group mb-3 input-group-sm">
+						  <label class="input-group-text" for="trail_guide" style="width: 25%;">Trail Guide</label>
+						  <select class="form-select" id="trail_guide" required>
+						    <option value="" selected disabled hidden>Choose...</option>
+						    {% for eng in eng %}
+						    <option value="{{eng.user.username}}">{{eng.firstname}} {{eng.lastname}}</option>
+						    {% endfor %}
+						  </select>
+						</div>
+						
+						<div class="input-group mb-3 input-group-sm">
+						  <label class="input-group-text" for="onb_buddy" style="width: 25%;">Onb. Buddy</label>
+						  <select class="form-select" id="onb_buddy" required>
+						    <option  value="" selected disabled hidden>Choose...</option>
+						    {% for eng in eng %}
+						    <option value="{{eng.user.username}}">{{eng.firstname}} {{eng.lastname}}</option>
+						    {% endfor %}
+						  </select>
+						</div>
+						
+						<div class="input-group mb-3 input-group-sm">
+						  <label class="input-group-text" for="manager" style="width: 25%;">Manager</label>
+						  <select class="form-select" id="manager" required>
+						    <option  value="" selected disabled hidden>Choose...</option>
+						    {% for manager in manager %}
+						    <option value="{{manager.user.username}}">{{manager.firstname}} {{manager.lastname}}</option>
+						    {% endfor %}
+						  </select>
+						</div>
+						
+						<div class="text-center" >
+							<input class="btn btn-outline-dark btn-sm" type="submit" value="Assign">
+						</div>
+
+					</form>
+				</div>
+			</div>
+			<div class="col border border border-dark user_table">
+				<div class="row">
+					<div class="col">
+						<h6>Current assignments</h6>
+					</div>
+					{% if onb %}
+					<div class="col" id="edit" style="text-align: right; display: block;">
+						<button type="button" class="btn-close me-2 m-auto fas fa-tools" aria-label="Close" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Refactor" ></button>
+					</div>
+					<div id="cancel" class="col" style="text-align: right; display: none;">
+						<button type="button" class="btn-close me-2 m-auto" aria-label="Close" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Cancel"></button>
+					</div>
+					{% endif %}
+				</div>
+				<table id="assignments_table" class="table table-sm table-hover table-responsive" style="font-size: 0.9rem">
+					<thead class="thead">
+						<tr>
+							<th scope="col">Username (NH)</th>
+							<th scope="col">New Hire</th>
+							<th scope="col">Trail Guide</th>
+							<th scope="col">Onboarding Buddy</th>
+						</tr>
+					</thead>
+					<tbody>
+					{% if onb %}
+					{% for onb in onb %}
+					<tr>
+						{% for usr in usr %}
+						{% if usr.username == onb.newhire %}
+						<td>{{usr.username }}</td>
+						{% endif %}
+						{% endfor %}
+
+						{% for usr in usr %}
+						{% if usr.username == onb.newhire %}
+						<td>{{usr.profile.firstname}} {{ usr.profile.lastname }}</td>
+						{% endif %}
+						{% endfor %}
+
+						{% for usr in usr %}
+						{% if usr.username == onb.trailguide %}
+						<td>{{usr.profile.firstname}} {{ usr.profile.lastname }}</td>
+						{% endif %}
+						{% endfor %}
+
+						{% for usr in usr %}
+						{% if usr.username == onb.onboardingbuddy %}
+						<td>{{usr.profile.firstname}} {{ usr.profile.lastname }}</td>
+						{% endif %}
+						{% endfor %}
+						<td id="del_row" style="display: none;"><div id="del_onb">
+							<button type="button" class="btn-close me-2 m-auto" aria-label="Close" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Cancel"></button></div>
+						</td>
+					</tr>
+					{% endfor %}
+					{% else %}
+						<tr><td colspan="4">
+							<div class="overlay">
+							  <div class="text">No new hires assigned</div>
+							</div>
+						</td></tr>
+					{% endif %}
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
+
+	<div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center w-100">
+	    <div class="toast border-0 position-absolute top-0 toast-bg" data-bs-delay="1500" role="alert" aria-live="assertive" aria-atomic="true" style="opacity: 1 !important;">
+		    <div class="d-flex">
+			    <div class="toast-body">
+			      
+			    </div>
+		    	<button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+		    </div>
+	    </div>
+	</div>
+
+	<script type="text/javascript">
+
+		$(document).ready(function() {
+			$(".fa-users").addClass("active");
+
+			$("#form").on("submit", function(e) {
+
+				e.preventDefault();
+				
+				console.log($("#new_hire").val());
+				console.log($("#trail_guide").val());
+				console.log($("#onb_buddy").val());
+				
+				$.ajax({
+					type: 'POST',
+					url: 'onb_assign/',
+					data: {
+						new_hire: $("#new_hire").val(),
+						trail_guide: $("#trail_guide").val(),
+						onb_buddy: $("#onb_buddy").val(),
+						the_manager: $("#manager").val(),
+						csrfmiddlewaretoken: '{{ csrf_token }}',
+					},
+					success: function() {
+						$('div.toast-body').text('New hire assignment successful!');
+							$("#form").trigger("reset");
+							var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+							var toastList = toastElList.map(function (toastEl) {
+							return new bootstrap.Toast(toastEl)
+						});
+						toastList.forEach(toast => toast.show());
+					    setTimeout(function() {window.location.reload()}, 1200);
+   					},
+					error: function() {
+						alert("Assignment failed! Please try again!")
+					}
+				});
+			});
+		});
+
+		$("#edit").on("click", function() {
+			this.style.display = 'none';
+			document.getElementById("cancel").style.display = 'block';
+			document.getElementById("del_row").style.display = 'block';
+		});
+
+		$("#cancel").on("click", function() {
+			this.style.display = 'none';
+			document.getElementById("edit").style.display = 'block';
+			document.getElementById("del_row").style.display = 'none';
+
+		});
+
+		$(document).on('click','#del_onb', function(e) {
+			e.preventDefault();
+			var currentRow = $(this).closest('tr'); 
+			var	col1=currentRow.find("td:eq(0)").text();
+
+			$.ajax({
+				type: 'POST',
+				url: 'del_onb/',
+				data: {
+					col1,
+					csrfmiddlewaretoken: '{{ csrf_token }}',
+				},
+				success: function(){ 
+					$('div.toast-body').text('Assignment Deleted!');
+					var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+					var toastList = toastElList.map(function (toastEl) {
+						return new bootstrap.Toast(toastEl)
+					});
+					toastList.forEach(toast => toast.show());
+					    setTimeout(function() {window.location.reload()}, 1200);
+				},
+				error: function() {
+					alert('Deleting week failed!')
+				}
+			});
+		});
+	</script>
 
 {% endblock %}

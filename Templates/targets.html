@@ -1,0 +1,207 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style type="text/css">
+	.week_t tr td:nth-child(2), tr th:nth-child(2) {
+		text-align: center;
+	}
+	.week_t tr td:nth-child(5) {
+		max-width: 30px
+	}
+</style>
+
+<div class="container-md reg_page">
+	<div class="row border" style="padding: 10px;">
+		<div class="col border border border-dark user_table user_table" style="max-height: 400px;">
+			<div class="row">
+				<div class="col">
+					<h5>Current targets</h5>
+				</div>
+				{% if user.profile.role == "MANAGER" or user.is_superuser %}
+				<div class="col edit" style="text-align: right; display: block;">
+					<button type="button" class="btn-close me-2 m-auto fas fa-tools" aria-label="Close" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Refactor"></button>
+				</div>
+				<div class="cancel col" style="text-align: right; display: none;">
+					<button type="button" class="btn-close me-2 m-auto" aria-label="Close" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Cancel"></button>
+				</div>
+				{% endif %}
+			</div>
+			<table class="table table-hover table-sm table-responsive week_t">
+				<thead class="thead">
+					<tr>
+						<td>Target name</td>
+						<td>Completed</td>
+					</tr>
+				</thead>
+				<tbody>
+					{% if target %}
+					{% for target in target %}
+					<tr>
+						<td>{{ target.target }}</td>
+						<td><input id="week_check" class="form-check-input" type="checkbox" id="flexCheckDefault"></td>
+						<td class="del_row" style="display: none;">
+							<div class="del_target">
+								<a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Remove"><i class="far fa-trash-alt"></i></a>
+							</div>
+						</td>
+					</tr>
+					{% endfor %}
+					{% else %}
+					<tr>
+						<td colspan="2">
+							<div class="overlay">
+								<div class="text">No targets found</div>
+							</div>
+						</td>
+					</tr>
+					{% endif %}
+				</tbody>
+			</table>
+		</div>		
+	</div>
+	<br>
+	<div class="row">
+		<center><button id="add-week" class="btn btn-colour btn-sm add-week" data-bs-toggle="modal" data-bs-target="#exampleModal" style="display: none;">Add target</button></center>
+		<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+		    	<div class="modal-content">
+		    		<form id="form" method="POST">
+    					<div class="modal-header">
+    						<h5 class="modal-title" id="exampleModalLabel">Add a target</h5>
+    						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    			      	</div>
+    			      	<div class="modal-body row g-3 justify-content-center">
+			      			<div class="col-sm-2">
+    			      		  	<input type="text" id="target_id" class="form-control" placeholder="Target #" aria-label="Target #" required>
+			      			</div>
+    			      	  	<div class="col-sm-9">
+    			      	  	  	<input type="text" id="title" class="form-control" placeholder="Title" aria-label="Title" required>
+    			      	  	</div>
+    			      	</div>
+    			      	<div class="modal-footer">
+    			        	<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+    			        	<input id="dispose" type="submit" class="btn btn-colour" value="Save changes"></button>
+    			      	</div>
+		    		</form>
+		    	</div>
+		  	</div>
+		</div>
+	</div>
+</div>
+<div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center w-100">
+    <div class="toast border-0 position-absolute top-0 toast-bg" data-bs-delay="1500" role="alert" aria-live="assertive" aria-atomic="true" style="opacity: 1 !important;">
+	    <div class="d-flex">
+		    <div class="toast-body">
+		      
+		    </div>
+	    	<button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+	    </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+	$(document).ready(function() {
+
+		$("#form").submit(function(e) {
+
+			e.preventDefault();
+
+			$.ajax({
+				type: 'POST',
+				url: 'add_target/',
+				data: {
+					target_id: $('#target_id').val(),
+					title: $('#title').val(),
+					csrfmiddlewaretoken: '{{ csrf_token }}',
+				},
+				success: function() { 
+					$('.modal').find('form').trigger('reset');
+					$('.modal').modal('hide');
+					$('div.toast-body').text('Target added successfully!');
+					var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+					var toastList = toastElList.map(function (toastEl) {
+						return new bootstrap.Toast(toastEl);
+					});
+					toastList.forEach(toast => toast.show());
+					setTimeout(function() {window.location.reload()}, 900);
+				},
+				error: function() {
+					alert('Adding week failed!');
+				}
+			});
+		});
+	});
+
+	$(document).on('click','.del_target', function(e) {
+		e.preventDefault();
+		var row = $(this).closest("tr");
+		console.log(row);
+		$.ajax({
+			type: 'POST',
+			url: 'del_target/',
+			data: {
+				title: row.find("td:eq(0)").text(),
+				csrfmiddlewaretoken: '{{ csrf_token }}',
+			},
+			success: function(){ 
+				$('div.toast-body').text('Target Deleted!');
+				var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+				var toastList = toastElList.map(function (toastEl) {
+					return new bootstrap.Toast(toastEl)
+				});
+				toastList.forEach(toast => toast.show());
+				setTimeout(function() {window.location.reload()}, 900);
+			},
+			error: function() {
+				alert('Deleting week failed!')
+			}
+		});
+	});
+
+	$(".edit").on("click", function() {
+		this.style.display = 'none';
+		$(".cancel").css('display', 'block');
+		$(".add-week").css('display', 'block');
+		$(".del_row").css('display','block');
+	});
+
+	$(".cancel").on("click", function() {
+		this.style.display = 'none';
+		$(".edit").css('display', 'block');
+		$(".add-week").css('display', 'none');
+		$(".del_row").css('display','none');
+
+	});
+
+	$(".target_check").on("click", function(e) {
+
+		e.preventDefault();
+		var row = $(this).closest("tr");
+		$.ajax({
+			type:'POST',
+			url:'week_check/',
+			data: {
+				week_id: row.find("td:eq(0)").text(),
+				week_check: $(".week_check").is(':checked'),
+				csrfmiddlewaretoken: '{{ csrf_token }}',
+			},
+			success: function(){
+				$('div.toast-body').text('Progress updated!');
+				var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+				var toastList = toastElList.map(function (toastEl) {
+				return new bootstrap.Toast(toastEl)
+				});
+				toastList.forEach(toast => toast.show());
+				setTimeout(function() {window.location.reload()}, 900);
+			}
+		});
+		console.log($(".week_check").is(':checked'));
+	});
+	$(document).ready(function() {
+		$(".fa-check-square").addClass("active");
+	});
+</script>
+
+{% endblock %}

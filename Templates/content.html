@@ -1,50 +1,45 @@
 {% extends 'base.html' %}
 
 {% block content %}
-	
+
+
 <style type="text/css">
-	.week_t tr td:nth-child(3), tr th:nth-child(3), td:nth-child(4), tr th:nth-child(4) {
+	.week_t tr td:nth-child(2), tr th:nth-child(2) {
 		text-align: center;
 	}
-	.week_t tr td:nth-child(5) {
+	.week_t tr td:nth-child(2) {
 		max-width: 30px
 	}
 </style>
 
 <div id="weekstable" class="container-md reg_page" >
 	<div class="row border" style="padding: 10px;">
-		<div class="col border border-dark user_table">
+		<div class="col border border border-dark user_table">
 			<div class="row">
-				<div class="col">
-					<h5>Weekly Plan</h5>
-				</div>
+				<div class="col"><h5>Week <strong id="week_no">{{week_no}}</strong></h5></div>
 				{% if user.profile.role == "MANAGER" or user.is_superuser %}
 					<div class="col edit" style="text-align: right; display: block;">
 						<button type="button" class="btn-close me-2 m-auto fas fa-tools" aria-label="Close" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Refactor" ></button>
 					</div>
-					<div class="cancel col" style="text-align: right; display: none;">
+					<div id="cancel" class="col" style="text-align: right; display: none;">
 						<button type="button" class="btn-close me-2 m-auto" aria-label="Close" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Cancel"></button>
 					</div>
 				{% endif %}
-			</div>
+				</div>
 
-			<table class="table table-hover table-responsive week_t">
+			<table class="table table-responsive table-hover week_t">
 				<thead class="thead">
 					<tr>
-						<th scope="col">Week #</th>
-						<th scope="col">Title</th>
-						<th scope="col">Action</th>
+						<th scope="col">Task Descrition</th>
 						<th scope="col">Completed</th>
 					</tr>
 				</thead>
 				<tbody>
-				{% if week_data %}
-				{% for week_data in week_data %}
+				{% if content %}
+				{% for content in content %}
 					<tr>
-						<td>{{week_data.weekid}}</td>
-						<td>{{week_data.weektitle}}</td>
-						<td><a href="{% url 'content' week_data.weekid %}" class="far fa-eye" style="text-decoration:none;" aria-label="Close" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Explore"></a></td>
-						<td><input id="week_check" class="form-check-input" type="checkbox" id="flexCheckDefault" disabled></td>
+						<td>{{content.task}}</td>
+						<td><input id="week_check" class="form-check-input" type="checkbox" id="flexCheckDefault"></td>
 						<td class="del_row" style="display: none;">
 							<div class="del_week">
 								<a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Remove"><i class="far fa-trash-alt"></i></a>
@@ -53,9 +48,9 @@
 					</tr>
 				{% endfor %}
 				{% else %}
-					<tr><td colspan="5">
+					<tr><td colspan="2">
 						<div class="overlay">
-						  <div class="text">No Plan Found</div>
+						  <div class="text">No Tasks Found</div>
 						</div>
 					</td></tr>
 				{% endif %}
@@ -63,22 +58,26 @@
 			</table>
 
 			{% if user.profile.role == "MANAGER" or user.is_superuser %}
-				<center><button id="add-week" class="btn btn-colour btn-sm add-week" data-bs-toggle="modal" data-bs-target="#exampleModal" style="display: none;">Add Week</button></center>
+				<center><button id="add-task" class="btn btn-colour btn-sm add-task" data-bs-toggle="modal" data-bs-target="#exampleModal" style="display: none;">Add Task Item</button></center>
 				<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 					<div class="modal-dialog modal-lg">
 				    	<div class="modal-content">
 				    		<form id="form" method="POST">
 		    					<div class="modal-header">
-		    						<h5 class="modal-title" id="exampleModalLabel">Add week</h5>
+		    						<h5 class="modal-title" id="exampleModalLabel">Add Task Item</h5>
 		    						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 		    			      	</div>
+		    			      	<br>
 		    			      	<div class="modal-body row g-3 justify-content-center">
-	    			      			<div class="col-sm-2">
-		    			      		  	<input type="text" id="week_id" class="form-control" placeholder="Week #" aria-label="Week #" required>
-	    			      			</div>
-		    			      	  	<div class="col-sm-9">
-		    			      	  	  	<input type="text" id="title" class="form-control" placeholder="Title" aria-label="Title" required>
-		    			      	  	</div>
+		    			      		<div class="col" style="margin:10px;">
+			    			      		<div class="row">
+			    			      		  	<input type="text" id="task_id" class="form-control" placeholder="Task #" aria-label="Week #" required>
+		    			      			</div>
+		    			      			<br>
+			    			      	  	<div class="row">
+			    			      	  		<textarea class="form-control" id="title" placeholder="Enter something" rows="3" required></textarea>
+			    			      	  	</div>
+		    			      		</div>
 		    			      	</div>
 		    			      	<div class="modal-footer">
 		    			        	<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -103,26 +102,25 @@
     </div>
 </div>
 
-
-
 <script type="text/javascript">
 	$(document).ready(function() {
 		$(".fa-calendar-week").addClass("active");
 		$("#form").submit(function(e){
 			e.preventDefault();
-
+			console.log($("#week_no").text())
 			$.ajax({
 				type: 'POST',
-				url: 'add_week/',
+				url: 'add_content/',
 				data: {
-					week_id: $('#week_id').val(),
+					task_id: $('#task_id').val(),
 					title: $('#title').val(),
+					week_id: $("#week_no").text(),
 					csrfmiddlewaretoken: '{{ csrf_token }}',
 				},
 				success: function(){ 
 					$('.modal').find('form').trigger('reset');
 					$('.modal').modal('hide');
-					$('div.toast-body').text('Week added successfully!');
+					$('div.toast-body').text('Task added successfully!');
 					var toastElList = [].slice.call(document.querySelectorAll('.toast'))
 					var toastList = toastElList.map(function (toastEl) {
 						return new bootstrap.Toast(toastEl)
@@ -131,7 +129,7 @@
 					setTimeout(function() {window.location.reload()}, 900);
 				},
 				error: function() {
-					alert('Adding week failed!')
+					alert('Adding task failed!')
 				}
 			});
 		});
@@ -139,17 +137,19 @@
 
 	$(document).on('click','.del_week', function(e) {
 		e.preventDefault();
+
 		var row = $(this).closest("tr");
-		console.log(row);
+
 		$.ajax({
 			type: 'POST',
-			url: 'del_week/',
+			url: 'del_content/',
 			data: {
-				week_id: row.find("td:eq(0)").text(),
+				week_id: $("#week_no").text(),
+				task: row.find("td:eq(0)").text(),
 				csrfmiddlewaretoken: '{{ csrf_token }}',
 			},
 			success: function(){ 
-				$('div.toast-body').text('Week Deleted!');
+				$('div.toast-body').text('Task Deleted!');
 				var toastElList = [].slice.call(document.querySelectorAll('.toast'))
 				var toastList = toastElList.map(function (toastEl) {
 					return new bootstrap.Toast(toastEl)
@@ -165,43 +165,18 @@
 
 	$(".edit").on("click", function() {
 		this.style.display = 'none';
-		$(".cancel").css('display', 'block');
-		$(".add-week").css('display', 'block');
-		$(".del_row").css('display','block');
+		$("#cancel").css('display', 'block');
+		$(".add-task").css('display', 'block');
+		$(".del_row").css('display', 'block');
 	});
 
-	$(".cancel").on("click", function() {
+	$("#cancel").on("click", function() {
 		this.style.display = 'none';
 		$(".edit").css('display', 'block');
-		$(".add-week").css('display', 'none');
-		$(".del_row").css('display','none');
+		$(".add-task").css('display', 'none');
+		$(".del_row").css('display', 'none');
 
 	});
-/*
-	$(".week_check").on("click", function(e) {
-
-		e.preventDefault();
-		var row = $(this).closest("tr");
-		$.ajax({
-			type:'POST',
-			url:'week_check/',
-			data: {
-				week_id: row.find("td:eq(0)").text(),
-				week_check: $(".week_check").is(':checked'),
-				csrfmiddlewaretoken: '{{ csrf_token }}',
-			},
-			success: function(){
-				$('div.toast-body').text('Progress updated!');
-				var toastElList = [].slice.call(document.querySelectorAll('.toast'))
-				var toastList = toastElList.map(function (toastEl) {
-				return new bootstrap.Toast(toastEl)
-				});
-				toastList.forEach(toast => toast.show());
-				setTimeout(function() {window.location.reload()}, 900);
-			}
-		});
-		console.log($(".week_check").is(':checked'));
-	});*/
 
 </script>
 

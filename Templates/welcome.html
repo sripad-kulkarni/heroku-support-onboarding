@@ -1,18 +1,44 @@
 {% extends 'base.html' %}
 
 {% block content %}
+	<style type="text/css">
+		body { 
+		   opacity: 0;
+		   transition: opacity .5s;
+		}
+	</style>
+	<div class="container-md jumbo reg_page">
+		<div class="jumbotron">
+		  	<h1 class="display-4">Welcome aboard, {{user.profile.firstname}}!</h1>
+		  	<p class="text-muted">We're glad you're here!</p>
+		  	<hr class="my-4">
 
-	<div class="container-md">
+		  	<p>You've been assinged with an onboarding plan along with folks that can help you through the process. This onboarding plan will span for a set of weeks and your progress will be tracked and updated per week. Each week will have tasks/video material that will help you get the feel of what a Heroku Support Engineer does in their day-to-day work.</p>
 
-		<br>
+		  	<p>Head through the plan by clicking the button below. Feel free to explore and ask as many questions that come through your mind during this process without any hesitation. We encourage making your hands dirty while learning. We'll make sure to be available and assist you with all the queries you might have. We're looking forward for a great start and an awesome journey for you!</p>
 
-		<h1>Welcome, {{user.profile.firstname}}!</h1>
-
-		<br>
-
-		<button type="button" class="btn btn-outline-dark" onclick="location.href='/home/'">Let's Begin ></button>
-		<br><br>
-
+		 	<h6><strong>All the best!</strong></h6>
+		 	
+		 	<br>
+		 	<p class="lead">
+		   		<!--<a class="btn btn-outline-dark btn-lg" href="/home/" role="button">Let's Begin ></a>-->
+		   		<span onclick="transitionToPage('/home/')"></span>
+		 	</p>
+		</div>
 	</div>
+
+	<script type="text/javascript">
+		window.transitionToPage = function(href) {
+		    document.querySelector('body').style.opacity = 0
+		    setTimeout(function() { 
+		        window.location.href = href
+		    }, 500)
+		}
+
+		document.addEventListener('DOMContentLoaded', function(event) {
+		    document.querySelector('body').style.opacity = 1
+		})
+	</script>
+
 
 {% endblock %}

@@ -3,26 +3,107 @@
 {% block content %}
 
 	<div class="container-md home-content">
-		<h4>Welcome Back, {{ user.profile.firstname }}!</h4>
+		<blockquote class="blockquote">
+			<p class="h4 welcome-font"><strong>Welcome Back, {{ user.profile.firstname }}!</strong></p>		
+		</blockquote>	
 	</div>
-	<div class="container-md border rounded">
-		<div class="col-md-8">
-			<h5><strong>Here's your onboarding summary</strong></h5>
-		</div>
-	</div>
-	<div class="container-md border rounded" style="margin: auto;">
-
-		<div class="row border rounded">
-			<div class="col-md-8 border">
-				<h5>Hello</h5>
+	<div class="container-md">
+		<div class="">
+			<div class="col-md-8">
+				<h4>
+					Your Onboarding
+				  	<small class="text-muted">Summary</small>
+				</h4>
 			</div>
-			<div class="col-md-4 border">
-				<p id="demo"></p>
-				<small id="demo-a"></small>
+		</div>
+		<div class="gap-3" style="margin: auto;">
+			<div class="row">
+				<div class="col p-2 mx-auto">
+					<div class="row home-bg">
+						<div class="row">
+							<div class="col">
+								<h6>Weeks progress</h6>
+								<div class="progress" style="background-color: white;">
+								  <div class="progress-bar progress-bar-striped bg-success" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">{{perc}}</div>
+								</div>
+							</div>
+							<figcaption class="blockquote-footer">
+							  This is your overall progress of <cite title="Source Title">all weeks</cite>
+							</figcaption>
+						</div>
+					</div>
+					<div class="row home-bg" style="max-height: 300px;">
+						<h6 style="margin-bottom: 20px;">Week wise progress</h6>
+					</div>
+				</div>
+				<div class="col-md-4 p-2">
+					<div class="row home-bg">
+						<div class="row" style="margin-bottom: 10px;">
+							<strong id="demo"></strong> 
+							<small class="text-muted" id="demo-a"></small>
+						</div>
+						<hr>
+						<div class="row">
+							<div class="col">
+								<table class="table table-borderless table-sm table-responsive">
+									<tbody>
+										<tr>
+											<td><b>Trail Guide</b></td>
+											{% for usr in usr %}
+											{% if usr.username == onb.trailguide %}
+											<td>{{usr.profile.firstname}} {{ usr.profile.lastname }}</td>
+											{% endif %}
+											{% endfor %}
+										</tr>
+										<tr>
+											<td><b>Onboarding Buddy</b></td>
+											{% for usr in usr %}
+											{% if usr.username == onb.onboardingbuddy %}
+											<td>{{usr.profile.firstname}} {{ usr.profile.lastname }}</td>
+											{% endif %}
+											{% endfor %}
+										</tr>
+										<tr>
+											<td><b>Manager</b></td>
+											{% for usr in usr %}
+											{% if usr.username == onb.the_manager %}	
+											<td>{{usr.profile.firstname}} {{ usr.profile.lastname }}</td>
+											{% endif %}
+											{% endfor %}
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+	
+					</div>
+					<div class="row home-bg" style="max-height: 225px">
+						<strong>Your Targets</strong>
+						<div style="margin-top: 10px;">
+							<div class="progress" >
+							  <div class="progress-bar progress-bar-striped bg-success" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+							</div>
+						</div>
+						<div class="row" style="margin-top: 10px;">
+							<div class="col">
+								<table class="table table-borderless table-sm table-hover table-responsive">
+									<tbody>
+										<tr>
+											<td></td>
+											<td><input id="week_check" class="form-check-input" type="checkbox" id="flexCheckDefault"></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
 	
+
 	<script>
 	sd = "{{prof.profile.startdate|date:'M d, Y'}}";
 	cd = "{{prof.profile.enddate|date:'M d, Y'}}";
@@ -34,6 +115,15 @@
 	    secondsInAHour = 60 * 60 * 1000;
 
 	$(document).ready(function() {
+
+		$(".progress-bar").css("width", "{{perc}}%");
+		console.log({{perc}});
+		if("{{perc}}"<100 && "{{perc}}">0){
+			$(".progress-bar").addClass("progress-bar-animated");
+		}
+		else {
+			$(".progress-bar").removeClass("progress-bar-animated");	
+		}
 		
 		$(".fa-home").addClass("active");
 
@@ -44,9 +134,15 @@
 	  	var left = Math.floor(((countDownDate - now)/ (secondsInADay) * 1) + 1);
 
 	  	var current = (period - left);
+	  	if (current<=period) {
+	  		document.getElementById("demo").innerHTML = "Day " + (current) + " of " + (period) ;
+	  		document.getElementById("demo-a").innerHTML = "Onboarding ends on " + cd ;
+	  	}
+	  	else {
+	  		document.getElementById("demo").innerHTML = "Onboarding ended on " + cd;
+	  	}
 
-	  	document.getElementById("demo").innerHTML = "Day " + (current) + " of " + (period) ;
-	  	document.getElementById("demo-a").innerHTML = "Onboarding ends on " + cd ;
+
 /*	  	console.log(period);
 	  	console.log(left);
 	  	console.log(now);
