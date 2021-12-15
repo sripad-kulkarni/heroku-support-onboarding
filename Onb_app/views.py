@@ -115,17 +115,50 @@ def updateprofile(request):
 	
 @login_required(login_url='/login/')
 def home(request):
-	prof = User.objects.get(username=request.user.username)
-	try:
-		onb = onboarding.objects.get(newhire=request.user.username)
-		nh_week = newhire_weeks.objects.filter(onboarding=onb)
-		perc = newhire_weeks.objects.filter(onboarding=onb, status=True)
+	if request.user.profile.role=="MANAGER" or request.user.is_superuser:
+		onb = onboarding.objects.all()
 		usr = User.objects.all()
-		return render(request, 'home.html', {'title': 'Onboarding Home', 'prof':prof, 'perc': perc, 'onb':onb, 'usr':usr, 'nh_week':nh_week})
-	except:
-		onb = None
-		perc = 0
-		return render(request, 'home.html', {'title': 'Onboarding Home', 'prof':prof, 'perc': perc, 'onb':onb})
+		nh_week = newhire_weeks.objects.all()
+		target = targets.objects.all()
+		return render(request, 'manager_home.html', {'onb':onb, 'usr':usr, 'nh_week':nh_week, 'target': targets})
+	else:
+		prof = User.objects.get(username=request.user.username)
+		try:
+			onb = onboarding.objects.get(newhire=request.user.username)
+			''' weeks progress '''
+			nh_week = newhire_weeks.objects.filter(onboarding__newhire=request.user.username)
+			completed = 0
+			count = 0
+			print(nh_week)
+			for nhw in nh_week:
+				completed = completed + newhire_content.objects.filter(newhire_weeks=nhw,status='True').count()
+				count = count + newhire_content.objects.filter(newhire_weeks=nhw).count()
+			print(completed, count)
+			'''
+			completed = newhire_weeks.objects.filter(onboarding__newhire=request.user.username, status='100.0').count()
+			'''
+			if nh_week.count() > 0:
+				perc = round((completed/count)*100, 2)
+			else:
+				perc = 0.0
+			''' weeks done '''
+			print(perc)
+			''' Targets below '''
+			onb.progress = perc
+			nh_targets = newhire_targets.objects.filter(onboarding__newhire=request.user.username)
+			target_achieved = newhire_targets.objects.filter(onboarding__newhire=request.user.username, status=True).count()
+			if nh_targets.count() > 0:
+				nh_t_progress = (target_achieved/nh_targets.count()) * 100
+				print(nh_t_progress)
+			else:
+				nh_t_progress = 0
+			''' Targets Done'''
+			usr = User.objects.all()
+			return render(request, 'home.html', {'title': 'Onboarding Home', 'prof':prof, 'onb':onb, 'usr':usr, 'nh_week':nh_week, 'nh_targets':nh_targets, 'nh_t_progress':nh_t_progress})
+		except Exception as ex:
+			onb = None
+			print(ex)
+			return render(request, 'home.html', {'title': 'Onboarding Home', 'prof':prof, 'onb':onb, 'nh_targets':None})
 
 
 @login_required(login_url='/login/')
@@ -240,7 +273,7 @@ def week_content(request,  id):
 		onb = onboarding.objects.get(newhire=request.user.username)
 		week = newhire_weeks.objects.get(onboarding=onb, weekid=id)
 		c = newhire_content.objects.filter(newhire_weeks=week).order_by('task_id')
-		return render(request, 'content.html', {'week_no':id, 'content':c})
+		return render(request, 'content.html', {'week_no':id, 'content':c, 'week':week})
 
 @login_required(login_url='/login')
 def add_content(request):
@@ -314,4 +347,71 @@ def del_target(request):
 		messages.error(request, "Your account does not have sufficient privileges to perform this action. If you think this is an error, please contact your manager.")
 		return redirect('/error/')
 
-	
+def target_check(request):
+	target_name = request.POST['target_name']
+	target_check = request.POST['target_check']
+	print(target_name, target_check)
+	target = newhire_targets.objects.get(onboarding__newhire=request.user.username, target=target_name)
+	if target_check == 'true':
+		target.status=True
+	else: 
+		target.status=False
+	target.save()
+	return HttpResponse('')
+
+
+def content_check(request):
+	content_name = request.POST['content_name']
+	content_check = request.POST['content_check']
+	week_no = request.POST['week_no']
+	print(week_no, content_name, content_check)
+	content = newhire_content.objects.get(newhire_weeks__onboarding__newhire=request.user.username, newhire_weeks__weekid = week_no, task = content_name)
+	if content_check == 'true':
+		content.status = True
+	else:
+		content.status = False
+	content.save()
+	nh_week_progress = newhire_content.objects.filter(newhire_weeks__onboarding__newhire=request.user.username, newhire_weeks__weekid = week_no, status=True).count()
+	nh_content = newhire_content.objects.filter(newhire_weeks__onboarding__newhire=request.user.username, newhire_weeks__weekid = week_no).count()
+	nh_week_perc = round((nh_week_progress/nh_content)*100, 2)
+	print(nh_week_perc)
+	nh_week = newhire_weeks.objects.get(onboarding__newhire=request.user.username, weekid=week_no)
+	nh_week.status = nh_week_perc
+	nh_week.save()
+	print(nh_week.status)
+	return HttpResponse('')
+
+def check_form(request):
+	if request.method == 'POST':
+		name=request.POST['name']
+		prof = User.objects.get(username=name)
+		onb = onboarding.objects.get(newhire=name)
+		usr = User.objects.all()
+		nh_week = newhire_weeks.objects.filter(onboarding__newhire=name)
+		completed = 0
+		count = 0
+		print(nh_week)
+		for nhw in nh_week:
+			completed = completed + newhire_content.objects.filter(newhire_weeks=nhw, status=True).count()
+			count = count + newhire_content.objects.filter(newhire_weeks=nhw).count()
+		print(completed)
+		'''
+		completed = newhire_weeks.objects.filter(onboarding__newhire=name, status='100.0').count()
+		'''
+		if nh_week.count() > 0:
+			perc = round((completed/count)*100, 2)
+		else:
+			perc = 0.0
+		''' weeks done '''
+		print(perc)
+		''' Targets below '''
+		onb.progress = perc
+		nh_targets = newhire_targets.objects.filter(onboarding__newhire=name)
+		target_achieved = newhire_targets.objects.filter(onboarding__newhire=name, status=True).count()
+		if nh_targets.count() > 0:
+			nh_t_progress = (target_achieved/nh_targets.count()) * 100
+			print(nh_t_progress)
+		else:
+			nh_t_progress = 0
+		''' Targets Done'''
+	return render(request, 'check_form.html', {'title': 'Onboarding Home', 'prof':prof, 'onb':onb, 'usr':usr, 'nh_week':nh_week, 'nh_targets':nh_targets, 'nh_t_progress':nh_t_progress})

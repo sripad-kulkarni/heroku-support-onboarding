@@ -15,7 +15,7 @@
 <body>
 
 	<div class="load loader-wrapper">
-		<span class="load-b loader"><span class="load-in loader-inner"></span></span>
+		<div class="load-b loader"><div class="load-in loader-inner"></div><div class="loader-text">H</div></div>
 	</div>
 
 	<div id="page_holder"></div>
@@ -31,13 +31,16 @@
 		          <a class="nav-link fas fa-home" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Home" aria-current="page" href="/home/"></a>
 		        </li>
 		        <li class="nav-item">
+		          <a class="nav-link fas fa-code-branch" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Access Requests" href="#"></a>
+		        </li>
+		        <li class="nav-item">
 		          <a class="nav-link fas fa-calendar-week" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Weeks" href="/weeks/"></a>
 		        </li>
 		        <li class="nav-item">
-		          <a class="nav-link fas fa-atlas" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Glossary" href="#"></a>
+		          <a class="nav-link fas fa-check-square" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Targets" href="/targets/"></a>
 		        </li>
 		        <li class="nav-item">
-		          <a class="nav-link fas fa-check-square" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Targets" href="/targets/"></a>
+		          <a class="nav-link fas fa-atlas" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Glossary" href="#"></a>
 		        </li>
 		        {% if user.profile.role == "MANAGER" or user.is_superuser %}
 		        <li class="nav-item dropdown">
@@ -81,11 +84,10 @@
 		  $(".load-b").addClass("loader");	
 		});*/
 		$(window).on("load",function(){
-		  $(".load").removeClass("loader-wrapper");
-		  $(".load-in").removeClass("loader-inner");
-		  $(".load-b").removeClass("loader");	
+		  $(".load").fadeOut("slow");
 		  console.log('Loaded');
 		});
+
 	</script>
 
 </body>

@@ -38,11 +38,14 @@ class onboarding(models.Model):
     trailguide = models.CharField(max_length=50)
     onboardingbuddy = models.CharField(max_length=50)
     the_manager = models.CharField(max_length=50)
+    progress = models.FloatField(default=0.0)
+    active = models.BooleanField(default=False)
 
 class newhire_weeks(models.Model):
     onboarding = models.ForeignKey(onboarding, on_delete=models.CASCADE)
     weekid = models.IntegerField()
     weektitle = models.CharField(max_length=200)
+    status = models.FloatField(default='0.0')
 
 class newhire_content(models.Model):
     newhire_weeks = models.ForeignKey(newhire_weeks, on_delete=models.CASCADE)

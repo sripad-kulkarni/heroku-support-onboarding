@@ -13,6 +13,14 @@
 </style>
 
 <div id="weekstable" class="container-md reg_page" >
+	<div class="row">
+		<div class="col">
+			<div class="progress" style="background-color: white;">
+			  <div class="progress-bar progress-bar-striped bg-success" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: {{week.status}}%;">{{week.status}}</div>
+			</div>
+		</div>
+	</div>
+	<hr>
 	<div class="row border" style="padding: 10px;">
 		<div class="col border border border-dark user_table">
 			<div class="row">
@@ -39,7 +47,11 @@
 				{% for content in content %}
 					<tr>
 						<td>{{content.task}}</td>
-						<td><input id="week_check" class="form-check-input" type="checkbox" id="flexCheckDefault"></td>
+						{% if content.status == True %}
+						<td><input id="content_check" class="content_check" class="form-check-input" type="checkbox" id="flexCheckDefault" checked></td>
+						{% else %}
+						<td><input id="content_check" class="content_check" class="form-check-input" type="checkbox" id="flexCheckDefault"></td>
+						{% endif %}
 						<td class="del_row" style="display: none;">
 							<div class="del_week">
 								<a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Remove"><i class="far fa-trash-alt"></i></a>
@@ -178,6 +190,32 @@
 
 	});
 
+	$(".content_check").on("change", function(e) {
+
+		e.preventDefault();
+		var row = $(this).closest("tr");
+		console.log(row.find("td:eq(1) input[type='checkbox']").is(':checked'));
+
+		$.ajax({
+			type:'POST',
+			url:'content_check/',
+			data: {
+				week_no: $("#week_no").text(),
+				content_name: row.find("td:eq(0)").text(),
+				content_check: row.find("td:eq(1) input[type='checkbox']").is(':checked'),
+				csrfmiddlewaretoken: '{{ csrf_token }}',
+			},
+			success: function(){
+				$('div.toast-body').text('Progress updated!');
+				var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+				var toastList = toastElList.map(function (toastEl) {
+				return new bootstrap.Toast(toastEl)
+				});
+				toastList.forEach(toast => toast.show());
+				setTimeout(function() {window.location.reload()}, 900);
+			}
+		});
+	});
 </script>
 
 {% endblock %}

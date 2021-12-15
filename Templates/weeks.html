@@ -44,7 +44,7 @@
 						<td>{{week_data.weekid}}</td>
 						<td>{{week_data.weektitle}}</td>
 						<td><a href="{% url 'content' week_data.weekid %}" class="far fa-eye" style="text-decoration:none;" aria-label="Close" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Explore"></a></td>
-						<td><input id="week_check" class="form-check-input" type="checkbox" id="flexCheckDefault" disabled></td>
+						<td>{{ week_data.status }}%</td>
 						<td class="del_row" style="display: none;">
 							<div class="del_week">
 								<a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Remove"><i class="far fa-trash-alt"></i></a>

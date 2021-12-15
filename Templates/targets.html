@@ -39,7 +39,11 @@
 					{% for target in target %}
 					<tr>
 						<td>{{ target.target }}</td>
-						<td><input id="week_check" class="form-check-input" type="checkbox" id="flexCheckDefault"></td>
+						{% if target.status == True %}
+						<td><input id="target_check" class="target_check" class="form-check-input" type="checkbox" id="flexCheckDefault" checked></td>
+						{% else %}
+						<td><input id="target_check" class="target_check" class="form-check-input" type="checkbox" id="flexCheckDefault"></td>
+						{% endif %}
 						<td class="del_row" style="display: none;">
 							<div class="del_target">
 								<a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Remove"><i class="far fa-trash-alt"></i></a>
@@ -175,16 +179,18 @@
 
 	});
 
-	$(".target_check").on("click", function(e) {
+	$(".target_check").on("change", function(e) {
 
 		e.preventDefault();
 		var row = $(this).closest("tr");
+		console.log(row.find("td:eq(1) input[type='checkbox']").is(':checked'));
+
 		$.ajax({
 			type:'POST',
-			url:'week_check/',
+			url:'target_check/',
 			data: {
-				week_id: row.find("td:eq(0)").text(),
-				week_check: $(".week_check").is(':checked'),
+				target_name: row.find("td:eq(0)").text(),
+				target_check: row.find("td:eq(1) input[type='checkbox']").is(':checked'),
 				csrfmiddlewaretoken: '{{ csrf_token }}',
 			},
 			success: function(){
@@ -197,7 +203,6 @@
 				setTimeout(function() {window.location.reload()}, 900);
 			}
 		});
-		console.log($(".week_check").is(':checked'));
 	});
 	$(document).ready(function() {
 		$(".fa-check-square").addClass("active");

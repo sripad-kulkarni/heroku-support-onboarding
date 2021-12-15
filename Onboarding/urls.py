@@ -43,6 +43,8 @@ urlpatterns = [
     path('targets/', views.show_targets),
     path('targets/add_target/', views.add_target),
     path('targets/del_target/', views.del_target),
-
+    path('targets/target_check/', views.target_check),
+    path('weeks/content_check/', views.content_check),
+    path('home/check_form/', views.check_form),
 ]
 '''path('weeks/week_check/', views.week_check),'''
