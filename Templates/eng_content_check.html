@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style type="text/css">
+		.week_t tr td:nth-child(2), tr th:nth-child(2) {
+			text-align: center;
+		}
+		.week_t tr td:nth-child(2) {
+			max-width: 30px
+		}
+	</style>
+</head>
+<body>
+
+	<div id="weekstable" class="container-md" style="vertical-align: middle;">
+		<div class="row">
+			<div class="col">
+				<div class="progress" style="background-color: white;">
+				  <div class="progress-bar progress-bar-striped bg-success" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: {{week.status}}%;">{{week.status}}</div>
+				</div>
+			</div>
+		</div>
+		<hr>
+		<div class="row border" style="padding: 10px;">
+			<div class="col border border border-dark user_table">
+				<div class="row">
+					<div class="col"><h5>Week <strong id="week_no">{{week_no}}</strong></h5></div>
+				</div>
+
+				<table class="table table-responsive table-hover week_t">
+					<thead class="thead">
+						<tr>
+							<th scope="col">Task Descrition</th>
+							<th scope="col">Completed</th>
+						</tr>
+					</thead>
+					<tbody>
+					{% if content %}
+					{% for content in content %}
+						<tr>
+							<td>{{content.task}}</td>
+							{% if content.status == True %}
+							<td><input id="content_check" class="content_check" class="form-check-input" type="checkbox" id="flexCheckDefault" checked disabled></td>
+							{% else %}
+							<td><input id="content_check" class="content_check" class="form-check-input" type="checkbox" id="flexCheckDefault" disabled></td>
+							{% endif %}
+							<td class="del_row" style="display: none;">
+								<div class="del_week">
+									<a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Remove"><i class="far fa-trash-alt"></i></a>
+								</div>
+							</td>
+						</tr>
+					{% endfor %}
+					{% else %}
+						<tr><td colspan="2">
+							<div class="overlay">
+							  <div class="text">No Tasks Found</div>
+							</div>
+						</td></tr>
+					{% endif %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center w-100">
+	    <div class="toast border-0 position-absolute top-0 toast-bg" data-bs-delay="1500" role="alert" aria-live="assertive" aria-atomic="true" style="opacity: 1 !important;">
+		    <div class="d-flex">
+			    <div class="toast-body">
+			      
+			    </div>
+		    	<button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+		    </div>
+	    </div>
+	</div>
+
+</body>
+</html>

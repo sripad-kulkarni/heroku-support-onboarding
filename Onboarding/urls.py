@@ -46,5 +46,8 @@ urlpatterns = [
     path('targets/target_check/', views.target_check),
     path('weeks/content_check/', views.content_check),
     path('home/check_form/', views.check_form),
+    path('home/check_weeks/', views.check_weeks),
+    path('home/check_targets/', views.check_targets),
+    path('home/check_content/', views.check_content),
 ]
 '''path('weeks/week_check/', views.week_check),'''

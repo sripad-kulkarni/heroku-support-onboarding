@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style type="text/css">
+		.week_t tr td:nth-child(2), tr th:nth-child(2) {
+			text-align: center;
+		}
+		.week_t tr td:nth-child(5) {
+			max-width: 30px
+		}
+	</style>
+</head>
+<body>
+	<div class="container-md">
+		<div class="row border" style="padding: 10px;">
+			<div class="col border border border-dark user_table user_table" style="max-height: 400px;">
+				<div class="row">
+					<div class="col">
+						<h5>Current targets</h5>
+					</div>
+				</div>
+				<table class="table table-hover table-sm table-responsive week_t">
+					<thead class="thead">
+						<tr>
+							<td>Target name</td>
+							<td>Completed</td>
+						</tr>
+					</thead>
+					<tbody>
+						{% if target %}
+						{% for target in target %}
+						<tr>
+							<td>{{ target.target }}</td>
+							{% if target.status == True %}
+							<td><input id="target_check" class="target_check" class="form-check-input" type="checkbox" id="flexCheckDefault" checked disabled></td>
+							{% else %}
+							<td><input id="target_check" class="target_check" class="form-check-input" type="checkbox" id="flexCheckDefault" disabled></td>
+							{% endif %}
+							<td class="del_row" style="display: none;">
+								<div class="del_target">
+									<a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Remove"><i class="far fa-trash-alt"></i></a>
+								</div>
+							</td>
+						</tr>
+						{% endfor %}
+						{% else %}
+						<tr>
+							<td colspan="2">
+								<div class="overlay">
+									<div class="text">No targets found</div>
+								</div>
+							</td>
+						</tr>
+						{% endif %}
+					</tbody>
+				</table>
+			</div>		
+		</div>
+	</div>
+	<div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center w-100">
+	    <div class="toast border-0 position-absolute top-0 toast-bg" data-bs-delay="1500" role="alert" aria-live="assertive" aria-atomic="true" style="opacity: 1 !important;">
+		    <div class="d-flex">
+			    <div class="toast-body">
+			      
+			    </div>
+		    	<button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+		    </div>
+	    </div>
+	</div>
+</body>
+
+</html>

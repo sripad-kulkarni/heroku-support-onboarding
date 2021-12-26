@@ -7,7 +7,7 @@ from django.contrib import messages
 from .models import *
 from django.contrib.auth.models import User
 import datetime
-
+from django.db.models import Q
 
 # Create your views here.
 
@@ -84,12 +84,13 @@ def error(request):
 @login_required(login_url='/login/')
 def welcome(request):
 	user = User.objects.get(username=request.user.username)
-	'''return render(request, 'welcome.html', {'title': 'Welcome', 'user':user})
-	'''
 	if user.profile.firstlogin:
 		user.profile.firstlogin = False
 		user.save()
-		return render(request, 'welcome.html', {'title': 'Welcome', 'user':user})
+		if user.profile.role == 'NEW_HIRE':
+			return render(request, 'welcome.html', {'title': 'Welcome', 'user':user})
+		else:
+			return render(request, 'welcome_default.html', {'title':'welcome', 'user':user})
 	else:
 		return HttpResponseRedirect('/home/')
 
@@ -121,11 +122,16 @@ def home(request):
 		nh_week = newhire_weeks.objects.all()
 		target = targets.objects.all()
 		return render(request, 'manager_home.html', {'onb':onb, 'usr':usr, 'nh_week':nh_week, 'target': targets})
+	elif request.user.profile.role=="ENGINEER":
+		onb = onboarding.objects.filter(Q(onboardingbuddy=request.user.username) | Q(trailguide=request.user.username))
+		usr = User.objects.all()
+		nh_week = newhire_weeks.objects.all()
+		target = targets.objects.all()
+		return render(request, 'manager_home.html', {'onb':onb, 'usr':usr, 'nh_week':nh_week, 'target': targets})
 	else:
 		prof = User.objects.get(username=request.user.username)
 		try:
 			onb = onboarding.objects.get(newhire=request.user.username)
-			''' weeks progress '''
 			nh_week = newhire_weeks.objects.filter(onboarding__newhire=request.user.username)
 			completed = 0
 			count = 0
@@ -134,16 +140,11 @@ def home(request):
 				completed = completed + newhire_content.objects.filter(newhire_weeks=nhw,status='True').count()
 				count = count + newhire_content.objects.filter(newhire_weeks=nhw).count()
 			print(completed, count)
-			'''
-			completed = newhire_weeks.objects.filter(onboarding__newhire=request.user.username, status='100.0').count()
-			'''
 			if nh_week.count() > 0:
 				perc = round((completed/count)*100, 2)
 			else:
 				perc = 0.0
-			''' weeks done '''
 			print(perc)
-			''' Targets below '''
 			onb.progress = perc
 			nh_targets = newhire_targets.objects.filter(onboarding__newhire=request.user.username)
 			target_achieved = newhire_targets.objects.filter(onboarding__newhire=request.user.username, status=True).count()
@@ -152,7 +153,6 @@ def home(request):
 				print(nh_t_progress)
 			else:
 				nh_t_progress = 0
-			''' Targets Done'''
 			usr = User.objects.all()
 			return render(request, 'home.html', {'title': 'Onboarding Home', 'prof':prof, 'onb':onb, 'usr':usr, 'nh_week':nh_week, 'nh_targets':nh_targets, 'nh_t_progress':nh_t_progress})
 		except Exception as ex:
@@ -217,7 +217,7 @@ def del_onb(request):
 
 @login_required(login_url='/login')
 def weeks(request):
-	if request.user.profile.role=="MANAGER" or request.user.is_superuser:
+	if request.user.profile.role=="MANAGER" or request.user.is_superuser or request.user.profile.role=="ENGINEER":
 		week = weeks_data.objects.all().order_by('weekid')
 		user = User.objects.get(username=request.user)
 		return render(request, 'weeks.html', {'week_data':week, 'user':user})
@@ -265,7 +265,7 @@ def del_week(request):
 
 @login_required(login_url='/login/')
 def week_content(request,  id):
-	if request.user.profile.role=="MANAGER" or request.user.is_superuser:
+	if request.user.profile.role=="MANAGER" or request.user.is_superuser or request.user.profile.role=="ENGINEER":
 		week = weeks_data.objects.get(weekid=id)
 		c = content.objects.filter(weeks_data=week).order_by('task_id')
 		return render(request, 'content.html', {'week_no':id, 'content':c})
@@ -308,7 +308,7 @@ def del_content(request):
 
 
 def show_targets(request):
-	if request.user.profile.role=="MANAGER" or request.user.is_superuser:
+	if request.user.profile.role=="MANAGER" or request.user.is_superuser or request.user.profile.role=="ENGINEER":
 		target = targets.objects.all()
 		return render(request, 'targets.html', {'target':target})		
 	else:
@@ -415,3 +415,35 @@ def check_form(request):
 			nh_t_progress = 0
 		''' Targets Done'''
 	return render(request, 'check_form.html', {'title': 'Onboarding Home', 'prof':prof, 'onb':onb, 'usr':usr, 'nh_week':nh_week, 'nh_targets':nh_targets, 'nh_t_progress':nh_t_progress})
+
+
+def check_weeks(request):
+	if request.method == 'POST':
+		name=request.POST['name']
+		try:
+			onb = onboarding.objects.get(newhire=name)
+			week = newhire_weeks.objects.filter(onboarding=onb).order_by('weekid')
+			user = User.objects.get(username=request.user)
+			return render(request, 'eng_week_check.html', {'week_data':week, 'user':user})
+		except:
+			user = User.objects.get(username=name)
+			return render(request, 'eng_week_check.html', {'week_data':None, 'user':user})
+
+def check_targets(request):
+	if request.method == 'POST':
+		name=request.POST['name']
+		try:
+			onb = onboarding.objects.get(newhire=name)
+			nh_targets=newhire_targets.objects.filter(onboarding=onb)
+			return render(request, 'eng_targets_check.html', {'target':nh_targets})		
+		except:
+			return render(request, 'eng_targets_check.html', {'target':None})
+
+def check_content(request):
+	if request.method == 'POST':
+		name=request.POST['name']
+		id = request.POST['week_id']
+		onb = onboarding.objects.get(newhire=name)
+		week = newhire_weeks.objects.get(onboarding=onb, weekid=id)
+		c = newhire_content.objects.filter(newhire_weeks=week).order_by('task_id')
+		return render(request, 'eng_content_check.html', {'week_no':id, 'content':c, 'week':week})

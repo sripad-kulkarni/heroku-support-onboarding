@@ -30,8 +30,8 @@
 				<div class="col p-2 mx-auto">
 					<nav>
 						<div class="nav nav-tabs" id="nav-tab" role="tablist">
-						    <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Cards</button>
-						    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Overview</button>
+						    <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Brief</button>
+						    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Detailed</button>
 						    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-accesses" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">New Hire Access Requests</button>
 						    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-weeks" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">New Hire Weeks</button>
 						    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-targets" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">New Hire Targets</button>
@@ -287,7 +287,23 @@
 				}
 			});
 		};
-		
+
+		$('#back_week').on('submit', function(e) {
+			e.preventDefault();
+
+			$.ajax({
+				type: 'POST',
+				url: 'check_weeks/',
+				data: {
+					name: $('#newhire_weeks').val(),
+					csrfmiddlewaretoken: '{{ csrf_token }}',
+				},
+				success: function(data) {
+					$('#nh_weeks').html(data);
+				}
+			})
+		});
+
 	</script>
 
 {% endblock %}

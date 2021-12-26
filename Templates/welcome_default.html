@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<style type="text/css">
+		body { 
+		   opacity: 0;
+		   transition: opacity .5s;
+		}
+	</style>
+	<div class="container-md jumbo reg_page">
+		<div class="jumbotron">
+		  	<h1 class="display-4">Hey, {{user.profile.firstname}}!</h1>
+		  	<p class="text-muted">We're glad you're here!</p>
+		  	<hr class="my-4">
+
+		  	<p>This is our onboarding portal where all new hires are assigned with their onboarding assigments. Managers/Leads will be able to adjust the global onboarding plan that will be assigned to the new hires when they are registered here. However, Trail Guides and Onboarding buddies be able to make changes to the new hire specific onboarding plan assigned to them as well for the flexibility.</p>
+
+		  	<p>Head through your dashboard by clicking the button below. You'll see this page only on your first login, from the next time you'd be taken to your dashboard directly. We hope this portal gives you a great experience while onboarding new folks!</p>
+
+		 	<h6><strong>Happy Onboarding!</strong></h6>
+		 	
+		 	<br>
+		 	<p class="lead">
+		   		<a class="btn btn-outline-dark btn-lg" href="/home/" role="button">Let's Begin ></a>
+		 	</p>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		window.transitionToPage = function(href) {
+		    document.querySelector('body').style.opacity = 0
+		    setTimeout(function() { 
+		        window.location.href = href
+		    }, 500)
+		}
+
+		document.addEventListener('DOMContentLoaded', function(event) {
+		    document.querySelector('body').style.opacity = 1
+		})
+	</script>
+
+
+{% endblock %}

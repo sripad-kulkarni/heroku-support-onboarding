@@ -33,6 +33,19 @@ class targets(models.Model):
     target_id = models.IntegerField()
     target = models.CharField(max_length=150)
 
+class non_dev_weeks_data(models.Model):
+    weekid = models.IntegerField()
+    weektitle = models.CharField(max_length=200)
+
+class non_dev_content(models.Model):
+    weeks_data = models.ForeignKey(non_dev_weeks_data, on_delete=models.CASCADE)
+    task_id = models.IntegerField()
+    task = models.TextField()
+
+class non_dev_targets(models.Model):
+    target_id = models.IntegerField()
+    target = models.CharField(max_length=150)
+
 class onboarding(models.Model):
     newhire = models.CharField(max_length=50, primary_key=True)
     trailguide = models.CharField(max_length=50)
