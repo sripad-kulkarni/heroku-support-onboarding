@@ -46,8 +46,9 @@ body {
 
 .bg-light {
 	border-radius: 10px;
-	background-color: rgba(236, 240, 243, 0.9)!important;
+	background-color: rgba(140, 172, 191, 0.3	)!important;
 	box-shadow: 0 6px 12px 0 rgba(0, 0, 0, 0.1), 0 0px 0px 0 rgba(0, 0, 0, 0.1);
+
 }
 
 .bg-card {
@@ -192,7 +193,6 @@ h1 {
 	overflow: auto;
 	padding: 10px;
 	min-width: 30px;
-	
 }
 
 tr:hover {
@@ -392,7 +392,7 @@ th {
 }
 
 .container-md {
-	min-width: 350px;;
+	min-width: 350px;
 }
 
 .form-check-input:checked {
