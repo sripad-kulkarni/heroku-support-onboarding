@@ -20,6 +20,15 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.username
 
+class access_section(models.Model):
+    s_id = models.IntegerField()
+    name = models.CharField(max_length=50)
+
+class access_item(models.Model):
+    access_section = models.ForeignKey(access_section, on_delete=models.CASCADE)
+    item_id = models.IntegerField()
+    name = models.TextField()
+
 class weeks_data(models.Model):
     weekid = models.IntegerField()
     weektitle = models.CharField(max_length=200)
@@ -33,19 +42,6 @@ class targets(models.Model):
     target_id = models.IntegerField()
     target = models.CharField(max_length=150)
 
-class non_dev_weeks_data(models.Model):
-    weekid = models.IntegerField()
-    weektitle = models.CharField(max_length=200)
-
-class non_dev_content(models.Model):
-    weeks_data = models.ForeignKey(non_dev_weeks_data, on_delete=models.CASCADE)
-    task_id = models.IntegerField()
-    task = models.TextField()
-
-class non_dev_targets(models.Model):
-    target_id = models.IntegerField()
-    target = models.CharField(max_length=150)
-
 class onboarding(models.Model):
     newhire = models.CharField(max_length=50, primary_key=True)
     trailguide = models.CharField(max_length=50)
@@ -53,6 +49,18 @@ class onboarding(models.Model):
     the_manager = models.CharField(max_length=50)
     progress = models.FloatField(default=0.0)
     active = models.BooleanField(default=False)
+
+class newhire_access_section(models.Model):
+    onboarding = models.ForeignKey(onboarding, on_delete=models.CASCADE)
+    s_id = models.IntegerField()
+    name = models.CharField(max_length=50)
+    status = models.FloatField(default='0.0')
+
+class newhire_access_item(models.Model):
+    newhire_access_section = models.ForeignKey(newhire_access_section, on_delete=models.CASCADE)
+    item_id = models.IntegerField()
+    name = models.TextField()
+    status = models.BooleanField(default=False)
 
 class newhire_weeks(models.Model):
     onboarding = models.ForeignKey(onboarding, on_delete=models.CASCADE)
@@ -71,6 +79,5 @@ class newhire_targets(models.Model):
     target_id = models.IntegerField()
     target = models.CharField(max_length=150)
     status = models.BooleanField(default=False)
-
 
 

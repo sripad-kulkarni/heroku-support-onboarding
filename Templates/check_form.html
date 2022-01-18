@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
-<body>
-	<div class="container-md">
+{% load static %}
+<body >
+	<div class="container-md" style="background-image: url({% static 'overview.png' %}); background-size: 50%; background-repeat:no-repeat; background-position: center;">
 		<div class="">
 			<div class="col-md-8">
 				<h4>
@@ -29,7 +30,7 @@
 					<div class="row home-bg" style="max-height: 300px;">
 						<div class="col">
 							<h6 style="margin-bottom: 10px;">Week wise progress</h6>
-							<table class="table table-borderless table-responsive">
+							<table class="table table-borderless table-responsive" >
 								<tbody>
 									{% if nh_week %}
 									{% for nh_week in nh_week %}

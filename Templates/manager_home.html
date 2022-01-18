@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
+{% load static %}
 
 	<div class="container-md home-content">
-		{% load static %}
 		<div class="row">
 			<div class="col">
-				<img src="{% static '/fake-sf.png' %}" style="max-height: 100px;" alt="My image"/>
+				<img class="salesforce" src="{% static 'sf_heroku.png' %}" style="max-height: 160px; filter: drop-shadow(0 0.1rem 0.1rem rgba(0, 0, 0, 0.2)); " alt="My image"/>
 				<blockquote class="blockquote">
 					<p class="h5 welcome-font text-muted"><strong>Welcome Back, {{ user.profile.firstname }}!</strong></p>		
 				</blockquote>
@@ -21,7 +21,8 @@
 			<div class="col-md-8">
 				<h4>
 					Onboarding 
-				  	<small class="text-muted">Live</small>
+				  	<small class="text-muted">Live&nbsp;</small>
+				  	<img src="{% static '/green_led_2.png' %}" style="max-height: 10px;" alt="My image"/>
 				</h4>
 			</div>
 		</div>
@@ -37,7 +38,7 @@
 						    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-targets" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">New Hire Targets</button>
 					    </div>
 					</nav>
-					<div class="tab-content" id="nav-tabContent">
+					<div class="tab-content" id="nav-tabContent" >
 
 						<div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
 							<br>
@@ -48,45 +49,47 @@
 							    	{% if u.username == onb.newhire %}
 							    	{% if not onb.active %}
 							        <div class="col">
-							        	<div class="p-3 border bg-light">
-								      		<h5>{{u.profile.firstname}} {{u.profile.lastname}}</h5><hr>
+							        	<div class="p-3 border bg-card" style="background-image: url({% static 'startup.png' %}); background-size: 100%;">
 
-								   <table class="table table-borderless table-sm table-responsive">
-								   	<tbody>
-								   		<tr>
-								   			<td><b>Trail Guide</b></td>
-								   			{% for usr in usr %}
-								   			{% if usr.username == onb.trailguide %}
-								   			<td>{{usr.profile.firstname}} {{ usr.profile.lastname }}</td>
-								   			{% endif %}
-								   			{% endfor %}
-								   		</tr>
-								   		<tr>
-								   			<td><b>Onboarding Buddy</b></td>
-								   			{% for usr in usr %}
-								   			{% if usr.username == onb.onboardingbuddy %}
-								   			<td>{{usr.profile.firstname}} {{ usr.profile.lastname }}</td>
-								   			{% endif %}
-								   			{% endfor %}
-								   		</tr>
-								   		<tr>
-								   			<td><b>Manager</b></td>
-								   			{% for usr in usr %}
-								   			{% if usr.username == onb.the_manager %}	
-								   			<td>{{usr.profile.firstname}} {{ usr.profile.lastname }}</td>
-								   			{% endif %}
-								   			{% endfor %}
-								   		</tr>
-								   		<tr>
-								   			<td><b>Onboarding Start</b></td>
-								   			<td>{{u.profile.startdate}}</td>
-								   		</tr>
-								   		<tr>
-								   			<td><b>Onboarding End</b></td>
-								   			<td>{{u.profile.enddate}}</td>
-								   		</tr>
-								   	</tbody>
-								   </table>
+								      	   <h5>{{u.profile.firstname}} {{u.profile.lastname}}</h5><hr>
+										   <table class="table table-borderless table-sm table-responsive">
+										   	<tbody>
+										   		<tr>
+										   			<td><b>Trail Guide</b></td>
+										   			{% for usr in usr %}
+										   			{% if usr.username == onb.trailguide %}
+										   			<td>{{usr.profile.firstname}} {{ usr.profile.lastname }}</td>
+										   			{% endif %}
+										   			{% endfor %}
+										   		</tr>
+										   		<tr>
+										   			<td><b>Onboarding Buddy</b></td>
+										   			{% for usr in usr %}
+										   			{% if usr.username == onb.onboardingbuddy %}
+										   			<td>{{usr.profile.firstname}} {{ usr.profile.lastname }}</td>
+										   			{% endif %}
+										   			{% endfor %}
+										   		</tr>
+										   		<tr>
+										   			<td><b>Manager</b></td>
+										   			{% for usr in usr %}
+										   			{% if usr.username == onb.the_manager %}	
+										   			<td>{{usr.profile.firstname}} {{ usr.profile.lastname }}</td>
+										   			{% endif %}
+										   			{% endfor %}
+										   		</tr>
+										   		<tr>
+										   			<td><b>Onboarding Start</b></td>
+										   			<td>{{u.profile.startdate}}</td>
+										   		</tr>
+										   		<tr>
+										   			<td><b>Onboarding End</b></td>
+										   			<td>{{u.profile.enddate}}</td>
+										   		</tr>
+										   	</tbody>
+										   </table>
+										   <center><button class="btn btn-outline-success">Finish Onboarding</button></center>
+
 							    		</div>
 							    	</div>
 							    	{% endif %}
@@ -97,10 +100,10 @@
 							</div>
 							<br>
 					  	</div>
-						<div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+						<div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" >
 							<br>
 							<form id="check_form">
-							<div class="container" style="max-width: 70%;">
+							<div class="container" style="max-width: 70%;" style="background-image: url({% static 'overview.png' %}); background-size: 50%; background-repeat:no-repeat; background-position: center;">
 								<div class="input-group">
 									<select class="form-select" id="newhire">
 								    <option  value="" selected disabled hidden>Choose...</option>
@@ -125,7 +128,7 @@
 						<div class="tab-pane fade" id="nav-accesses" role="tabpanel" aria-labelledby="nav-profile-tab">
 							<br>
 							<form id="check_accesses">
-							<div class="container" style="max-width: 70%;">
+							<div class="container" style="max-width: 70%;" style="background-image: url({% static 'overview.png' %}); background-size: 50%; background-repeat:no-repeat; background-position: center;">
 								<div class="input-group">
 									<select class="form-select" id="newhire_accesses">
 								    <option  value="" selected disabled hidden>Choose...</option>
@@ -150,7 +153,7 @@
 						<div class="tab-pane fade" id="nav-weeks" role="tabpanel" aria-labelledby="nav-profile-tab">
 							<br>
 							<form id="check_weeks">
-							<div class="container" style="max-width: 70%;">
+							<div class="container" style="max-width: 70%;" style="background-image: url({% static 'overview.png' %}); background-size: 50%; background-repeat:no-repeat; background-position: center;">
 								<div class="input-group">
 									<select class="form-select" id="newhire_weeks">
 								    <option  value="" selected disabled hidden>Choose...</option>
@@ -175,7 +178,7 @@
 						<div class="tab-pane fade" id="nav-targets" role="tabpanel" aria-labelledby="nav-profile-tab">
 							<br>
 							<form id="check_targets">
-							<div class="container" style="max-width: 70%;">
+							<div class="container" style="max-width: 70%;" style="background-image: url({% static 'overview.png' %}); background-size: 50%; background-repeat:no-repeat; background-position: center;">
 								<div class="input-group">
 									<select class="form-select" id="newhire_targets">
 								    <option  value="" selected disabled hidden>Choose...</option>
@@ -289,5 +292,4 @@
 		};
 		
 	</script>
-
 {% endblock %}

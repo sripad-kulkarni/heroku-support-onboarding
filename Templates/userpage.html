@@ -145,10 +145,10 @@
 						<h6>Current assignments</h6>
 					</div>
 					{% if onb %}
-					<div class="col" id="edit" style="text-align: right; display: block;">
+					<div class="col edit" style="text-align: right; display: block;">
 						<button type="button" class="btn-close me-2 m-auto fas fa-tools" aria-label="Close" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Refactor" ></button>
 					</div>
-					<div id="cancel" class="col" style="text-align: right; display: none;">
+					<div class="cancel col" style="text-align: right; display: none;">
 						<button type="button" class="btn-close me-2 m-auto" aria-label="Close" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Cancel"></button>
 					</div>
 					{% endif %}
@@ -189,7 +189,7 @@
 						<td>{{usr.profile.firstname}} {{ usr.profile.lastname }}</td>
 						{% endif %}
 						{% endfor %}
-						<td id="del_row" style="display: none;"><div id="del_onb">
+						<td class="del_row" style="display: none;"><div class="del_onb">
 							<button type="button" class="btn-close me-2 m-auto" aria-label="Close" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Cancel"></button></div>
 						</td>
 					</tr>
@@ -258,16 +258,16 @@
 			});
 		});
 
-		$("#edit").on("click", function() {
+		$(".edit").on("click", function() {
 			this.style.display = 'none';
-			document.getElementById("cancel").style.display = 'block';
-			document.getElementById("del_row").style.display = 'block';
+			$(".cancel").css('display', 'block');
+			$(".del_row").css('display', 'block');
 		});
 
-		$("#cancel").on("click", function() {
+		$(".cancel").on("click", function() {
 			this.style.display = 'none';
-			document.getElementById("edit").style.display = 'block';
-			document.getElementById("del_row").style.display = 'none';
+			$(".edit").css('display', 'block');
+			$(".del_row").css('display', 'none');
 
 		});
 

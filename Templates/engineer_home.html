@@ -22,6 +22,7 @@
 				<h4>
 					Onboarding 
 				  	<small class="text-muted">Live</small>
+				  	<div class="led green"></div>
 				</h4>
 			</div>
 		</div>
@@ -287,23 +288,7 @@
 				}
 			});
 		};
-
-		$('#back_week').on('submit', function(e) {
-			e.preventDefault();
-
-			$.ajax({
-				type: 'POST',
-				url: 'check_weeks/',
-				data: {
-					name: $('#newhire_weeks').val(),
-					csrfmiddlewaretoken: '{{ csrf_token }}',
-				},
-				success: function(data) {
-					$('#nh_weeks').html(data);
-				}
-			})
-		});
-
+		
 	</script>
 
 {% endblock %}

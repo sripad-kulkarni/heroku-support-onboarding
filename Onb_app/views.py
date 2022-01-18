@@ -1,13 +1,16 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound, JsonResponse
+import json as simplejson
 from .forms import UserRegisterForm
 from django.contrib import messages
 from .models import *
 from django.contrib.auth.models import User
 import datetime
 from django.db.models import Q
+from django.core import serializers
+
 
 # Create your views here.
 
@@ -447,3 +450,53 @@ def check_content(request):
 		week = newhire_weeks.objects.get(onboarding=onb, weekid=id)
 		c = newhire_content.objects.filter(newhire_weeks=week).order_by('task_id')
 		return render(request, 'eng_content_check.html', {'week_no':id, 'content':c, 'week':week})
+
+
+def access_req(request):
+	tabs = access_section.objects.all()
+	return render(request, 'access_req.html', {'tabs': tabs})
+
+
+def access_tab(request):
+	if request.user.profile.role=="MANAGER" or request.user.is_superuser:
+		if request.method == 'POST':
+			tab_id = request.POST['tab_id']
+			name= request.POST['name']
+			access_section.objects.create(s_id=tab_id, name=name)
+			return HttpResponse('')
+
+
+def del_tab(request):
+	if request.user.profile.role=="MANAGER" or request.user.is_superuser:
+		if request.method == 'POST':
+			name = request.POST['name']
+			print(name)
+			access_section.objects.get(name=name).delete()
+			return HttpResponse('')
+
+def add_item(request):
+	if request.user.profile.role=="MANAGER" or request.user.is_superuser:
+		if request.method == 'POST':
+			section = request.POST['section']
+			item_id = request.POST['item_id']
+			name = request.POST['name']
+			s = access_section.objects.get(name=section)
+			access_item.objects.create(access_section=s, item_id=item_id, name=name) 
+			return HttpResponse('')
+
+def get_items(request):
+	name = request.GET['name']
+	section = access_section.objects.get(name=name)
+	items = access_item.objects.filter(access_section=section)
+	data = list(items.values())
+	return JsonResponse(data, safe=False)
+
+
+def del_item(request):
+	if request.user.profile.role=="MANAGER" or request.user.is_superuser:
+		if request.method == 'POST':
+			section = request.POST['section']
+			name = request.POST['name']
+			s = access_section.objects.get(name=section)
+			access_item.objects.get(access_section = s, name = name).delete()
+			return HttpResponse('')

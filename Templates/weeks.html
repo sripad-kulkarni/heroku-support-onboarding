@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-	
+	{% load static %}
 <style type="text/css">
 	.week_t tr td:nth-child(3), tr th:nth-child(3), td:nth-child(4), tr th:nth-child(4) {
 		text-align: center;
@@ -28,7 +28,7 @@
 				{% endif %}
 			</div>
 
-			<table class="table table-hover table-responsive week_t">
+			<table class="table table-hover table-responsive week_t" >
 				<thead class="thead">
 					<tr>
 						<th scope="col">Week #</th>

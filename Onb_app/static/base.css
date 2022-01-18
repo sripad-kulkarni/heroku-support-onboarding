@@ -1,4 +1,5 @@
 body {
+	/*background-color: #00061c;*/
 	background-color: #a6bac6;
 	background-image: linear-gradient(0deg, #A7BBC7 5%, #f6fafb 50%);
 	font-family: 'Roboto', sans-serif;
@@ -45,10 +46,15 @@ body {
 
 .bg-light {
 	border-radius: 10px;
-	background-color: rgba(236, 240, 243, 0.6)!important;
-	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1), 0 0px 0px 0 rgba(0, 0, 0, 0.1);
+	background-color: rgba(236, 240, 243, 0.9)!important;
+	box-shadow: 0 6px 12px 0 rgba(0, 0, 0, 0.1), 0 0px 0px 0 rgba(0, 0, 0, 0.1);
 }
 
+.bg-card {
+	border-radius: 10px;
+	background-color: rgba(4,161,224, 0.1)!important;
+	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1), 0 0px 0px 0 rgba(0, 0, 0, 0.1);
+}
 
 .login-input{
 	width: clamp(6rem, 12rem, 15rem);
@@ -93,6 +99,7 @@ body {
 h1 {
   font-size: 3.0vmax;
 }
+
 
 .register {
 	min-width: 20px;
@@ -185,6 +192,7 @@ h1 {
 	overflow: auto;
 	padding: 10px;
 	min-width: 30px;
+	
 }
 
 tr:hover {
@@ -430,3 +438,36 @@ th {
     position:absolute;
     left: 50%;
 }
+
+.led {
+		margin: 1.5px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.25);
+    box-shadow: #000 0 -1px 6px 1px;
+}
+.led-red {
+    background-color: #F00;
+    box-shadow: #000 0 -1px 6px 1px, inset #600 0 -1px 8px, #F00 0 3px 11px;
+}
+.led-orange {
+    background-color: #FF7000;
+    box-shadow: #000 0 -1px 6px 1px, inset #630 0 -1px 8px, #FF7000 0 3px 11px;
+}
+
+.led-yellow {
+    background-color: #FF0;
+    box-shadow: #000 0 -1px 6px 1px, inset #660 0 -1px 8px, #FF0 0 3px 11px;
+}
+
+.led-green {
+    background-color: #80FF00;
+    box-shadow: #000 0 0px 4px 0.2px, inset #460 0 -1px 8px, #80FF00 0 3px 11px;
+}
+
+.led-blue {
+    background-color: #06F;
+    box-shadow: #000 0 -1px 6px 1px, inset #006 0 -1px 8px, #06F 0 3px 11px;
+}
+

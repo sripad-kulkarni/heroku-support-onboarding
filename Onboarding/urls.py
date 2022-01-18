@@ -49,5 +49,11 @@ urlpatterns = [
     path('home/check_weeks/', views.check_weeks),
     path('home/check_targets/', views.check_targets),
     path('home/check_content/', views.check_content),
+    path('access_req/', views.access_req),
+    path('access_req/access_tab/', views.access_tab),
+    path('access_req/del_tab/', views.del_tab),
+    path('access_req/get_items/', views.get_items),
+    path('access_req/add_item/', views.add_item),
+    path('access_req/del_item/', views.del_item),
 ]
 '''path('weeks/week_check/', views.week_check),'''

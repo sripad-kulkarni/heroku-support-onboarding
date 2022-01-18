@@ -1,0 +1,241 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<div class="container-md reg_page">
+		<nav>
+		  <div class="nav nav-tabs" id="nav-tab" role="tablist">
+		    <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">&nbsp; <label>Start Here</label> &nbsp;<i class="fab fa-get-pocket"></i></button>
+		    {% if user.profile.role == "MANAGER" or user.is_superuser %}
+		    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">+</button>
+			{% endif %}
+		  </div>
+		</nav>
+		<div class="tab-content" id="nav-tabContent">
+
+		  	<div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+		  		...
+		  		{% if not tabs %}
+		  		<hr>
+		  	    <div class="container-md">
+		  	    	<center><h5>Nothing here yet!</h5></center>
+		  	    </div>
+		  	    <hr>
+		  		{% endif %}
+			</div>
+		    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+		  		<br>
+		  	 	<div class="container-md mb-3">
+				  	<form id="access_tab" method="POST">
+			  		  	<h5 for="formGroupExampleInput" class="form-label">Add Access Section</h5>
+			  		  	<div class="input-group mb-3">
+	    	  		  		<input type="number" id='tab_id' class="form-control" id="formGroupExampleInput" placeholder="Id" style="max-width: 10%">
+				  			<input type="text" id='tab_name' class="form-control" id="formGroupExampleInput" placeholder="Name">
+				  			<input type="submit" class="btn btn-outline-secondary" value="Add" style="width: 20%;">
+				  		</div>
+			  		  <br>
+			  		</form>
+			  		{% if tabs %}
+
+				  	<h5 for="formGroupExampleInput" class="form-label">Delete Access Section</h5>
+			  		<form id='del_tab'>
+		  				<div class="input-group">
+		  					<select class="form-select" id="tab_del">
+		  				    <option  value="" selected disabled hidden>Choose...</option>
+		  				    {% for tab in tabs %}
+		  				    <option value="{{tab.name}}">{{tab.name}}</option>
+		  				    {% endfor %}
+		  				    </select>
+		  				    <input type="submit" class="btn btn-outline-secondary" value="Delete" style="width: 20%;">
+		  			   </div>
+			  		</form>
+		  		</div>
+			  	<br>
+			  	<div class="container-md mb-3">
+				  	<form id="add_access_item" method="POST">
+			  		  	<h5 for="formGroupExampleInput" class="form-label">Add Item</h5>
+			  		  	<div class="input-group mb-3">
+		  		  			<select class="form-select" id="item_section_add">
+		  		  		    <option  value="" selected disabled hidden>Choose...</option>
+		  		  		    {% for tab in tabs %}
+		  		  		    <option value="{{tab.name}}">{{tab.name}}</option>
+		  		  		    {% endfor %}
+		  		  		    </select>
+	    	  		  		<input type="number" id='item_id' class="form-control" id="formGroupExampleInput" placeholder="Id" style="max-width: 10%">
+				  			<input type="text" id='item_name' class="form-control" id="formGroupExampleInput" placeholder="Name">
+				  			<input type="submit" class="btn btn-outline-secondary" value="Add" style="width: 20%;">
+				  		</div>
+			  		  <br>
+			  		</form>
+				  	<h5 for="formGroupExampleInput" class="form-label">Delete Item</h5>
+			  		<form id='del_access_item'>
+		  				<div class="input-group">
+		  					<select class="form-select" id="item_section_del">
+		  				    <option  value="" selected disabled hidden>Choose...</option>
+		  				    {% for tab in tabs %}
+		  				    <option value="{{tab.name}}">{{tab.name}}</option>
+		  				    {% endfor %}
+		  				    </select>
+	  				    	<select class="form-select" id="item_del">
+	  				        <option  value="" selected disabled hidden>Choose...</option>
+	  				        </select>
+		  				    <input type="submit" class="btn btn-outline-secondary" value="Delete" style="width: 20%;">
+		  			   </div>
+			  		</form>
+					{% endif %}
+				</div>
+		    </div>
+		</div>
+	</div>
+	<div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center w-100">
+	    <div class="toast border-0 position-absolute top-0 toast-bg" data-bs-delay="1500" role="alert" aria-live="assertive" aria-atomic="true" style="opacity: 1 !important;">
+		    <div class="d-flex">
+			    <div class="toast-body">
+			      
+			    </div>
+		    	<button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+		    </div>
+	    </div>
+	</div>
+	<script type="text/javascript">
+		
+		$(document).ready(function function_name() {
+			$('#access_tab').submit(function(e) {
+				e.preventDefault();
+
+				$.ajax({
+					type: 'POST',
+					url: 'access_tab/',
+					data: {
+						name: $('#tab_name').val(),
+						tab_id: $('#tab_id').val(),
+						csrfmiddlewaretoken: '{{ csrf_token }}',
+					},
+					success: function() {
+						$('.modal').find('form').trigger('reset');
+						$('.modal').modal('hide');
+						$('div.toast-body').text('Tab added successfully!');
+						var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+						var toastList = toastElList.map(function (toastEl) {
+							return new bootstrap.Toast(toastEl)
+						});
+						toastList.forEach(toast => toast.show());
+						setTimeout(function() {window.location.reload()}, 900);
+					},
+					error: function() {
+						alert('Adding tab failed!')
+					}
+				})
+			});
+
+			$('#del_tab').submit(function(e) {
+				e.preventDefault();
+
+				$.ajax({
+					type: 'POST',
+					url: 'del_tab/',
+					data: {
+						name: $('#tab_del').val(),
+						csrfmiddlewaretoken: '{{ csrf_token }}',
+					},
+					success: function() {
+						$('.modal').find('form').trigger('reset');
+						$('.modal').modal('hide');
+						$('div.toast-body').text('Tab deleted successfully!');
+						var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+						var toastList = toastElList.map(function (toastEl) {
+							return new bootstrap.Toast(toastEl)
+						});
+						toastList.forEach(toast => toast.show());
+						setTimeout(function() {window.location.reload()}, 900);
+					},
+					error: function() {
+						alert('Delete tab failed!')
+					}
+				})
+			});
+
+			$('#add_access_item').submit(function(e) {
+				e.preventDefault();
+
+				$.ajax({
+					type:'POST',
+					url: 'add_item/',
+					data: {
+						section: $('#item_section_add').val(),
+						item_id: $('#item_id').val(),
+						name: $('#item_name').val(),
+						csrfmiddlewaretoken: '{{ csrf_token }}',
+					},
+					success: function() {
+						$('.modal').find('form').trigger('reset');
+						$('.modal').modal('hide');
+						$('div.toast-body').text('Added Item successfully!');
+						var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+						var toastList = toastElList.map(function (toastEl) {
+							return new bootstrap.Toast(toastEl)
+						});
+						toastList.forEach(toast => toast.show());
+						setTimeout(function() {window.location.reload()}, 900);
+					},
+					error: function() {
+						alert('Adding Item failed!')
+					}
+				})
+
+			});
+
+			$('#del_access_item').submit(function(e) {
+				e.preventDefault();
+
+				$.ajax({
+					type:'POST',
+					url: 'del_item/',
+					data: {
+						section: $('#item_section_del').val(),
+						name: $('#item_del').val(),
+						csrfmiddlewaretoken: '{{ csrf_token }}',
+					},
+					success: function() {
+						$('.modal').find('form').trigger('reset');
+						$('.modal').modal('hide');
+						$('div.toast-body').text('Deleted Item successfully!');
+						var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+						var toastList = toastElList.map(function (toastEl) {
+							return new bootstrap.Toast(toastEl)
+						});
+						toastList.forEach(toast => toast.show());
+						setTimeout(function() {window.location.reload()}, 900);
+					},
+					error: function() {
+						alert('Deleting Item failed!')
+					}
+				})
+
+			});
+
+			$('#item_section_del').change(function(e) {
+				e.preventDefault();
+				var optionSelected = $(this).find("option:selected");
+				var valueSelected  = optionSelected.val();
+				var section_name   = optionSelected.text();
+				$.ajax({
+					url: 'get_items/',
+					data: {
+						name: section_name,
+					},
+					success: function(result) {
+						console.log(result[0]);
+						$("#item_del option").remove();
+						if (result.length != 0) {
+							for (var i = 0; i <= result.length - 1; i++) {
+							    $("#item_del").append('<option>'+ result[i].name +'</option>');
+							};
+						}
+					}
+				});
+			})
+		})
+	</script>
+
+
+{% endblock %}
