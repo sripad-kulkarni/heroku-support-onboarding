@@ -55,5 +55,6 @@ urlpatterns = [
     path('access_req/get_items/', views.get_items),
     path('access_req/add_item/', views.add_item),
     path('access_req/del_item/', views.del_item),
+    path('access_req/access_req_update/', views.access_req_update),
 ]
 '''path('weeks/week_check/', views.week_check),'''

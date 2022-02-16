@@ -1,7 +1,12 @@
-{% extends 'base.html' %}
-
-{% block content %}
-	<div class="container-md reg_page">
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+</head>
+<body>
+<div class="container-md reg_page">
 		<nav>
 		  <div class="nav nav-tabs" id="nav-tab" role="tablist">
 		    <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">&nbsp; <label>Start Here</label> &nbsp;<i class="fab fa-get-pocket"></i></button>
@@ -20,7 +25,6 @@
 			    Pending Approval
 			  </div>
 			</div>
-
 		  	<div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
 		  		<br>
 		  		{% if not tabs %}
@@ -41,24 +45,22 @@
 		  		    <div id="panelsStayOpen-{{ tab.name }}" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
 		  		      <div class="accordion-body">
 		  		        
-		  		      	<table class="table table-sm table-responsive table-hover" style="vertical-align: middle; margin-bottom: 0px;">
+		  		      	<table class="table table-sm table-responsive table-hover">
 		  		      	  <tbody>
 		  		  			{% for item in items %}
 		  		  			{% if item.access_section.name == tab.name %}
 		  		      	    <tr>
 	  		      	          <td>{{ item.name }}</td>
-	  		      	          <td class="col-sm-2">
-	  		      	          	<select class="form-select form-select-sm" aria-label="Default select example">
-	  		      	          		<option value="" selected disabled hidden>{{ item.status }}</option>
-	  		      	          	  	<option value="1">Requested</option>
-	  		      	          	  	<option value="2">Approved</option>
-	  		      	          	</select>
+	  		      	          <td>
+
 	  		      	          </td>
+	  		      	          <td>@mdo</td>
 	  		      	        </tr>
 	  		      	        {% endif %}
 	  		      	  		{% endfor %}
 		  		      	    </tbody>
 		  		      	</table>
+
 		  		      </div>
 		  		    </div>
 		  		  </div>
@@ -129,7 +131,6 @@
 				</div>
 		    </div>
 		</div>
-
 	</div>
 	<div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center w-100">
 	    <div class="toast border-0 position-absolute top-0 toast-bg" data-bs-delay="1500" role="alert" aria-live="assertive" aria-atomic="true" style="opacity: 1 !important;">
@@ -279,39 +280,8 @@
 					}
 				});
 			})
-
-			$(".form-select").on("change", function(e) {
-
-				e.preventDefault();
-				var row = $(this).closest("tr");
-				console.log(row.find("td:eq(1) option:selected").text());
-
-				$.ajax({
-					type:'POST',
-					url:'access_req_update/',
-					data: {
-						week_no: $("#week_no").text(),
-						name: row.find("td:eq(0)").text(),
-						value: row.find("td:eq(1) option:selected").text(),
-						csrfmiddlewaretoken: '{{ csrf_token }}',
-					},
-					success: function(){
-						$('div.toast-body').text('Progress updated!');
-						var toastElList = [].slice.call(document.querySelectorAll('.toast'))
-						var toastList = toastElList.map(function (toastEl) {
-						return new bootstrap.Toast(toastEl)
-						});
-						toastList.forEach(toast => toast.show());
-						setTimeout(function() {window.location.reload()}, 900);
-					}
-				});
-			});
-
 		})
 
-
-
 	</script>
-
-
-{% endblock %}
+</body>
+</html>

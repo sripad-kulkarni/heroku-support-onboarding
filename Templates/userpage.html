@@ -3,9 +3,9 @@
 {% block content %}
 
 	<div class="container-md reg_page"  id="assignments">
-		<div class="row border" style="padding: 10px; max-height: 250px;">
+		<div class="row border" style="padding: 10px; max-height: 350px;">
 
-			<div class="col border border border-dark user_table">
+			<div class="col border border border-dark user_table" style="max-height: 330px; overflow: auto;">
 				<h5>Support Engineers</h5>
 				<table class="table table-sm table-hover table-responsive">
 					<thead class="thead">
@@ -31,7 +31,7 @@
 				</table>
 			</div>
 
-			<div class="col border border border-dark user_table">
+			<div class="col border border border-dark user_table" style="max-height: 330px; overflow: auto;">
 				<h5>New Hires</h5>
 				<table class="table table-sm table-hover table-responsive">
 					<thead class="thead">
@@ -57,7 +57,7 @@
 				</table>
 			</div>
 
-			<div class="col border border border-dark user_table">
+			<div class="col border border border-dark user_table" style="max-height: 330px; overflow: auto;">
 				<h5>Managers</h5>
 				<table class="table table-sm table-hover table-responsive">
 					<thead class="thead">
@@ -271,7 +271,7 @@
 
 		});
 
-		$(document).on('click','#del_onb', function(e) {
+		$(document).on('click','.del_onb', function(e) {
 			e.preventDefault();
 			var currentRow = $(this).closest('tr'); 
 			var	col1=currentRow.find("td:eq(0)").text();

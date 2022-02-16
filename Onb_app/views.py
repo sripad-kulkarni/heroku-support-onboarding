@@ -200,6 +200,12 @@ def onb_assign(request):
 				target = targets.objects.all()
 				for t in target:
 					newhire_targets.objects.create(onboarding=onb, target_id=t.target_id, target=t.target)
+				access = access_section.objects.all()
+				for a in access:
+					acc = newhire_access_section.objects.create(onboarding=onb, s_id=a.s_id, name=a.name)
+					item = access_item.objects.filter(access_section=a)
+					for i in item:
+						newhire_access_item.objects.create(newhire_access_section=acc, item_id=i.item_id, name=i.name)
 				return HttpResponse('')
 			else:
 				HttpResponseNotFound('')
@@ -420,6 +426,18 @@ def check_form(request):
 	return render(request, 'check_form.html', {'title': 'Onboarding Home', 'prof':prof, 'onb':onb, 'usr':usr, 'nh_week':nh_week, 'nh_targets':nh_targets, 'nh_t_progress':nh_t_progress})
 
 
+def check_accesses(request):
+	if request.method=='POST':
+		name = request.POST['name']
+		try:
+			onb = onboarding.objects.get(newhire=name)
+			access = newhire_access_section.objects.filter(onboarding=onb).order_by('s_id')
+			items = newhire_access_item.objects.filter(newhire_access_section=access).order_by('item_id')
+			return render(request, 'eng_access_req.html', {'tabs':access, 'items':items})
+		except:
+			return render(request, 'eng_access_req.html', {'tabs':None, 'items':None})			
+
+
 def check_weeks(request):
 	if request.method == 'POST':
 		name=request.POST['name']
@@ -453,9 +471,14 @@ def check_content(request):
 
 
 def access_req(request):
-	tabs = access_section.objects.all()
-	return render(request, 'access_req.html', {'tabs': tabs})
-
+	if request.user.profile.role=="MANAGER" or request.user.is_superuser:
+		tabs = access_section.objects.all()
+		items = access_item.objects.all()
+		return render(request, 'access_req.html', {'tabs': tabs, 'items': items})
+	else:
+		tabs = newhire_access_section.objects.filter(onboarding__newhire=request.user.username)
+		items = access_item.objects.all()
+		return render(request, 'access_req.html', {'tabs': tabs, 'items': items})
 
 def access_tab(request):
 	if request.user.profile.role=="MANAGER" or request.user.is_superuser:
@@ -500,3 +523,11 @@ def del_item(request):
 			s = access_section.objects.get(name=section)
 			access_item.objects.get(access_section = s, name = name).delete()
 			return HttpResponse('')
+
+def access_req_update(request):
+	if request.method == 'POST':
+		name = request.POST['name']
+		value = request.POST['value']
+		item = newhire_access_item.objects.get(newhire_access_section__onboarding__newhire = request.user.username, name=name)
+		item.status = value
+		return HttpResponse()

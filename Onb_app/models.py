@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .choices import ROLES
+from .choices import ROLES, ACCESS_STATUS
 import datetime
 
 # Create your models here.
@@ -60,7 +60,7 @@ class newhire_access_item(models.Model):
     newhire_access_section = models.ForeignKey(newhire_access_section, on_delete=models.CASCADE)
     item_id = models.IntegerField()
     name = models.TextField()
-    status = models.BooleanField(default=False)
+    status = models.CharField(max_length=15, default = 'NOT YET REQUESTED')
 
 class newhire_weeks(models.Model):
     onboarding = models.ForeignKey(onboarding, on_delete=models.CASCADE)
