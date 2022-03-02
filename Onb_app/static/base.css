@@ -1,7 +1,7 @@
 body {
 	/*background-color: #00061c;*/
 	background-color: #a6bac6;
-	background-image: linear-gradient(0deg, #A7BBC7 5%, #eef4ff 50%);
+	background-image: linear-gradient(0deg, #cee0f7 5%, #eef4ff 50%);
 
 	font-family: 'Roboto', sans-serif;
 	height: 100%;
@@ -12,10 +12,114 @@ body {
 	animation-fill-mode: forwards;
 }
 
+.slds-brand-band{
+  display:-webkit-box;
+  display:-ms-flexbox;
+  display:flex;
+  -webkit-box-orient:vertical;
+  -webkit-box-direction:normal;
+      -ms-flex-direction:column;
+          flex-direction:column;
+  position:relative;
+  height:100%;
+  width:100%;
+}
+.slds-brand-band:before{
+  content:"";
+  display:block;
+  position:absolute;
+  z-index:-1;
+  top:0;
+  right:0;
+  bottom:0;
+  left:0;
+  background-image:url("/static/assets/images/themes/oneSalesforce/banner-brand-default.png"), -webkit-gradient(linear, left bottom, left top, color-stop(0, rgba(1, 68, 134, 0)), to(#014486));
+  background-image:url("/static/assets/images/themes/oneSalesforce/banner-brand-default.png"), linear-gradient(to top, rgba(1, 68, 134, 0) 0, #014486);
+  background-repeat:repeat-x;
+  background-position:top left;
+}
+.slds-brand-band:after{
+  content:none;
+  display:block;
+  position:absolute;
+  z-index:-1;
+  left:0;
+  right:0;
+  top:0;
+  width:100%;
+  height:3.125rem;
+  background-image:-webkit-gradient(linear, left top, left bottom, color-stop(60%, rgba(176, 196, 223, 0)), to(#eef4ff));
+  background-image:linear-gradient(to bottom, rgba(176, 196, 223, 0) 60%, #eef4ff);
+}
+.slds-brand-band.slds-brand-band_cover:before{
+  background-repeat:no-repeat;
+  background-size:cover;
+}
+.slds-brand-band.slds-brand-band_small:before{
+  height:6rem;
+}
+.slds-brand-band.slds-brand-band_small:after{
+  content:"";
+  top:2.875rem;
+}
+.slds-brand-band.slds-brand-band_medium:before{
+  height:12.5rem;
+}
+.slds-brand-band.slds-brand-band_medium:after{
+  content:"";
+  top:9.375rem;
+}
+.slds-brand-band.slds-brand-band_large:before{
+  height:18.75rem;
+}
+.slds-brand-band.slds-brand-band_large:after{
+  content:"";
+  top:15.625rem;
+}
+.slds-brand-band.slds-brand-band_full:before{
+  height:100%;
+}
+.slds-brand-band.slds-brand-band_bottom:before{
+  background-position:bottom;
+  top:initial;
+}
+.slds-brand-band.slds-brand-band_none:before{
+  height:0;
+}
+.slds-brand-band.slds-brand-band_group:before{
+  background-image:url("/static/assets/images/themes/oneSalesforce/banner-group-public-default.png");
+}
+.slds-brand-band.slds-brand-band_user:before{
+  background-image:url("/static/assets/images/themes/oneSalesforce/banner-user-default.png");
+}
+.slds-brand-band .slds-brand-band_blank{
+  background:white;
+}
+.slds-brand-band .slds-brand-band_blank:before, .slds-brand-band .slds-brand-band_blank:after{
+  background:none;
+}
+
+.slds-template__container{
+  position:relative;
+  height:100%;
+  width:100%;
+}
+
+.slds-template_default{
+  padding:0.75rem;
+}
+.slds-template_default.slds-brand-band:before{
+  position:fixed;
+  top:5.625rem;
+}
+.slds-template_default.slds-brand-band.slds-brand-band_medium:after{
+  position:fixed;
+  top:15rem;
+}
 .base-bg-grass {
   height: 100%;
   width: 100%;
-  bottom: -100;
+  bottom: -10;
   position: absolute;
   background-image:url("/static/recipe-header-hill.png");
   background-repeat: no-repeat;
@@ -54,10 +158,6 @@ body {
 	border-radius: 20px;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 	text-shadow: 3px 3px 3px 3px #aaaaaa;
-	position: fixed;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
 	width: 40%;
 	min-width: fit-content;
 	min-height: fit-content;
@@ -100,10 +200,9 @@ body {
 }
 
 .title {
-	padding: 5%;
+	padding: 1%;
 	vertical-align: center;
 	text-align: center;
-	position: relative;
 }
 
 .home-content {

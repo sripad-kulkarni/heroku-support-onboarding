@@ -11,46 +11,46 @@
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 	<link rel="stylesheet" type="text/css" href="{% static '/base.css' %}">
+
 </head>
 
 <body>
-
-	<div class="title">
-		
-		<img src="{% static '/sf_heroku.png' %}" style="max-height: 100px;" alt="My image"/>
-		<br>
-
-		<h6 class="text-muted">Onboarding Engineers</h6>
-		<small class="text-muted">(Customer Support - Frontline)</small>
-	</div>
-
-	<div class="container-md login">
-		<br>
-		<h2>Login</h2>
-		<br>
-		<form method="POST" action="/authenticate/">
-			{% csrf_token %}
-			<input type="text" type="text" class="form-control login-input" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" name="username" autofocus>
-			<br>
-			<input type="password" class="form-control login-input" id="inputPassword2" placeholder="Password" name="password">
-			<br>
-			<input type="submit" class="btn btn-outline-dark" name="submit">
-		</form>
-		<center>
-		<div class="container-md">
-			<br>
-			{% if messages %}
-				{% for message in messages %}
-				<div class="alert alert-danger alert-dismissible fade show" role="alert">
-			  		<strong>{{ message }}</strong>
-			  		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-				</div>
-				{% endfor %}
-			{% endif %}
-			<br>
+	<img src="/static/assets/images/themes/classic/banner-user-default.png" style="width: 100%; top: 0;  z-index: -1;">
+	<center>
+	<div class="col container-md" style="transform: scale(1.0);">
+		<div class="row title">
+			<img src="{% static '/sf_heroku.png' %}" style=" width: 25%; margin-left: auto; margin-right: auto; display: block;" alt="My image"/>
+			<h5 class="text-muted">Onboarding Engineers</h5>
 		</div>
-		</center>
+		<div class="row login">
+			<h2 style="margin-top: 20px; margin-bottom: 20px;">Login</h2>
+			<form method="POST" action="/authenticate/">
+				{% csrf_token %}
+				<input type="text" type="text" class="form-control login-input" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" name="username" autofocus>
+				<br>
+				<input type="password" class="form-control login-input" id="inputPassword2" placeholder="Password" name="password">
+				<br>
+				<input type="submit" class="btn btn-outline-dark" name="submit">
+			</form>
+			<center>
+			<div class="container-md">
+				<br>
+				{% if messages %}
+					{% for message in messages %}
+					<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				  		<strong>{{ message }}</strong>
+				  		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
+					{% endfor %}
+				{% endif %}
+				<br>
+			</div>
+			</center>
+		</div>
 	</div>
+</center>
+<img src="/static/recipe-header-hill.png" style="width: 100%; bottom: 0; position: absolute; z-index: -1;">
+
 	<!--<div>Sripad Kulkarni</div>-->
 </body>
 
