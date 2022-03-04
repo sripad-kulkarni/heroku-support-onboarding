@@ -33,7 +33,6 @@
 					<tr>
 						<th scope="col">Week #</th>
 						<th scope="col">Title</th>
-						<th scope="col">Action</th>
 						<th scope="col">Completed</th>
 					</tr>
 				</thead>
@@ -42,8 +41,7 @@
 				{% for week_data in week_data %}
 					<tr>
 						<td>{{week_data.weekid}}</td>
-						<td>{{week_data.weektitle}}</td>
-						<td><a href="{% url 'content' week_data.weekid %}" class="far fa-eye" style="text-decoration:none;" aria-label="Close" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Explore"></a></td>
+						<td><a href="{% url 'content' week_data.weekid %}">{{week_data.weektitle}}</a> </td>
 						<td>{{ week_data.status }}%</td>
 						<td class="del_row" style="display: none;">
 							<div class="del_week">

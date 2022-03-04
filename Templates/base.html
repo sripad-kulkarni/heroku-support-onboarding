@@ -5,6 +5,8 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>{{ title }}</title>
+		<link rel="icon" href="{% static '/salesforce_logo.png' %}">
+
 				<link rel="stylesheet" type="text/css" href="{% static '/assets/styles/salesforce-lightning-design-system.css' %}"/>
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,7 +17,6 @@
 </head>
 <body>
 <div class="slds-brand-band slds-brand-band_small"></div>
-<img src="/static/recipe-header-hill.png" style="width: 100%; bottom: 0; position: absolute; z-index: -1;">
 	<div class="load loader-wrapper">
 		<div class="load-b loader"><div class="load-in loader-inner"></div><div class="loader-text">H</div></div>
 	</div>
@@ -40,10 +41,10 @@
 		        </li>
 		        <!--<li class="nav-item">
 		          <a class="nav-link fas fa-check-square" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Targets" href="/targets/"></a>
-		        </li>-->
+		        </li>
 		        <li class="nav-item">
 		          <a class="nav-link fas fa-atlas" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Glossary" href="#"></a>
-		        </li>
+		        </li>-->
 		        {% if user.profile.role == "MANAGER" or user.is_superuser %}
 		        <li class="nav-item dropdown">
 		          <a class="nav-link dropdown-toggle fas fa-users" data-bs-toggle="dropdown" role="button" aria-expanded="false" title="Users"></a>
@@ -102,6 +103,8 @@
 		  }
 		});*/
 	</script>
+<img src="/static/PR-Landscape-lockups-large-3D-astro-005-8000x3197.png" style="width: 100%; bottom: 0; position: fixed; z-index: -1;">
+
 
 </body>
 

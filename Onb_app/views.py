@@ -130,7 +130,7 @@ def home(request):
 		usr = User.objects.all()
 		nh_week = newhire_weeks.objects.all()
 		target = targets.objects.all()
-		return render(request, 'manager_home.html', {'onb':onb, 'usr':usr, 'nh_week':nh_week, 'target': targets})
+		return render(request, 'manager_home.html', {'onb':onb, 'usr':usr, 'nh_week':nh_week, 'target': targets, 'title': "Onboarding - Home"})
 	else:
 		prof = User.objects.get(username=request.user.username)
 		try:
