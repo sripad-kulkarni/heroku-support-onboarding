@@ -127,13 +127,6 @@ body {
   z-index: -1;
 }
 
-.another-img {
-  width: 100%;
-  top: 0;
-  background-image:url("/static/customer-story-headspace.png");
-  background-repeat: no-repeat;
-  background-position: top right;
-}
 
 @keyframes fadeInAnimation {
     0% {
@@ -314,6 +307,7 @@ h1 {
 }
 
 .table-custom tr td:nth-child(2){
+	width: fit-content;
 	margin-right: 0;
 	padding-right: 0;
 	text-align: left; 
