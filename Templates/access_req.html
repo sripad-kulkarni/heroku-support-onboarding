@@ -36,6 +36,7 @@
 		  		      	<table class="table table-sm table-responsive table-hover" style="vertical-align: middle; margin-bottom: 0px;">
 		  		      	  <tbody>
 		  		  			{% for item in items %}
+		  		  			{% if user.profile.role == "MANAGER" or user.is_superuser or user.profile.role == "ENGINEER" %}
 		  		  			{% if item.access_section.name == tab.name %}
 		  		      	    <tr>
 	  		      	          <td>{{ item.name }}</td>
@@ -47,6 +48,20 @@
 	  		      	          	</select>
 	  		      	          </td>
 	  		      	        </tr>
+	  		      	        {% endif %}
+		  		  			{% else %}
+		  		  			{% if item.newhire_access_section.name == tab.name %}
+		  		      	    <tr>
+	  		      	          <td>{{ item.name }}</td>
+	  		      	          <td class="col-sm-2">
+	  		      	          	<select class="form-select form-select-sm" aria-label="Default select example">
+	  		      	          		<option value="" selected disabled hidden>{{ item.status }}</option>
+	  		      	          	  	<option value="1">Requested</option>
+	  		      	          	  	<option value="2">Approved</option>
+	  		      	          	</select>
+	  		      	          </td>
+	  		      	        </tr>
+	  		      	        {% endif %}
 	  		      	        {% endif %}
 	  		      	  		{% endfor %}
 		  		      	    </tbody>

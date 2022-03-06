@@ -89,7 +89,7 @@
 										   		</tr>
 										   	</tbody>
 										   </table>
-										   <center><button class="btn btn-outline-primary btn-sm">View Details</button></center>
+										   <center><button class="btn btn-outline-primary btn-sm view-details">View Details</button></center>
 
 							    		</div>
 							    	</div>
@@ -273,6 +273,24 @@
 					}
 				})
 			});
+
+			$('.view-details').on('click', function(e) {
+				e.preventDefault();
+
+				var nh_name = $(this).closest("div").find("h5").text();
+				console.log(nh_name);
+				$.ajax({
+					type:'POST',
+					url:'view_details/',
+					data: {
+						name: nh_name,
+						csrfmiddlewaretoken: '{{ csrf_token }}',
+					},
+					success: function(data) {
+
+					}
+				})
+			})
 
 		});
 

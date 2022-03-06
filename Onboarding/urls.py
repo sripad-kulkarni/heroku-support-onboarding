@@ -45,6 +45,7 @@ urlpatterns = [
     path('targets/del_target/', views.del_target),
     path('targets/target_check/', views.target_check),
     path('weeks/content_check/', views.content_check),
+    path('home/view_details/', views.view_details),
     path('home/check_form/', views.check_form),
     path('home/check_weeks/', views.check_weeks),
     path('home/check_targets/', views.check_targets),

@@ -25,7 +25,7 @@
 				<div class="col"><h5><strong>Week</strong> <strong id="week_no">{{week_no}}</strong></h5></div>
 				<div class="col-lg-10" style="align-items: center;">
 					<div class="progress" style="white; height: 20px;">
-					  <div class="progress-bar progress-bar-striped bg-success" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: {{week.status}}%; "><strong>{{week.status}}%</strong></div>
+					  <div class="progress-bar progress-bar-striped bg-success" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: {{week.status}}%; "><strong>{{week.status}}</strong></div>
 					</div>
 				</div>
 				{% if user.profile.role == "MANAGER" or user.is_superuser %}

@@ -124,7 +124,7 @@ def home(request):
 		usr = User.objects.all()
 		nh_week = newhire_weeks.objects.all()
 		target = targets.objects.all()
-		return render(request, 'manager_home.html', {'onb':onb, 'usr':usr, 'nh_week':nh_week, 'target': targets})
+		return render(request, 'manager_home.html', {'onb':onb, 'usr':usr, 'nh_week':nh_week, 'target': targets, 'title': "Onboarding - Home"})
 	elif request.user.profile.role=="ENGINEER":
 		onb = onboarding.objects.filter(Q(onboardingbuddy=request.user.username) | Q(trailguide=request.user.username))
 		usr = User.objects.all()
@@ -157,11 +157,11 @@ def home(request):
 			else:
 				nh_t_progress = 0
 			usr = User.objects.all()
-			return render(request, 'home.html', {'title': 'Onboarding Home', 'prof':prof, 'onb':onb, 'usr':usr, 'nh_week':nh_week, 'nh_targets':nh_targets, 'nh_t_progress':nh_t_progress})
+			return render(request, 'home.html', {'title': 'Onboarding - Home', 'prof':prof, 'onb':onb, 'usr':usr, 'nh_week':nh_week, 'nh_targets':nh_targets, 'nh_t_progress':nh_t_progress})
 		except Exception as ex:
 			onb = None
 			print(ex)
-			return render(request, 'home.html', {'title': 'Onboarding Home', 'prof':prof, 'onb':onb, 'nh_targets':None})
+			return render(request, 'home.html', {'title': 'Onboarding - Home', 'prof':prof, 'onb':onb, 'nh_targets':None})
 
 
 @login_required(login_url='/login/')
@@ -172,7 +172,7 @@ def viewsupportengineers(request):
 		nh = Profile.objects.filter(role='NEW_HIRE')
 		onb = onboarding.objects.all()
 		usr = User.objects.all()
-		return render(request, 'userpage.html', {'eng': eng, 'manager':manager, 'nh':nh, 'onb':onb, 'usr':usr})
+		return render(request, 'userpage.html', {'eng': eng, 'manager':manager, 'nh':nh, 'onb':onb, 'usr':usr, 'title': "Engineers"})
 	else:
 		logout(request)
 		messages.error(request, "Your account does not have sufficient privileges to perform this action. If you think this is an error, please contact your manager.")
@@ -229,16 +229,16 @@ def weeks(request):
 	if request.user.profile.role=="MANAGER" or request.user.is_superuser or request.user.profile.role=="ENGINEER":
 		week = weeks_data.objects.all().order_by('weekid')
 		user = User.objects.get(username=request.user)
-		return render(request, 'weeks.html', {'week_data':week, 'user':user})
+		return render(request, 'weeks.html', {'week_data':week, 'user':user, 'title': "Onboarding Plan - Weeks"})
 	else:
 		try:
 			onb = onboarding.objects.get(newhire=request.user.username)
 			week = newhire_weeks.objects.filter(onboarding=onb).order_by('weekid')
 			user = User.objects.get(username=request.user)
-			return render(request, 'weeks.html', {'week_data':week, 'user':user})
+			return render(request, 'weeks.html', {'week_data':week, 'user':user, 'title': "Onboarding Plan - Weeks"})
 		except:
 			user = User.objects.get(username=request.user)
-			return render(request, 'weeks.html', {'week_data':None, 'user':user})
+			return render(request, 'weeks.html', {'week_data':None, 'user':user, 'title': "Onboarding Plan - Weeks"})
 
 @login_required(login_url='/login')
 def add_week(request):
@@ -277,12 +277,12 @@ def week_content(request,  id):
 	if request.user.profile.role=="MANAGER" or request.user.is_superuser or request.user.profile.role=="ENGINEER":
 		week = weeks_data.objects.get(weekid=id)
 		c = content.objects.filter(weeks_data=week).order_by('task_id')
-		return render(request, 'content.html', {'week_no':id, 'content':c})
+		return render(request, 'content.html', {'week_no':id, 'content':c, 'title': "The Week"})
 	else:
 		onb = onboarding.objects.get(newhire=request.user.username)
 		week = newhire_weeks.objects.get(onboarding=onb, weekid=id)
 		c = newhire_content.objects.filter(newhire_weeks=week).order_by('task_id')
-		return render(request, 'content.html', {'week_no':id, 'content':c, 'week':week})
+		return render(request, 'content.html', {'week_no':id, 'content':c, 'week':week, 'title':"The Week"})
 
 @login_required(login_url='/login')
 def add_content(request):
@@ -425,6 +425,11 @@ def check_form(request):
 		''' Targets Done'''
 	return render(request, 'check_form.html', {'title': 'Onboarding Home', 'prof':prof, 'onb':onb, 'usr':usr, 'nh_week':nh_week, 'nh_targets':nh_targets, 'nh_t_progress':nh_t_progress})
 
+def view_details(request):
+	if request.method=='POST':
+		name = request.POST['name']
+		print(name)
+		return HttpResponse()
 
 def check_accesses(request):
 	if request.method=='POST':
@@ -474,11 +479,12 @@ def access_req(request):
 	if request.user.profile.role=="MANAGER" or request.user.is_superuser:
 		tabs = access_section.objects.all()
 		items = access_item.objects.all()
-		return render(request, 'access_req.html', {'tabs': tabs, 'items': items})
+		return render(request, 'access_req.html', {'tabs': tabs, 'items': items, 'title': "Access Requests"})
 	else:
 		tabs = newhire_access_section.objects.filter(onboarding__newhire=request.user.username)
-		items = access_item.objects.all()
-		return render(request, 'access_req.html', {'tabs': tabs, 'items': items})
+		items = newhire_access_item.objects.filter(newhire_access_section__onboarding__newhire=request.user.username)
+		print(items)
+		return render(request, 'access_req.html', {'tabs': tabs, 'items': items, 'title': "Access Requests"})
 
 def access_tab(request):
 	if request.user.profile.role=="MANAGER" or request.user.is_superuser:
@@ -487,7 +493,6 @@ def access_tab(request):
 			name= request.POST['name']
 			access_section.objects.create(s_id=tab_id, name=name)
 			return HttpResponse('')
-
 
 def del_tab(request):
 	if request.user.profile.role=="MANAGER" or request.user.is_superuser:
@@ -530,4 +535,6 @@ def access_req_update(request):
 		value = request.POST['value']
 		item = newhire_access_item.objects.get(newhire_access_section__onboarding__newhire = request.user.username, name=name)
 		item.status = value
+		print(item.status)
+		item.save()
 		return HttpResponse()
