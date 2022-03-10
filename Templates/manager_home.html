@@ -2,9 +2,30 @@
 
 {% block content %}
 {% load static %}
+{% load markdown_extras %}
 
-	
+	<div class="modal fade" id="onbModal" tabindex="-1" aria-labelledby="onbModalLabel" aria-hidden="true" style="background-color: rgba(219, 232, 255, 0.3)!important;">
+	  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+	    <div class="modal-content" style="background-color: rgba(219, 232, 255, 0.8)!important;">
+	      <div class="modal-header" style="border-bottom-color: #a7bac7;">
+	      	<div class="col-md-8">
+	      		<h4>
+	      			<h5 class="modal-title" id="onbModalLabel" style="display: inline;"> </h5> 
+	      		  	<small class="text-muted">'s Onboarding Summary</small>
+	      		</h4>
+	      	</div>
+	        <h5 class="modal-title" id="onbModalLabel"> </h5>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body" id="modal_body">
 
+	      </div>
+	      <div class="modal-footer" style="border-top-color: #a7bac7;">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
 	<div class="container-md home-content">
 		<div class="row">
 			<div class="col">
@@ -33,10 +54,10 @@
 					<nav>
 						<div class="nav nav-tabs" id="nav-tab" role="tablist">
 						    <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Cards</button>
-						    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Overview</button>
-						    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-accesses" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">New Hire Access Requests</button>
+						    <!--<button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Overview</button>-->
+						    <!--<button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-accesses" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">New Hire Access Requests</button>-->
 						    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-weeks" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">New Hire Weeks</button>
-						    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-targets" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">New Hire Targets</button>
+						    <!--<button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-targets" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">New Hire Targets</button>-->
 					    </div>
 					</nav>
 					<div class="tab-content" id="nav-tabContent" >
@@ -45,6 +66,12 @@
 							<br>
 							<div class="container-md">
 							    <div class="row row-cols-2 row-cols-lg-3 g-2 g-lg-3">
+							    	{% if onb is not none %}
+							    		<div>						
+			    							<b>No New Hires Yet!</b><br><br>
+			    							<small>Please navigate to <a href="/register/">Register Users</a> page create a new hire account!</small>
+							    		</div>
+							    	{% else %}
 							    	{% for u in usr %}
 							    	{% for onb in onb %}
 							    	{% if u.username == onb.newhire %}
@@ -89,7 +116,9 @@
 										   		</tr>
 										   	</tbody>
 										   </table>
-										   <center><button class="btn btn-outline-primary btn-sm view-details">View Details</button></center>
+										   <center>
+							
+										   	<button class="btn btn-outline-primary btn-sm view-details" data-bs-toggle="modal" data-bs-target="#onbModal">View Details</button></center>
 
 							    		</div>
 							    	</div>
@@ -97,6 +126,7 @@
 							    	{% endif %}
 							    	{% endfor %}
 							    	{% endfor %}
+							    	{% endif %}
 							  </div>
 							</div>
 							<br>
@@ -207,6 +237,7 @@
 		</div>
 	</div>
 
+
 	<script type="text/javascript">
 		$(document).ready(function(){
 
@@ -287,7 +318,8 @@
 						csrfmiddlewaretoken: '{{ csrf_token }}',
 					},
 					success: function(data) {
-
+						$('#onbModalLabel').text(nh_name);
+						$('#modal_body').html(data);
 					}
 				})
 			})
@@ -312,3 +344,9 @@
 		
 	</script>
 {% endblock %}
+
+
+Hey folks,
+
+Sripad joined Salesforce - Heroku as a college grad, futureforce batch of 2019 that makes him 2.8 years old here. He lives in Hyderabad, India and about 30kms away from our Hyderabad office. 
+

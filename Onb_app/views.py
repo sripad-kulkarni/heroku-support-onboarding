@@ -10,6 +10,8 @@ from django.contrib.auth.models import User
 import datetime
 from django.db.models import Q
 from django.core import serializers
+from django.db.models import Value
+from django.db.models.functions import Concat
 
 
 # Create your views here.
@@ -427,9 +429,41 @@ def check_form(request):
 
 def view_details(request):
 	if request.method=='POST':
-		name = request.POST['name']
-		print(name)
-		return HttpResponse()
+		full_name = request.POST['name']
+		p = Profile.objects.annotate(fullname=Concat('firstname', Value(' '), 'lastname')).get(fullname=full_name)
+		name = p.user.username
+		prof = User.objects.get(username=name)
+		onb = onboarding.objects.get(newhire=name)
+		usr = User.objects.all()
+		nh_week = newhire_weeks.objects.filter(onboarding__newhire=name)
+		completed = 0
+		count = 0
+		print(nh_week)
+		for nhw in nh_week:
+			completed = completed + newhire_content.objects.filter(newhire_weeks=nhw, status=True).count()
+			count = count + newhire_content.objects.filter(newhire_weeks=nhw).count()
+		print(completed)
+		'''
+		completed = newhire_weeks.objects.filter(onboarding__newhire=name, status='100.0').count()
+		'''
+		if nh_week.count() > 0:
+			perc = round((completed/count)*100, 2)
+		else:
+			perc = 0.0
+		''' weeks done '''
+		print(perc)
+		''' Targets below '''
+		onb.progress = perc
+		nh_targets = newhire_targets.objects.filter(onboarding__newhire=name)
+		target_achieved = newhire_targets.objects.filter(onboarding__newhire=name, status=True).count()
+		if nh_targets.count() > 0:
+			nh_t_progress = (target_achieved/nh_targets.count()) * 100
+			print(nh_t_progress)
+		else:
+			nh_t_progress = 0
+		''' Targets Done'''
+	return render(request, 'check_form.html', {'title': 'Onboarding Home', 'prof':prof, 'onb':onb, 'usr':usr, 'nh_week':nh_week, 'nh_targets':nh_targets, 'nh_t_progress':nh_t_progress})
+
 
 def check_accesses(request):
 	if request.method=='POST':

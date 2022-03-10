@@ -259,7 +259,7 @@ h1 {
 }
 
 .fa-power-off {
-	color: black;
+	color: #154e8d;
 	padding: 0px;
 	margin-right: 1rem;
 }
@@ -571,4 +571,8 @@ th {
 
 .acc_update:hover {
 	box-shadow: 0 2px 5px rgba(61, 91, 110, .4);
+}
+
+.modal-xl {
+	max-width: 1300px;
 }
