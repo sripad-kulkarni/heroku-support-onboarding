@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 {% load static %}
-{% load markdown_extras %}
 <head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -52,6 +51,9 @@
 		            <li><a class="dropdown-item" href="/register/">Register New Users</a></li>
 		            <li><a class="dropdown-item" href="/manage_users/">Manage Existing Users</a></li>
 		          </ul>
+		        </li>
+		        <li class="nav-item">
+		          <a class="nav-link fas fa-solid fa-user-secret" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Audit Log" href="/audit/"></a>
 		        </li>
 		        {% endif %}
 		      </ul>

@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 {% load static %}
-{% load markdown_extras %}
 
 <body >
 	<div class="container-md" style="background-image: url({% static 'overview.png' %}); background-size: 50%; background-repeat:no-repeat; background-position: center;">
@@ -18,14 +17,14 @@
 								</div>
 							</div>
 							<figcaption class="blockquote-footer">
-							  This is {{prof.profile.firstname}}'s of <cite title="Source Title">all weeks</cite>
+							  This is {{prof.profile.firstname}}'s progress of <cite title="Source Title">all weeks</cite>
 							</figcaption>
 						</div>
 					</div>
 					<div class="row home-bg" style="max-height: 300px;">
 						<div class="col">
-							<h6 style="margin-bottom: 10px;">Week wise progress</h6>
-							<table class="table table-borderless table-responsive" >
+							<h6 style="margin-bottom: 10px;">Week wise progress</h6><hr style="margin: 2px;">
+							<table class="table align-middle table-responsive table-hover" >
 								<tbody>
 									{% if nh_week %}
 									{% for nh_week in nh_week %}
@@ -35,6 +34,9 @@
 											<div class="progress" style="background-color: white;">
 											  <div class="progress-bar progress-bar-striped bg-success" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: {{nh_week.status}}%;">{{nh_week.status}}</div>
 											</div>
+										</td>
+										<td>
+											>
 										</td>
 									</tr>
 									{% endfor %}

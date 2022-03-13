@@ -30,6 +30,7 @@ urlpatterns = [
     path('logout/', views.auth_logout),
     path('error/', views.error),
     path('profile/', views.profile_page),
+    path('audit/', views.audit),
     path('profile/update_profile/', views.updateprofile),
     path('manage_users/', views.viewsupportengineers),
     path('manage_users/onb_assign/', views.onb_assign),

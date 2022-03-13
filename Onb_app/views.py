@@ -12,7 +12,7 @@ from django.db.models import Q
 from django.core import serializers
 from django.db.models import Value
 from django.db.models.functions import Concat
-
+from django.db.models import Count, Sum
 
 # Create your views here.
 
@@ -37,6 +37,7 @@ def register(request):
 		        user.profile.enddate = form.cleaned_data.get('enddate')
 		        user.save()
 		        messages.success(request, "User creation successful!")
+		        audit_logger.objects.create(user=request.user.username, action='CREATE_USER: `' + user.username + '`')
 		        return redirect('/register/')
 		    else:
 		        return render(request, 'register.html', {'form': form, 'title': 'Register Users'})
@@ -78,8 +79,9 @@ def logincheck(request):
 
 
 def auth_logout(request):
-    logout(request)
-    return redirect('/login/')
+	audit_logger.objects.create(user=request.user.username, action='LOGOUT')
+	logout(request)
+	return redirect('/login/')
 
 
 def error(request):
@@ -92,11 +94,13 @@ def welcome(request):
 	if user.profile.firstlogin:
 		user.profile.firstlogin = False
 		user.save()
+		audit_logger.objects.create(user=request.user.username, action='FIRST LOGIN')
 		if user.profile.role == 'NEW_HIRE':
 			return render(request, 'welcome.html', {'title': 'Welcome', 'user':user})
 		else:
 			return render(request, 'welcome_default.html', {'title':'welcome', 'user':user})
 	else:
+		audit_logger.objects.create(user=request.user.username, action='LOGIN')
 		return HttpResponseRedirect('/home/')
 
 
@@ -111,11 +115,14 @@ def updateprofile(request):
 	if request.method == 'POST':
 		firstname = request.POST['firstname']
 		lastname = request.POST['lastname']
+		email = request.POST['email']
 		user = User.objects.get(username=request.user.username)
 		user.profile.firstname = firstname
 		user.profile.lastname = lastname
+		user.profile.email = email
 		user.save()
-		print(firstname, lastname)
+		print(firstname, lastname, email)
+		audit_logger.objects.create(user=request.user.username, action='UPDATE_PROFILE')
 		return HttpResponse('')
 
 	
@@ -165,6 +172,16 @@ def home(request):
 			print(ex)
 			return render(request, 'home.html', {'title': 'Onboarding - Home', 'prof':prof, 'onb':onb, 'nh_targets':None})
 
+@login_required(login_url='/login/')
+def audit(request):
+	if request.user.profile.role=="MANAGER" or request.user.is_superuser:
+		audit = audit_logger.objects.all()
+		return render(request, 'audit.html', { 'audit':audit, 'title':'Audit Log' })
+	else:
+		logout(request)
+		messages.error(request, "Your account does not have sufficient privileges to perform this action. If you think this is an error, please contact your manager.")
+		return redirect('/error/')
+
 
 @login_required(login_url='/login/')
 def viewsupportengineers(request):
@@ -208,6 +225,7 @@ def onb_assign(request):
 					item = access_item.objects.filter(access_section=a)
 					for i in item:
 						newhire_access_item.objects.create(newhire_access_section=acc, item_id=i.item_id, name=i.name)
+				audit_logger.objects.create(user=request.user.username, action='**ASSIGN NEW HIRE** `'+new_hire+'` to TRAIL GUIDE `'+trail_guide+'`, ONBOARDING BUDDY `'+onb_buddy+'`, MANAGER `'+the_manager+'`')
 				return HttpResponse('')
 			else:
 				HttpResponseNotFound('')
@@ -223,6 +241,7 @@ def del_onb(request):
 		nh_uname = request.POST['col1']
 		print(nh_uname)
 		onboarding.objects.filter(newhire=nh_uname).delete()
+		audit_logger.objects.create(user=request.user.username, action='**REMOVE ASSIGNMENT NEW HIRE** `'+nh_uname+'`')
 		return HttpResponse('')
 
 
@@ -237,7 +256,9 @@ def weeks(request):
 			onb = onboarding.objects.get(newhire=request.user.username)
 			week = newhire_weeks.objects.filter(onboarding=onb).order_by('weekid')
 			user = User.objects.get(username=request.user)
-			return render(request, 'weeks.html', {'week_data':week, 'user':user, 'title': "Onboarding Plan - Weeks"})
+			content = newhire_content.objects.filter(newhire_weeks__onboarding=onb)
+			print(content)
+			return render(request, 'weeks.html', {'week_data':week, 'user':user, content:'content', 'title': "Onboarding Plan - Weeks"})
 		except:
 			user = User.objects.get(username=request.user)
 			return render(request, 'weeks.html', {'week_data':None, 'user':user, 'title': "Onboarding Plan - Weeks"})
@@ -251,6 +272,7 @@ def add_week(request):
 			if not weeks_data.objects.filter(weekid=week_id).exists():
 				w = weeks_data(weekid = week_id, weektitle = title)
 				w.save()
+				audit_logger.objects.create(user=request.user.username, action='**ADD WEEEK:** `'+week_id+'` - `'+title+'`')
 				return HttpResponse('')
 			else:
 				return HttpResponseNotFound('Week ID already exists!')
@@ -267,6 +289,7 @@ def del_week(request):
 			week_id = request.POST['week_id']
 			print(week_id)
 			weeks_data.objects.filter(weekid=week_id).delete()
+			audit_logger.objects.create(user=request.user.username, action='**REMOVE WEEEK:** `'+week_id+'`')
 			return HttpResponse('')
 	else:
 		logout(request)
@@ -279,12 +302,12 @@ def week_content(request,  id):
 	if request.user.profile.role=="MANAGER" or request.user.is_superuser or request.user.profile.role=="ENGINEER":
 		week = weeks_data.objects.get(weekid=id)
 		c = content.objects.filter(weeks_data=week).order_by('task_id')
-		return render(request, 'content.html', {'week_no':id, 'content':c, 'title': "The Week"})
+		return render(request, 'content.html', {'week_no':id, 'week':week, 'content':c, 'title': "The Week"})
 	else:
 		onb = onboarding.objects.get(newhire=request.user.username)
 		week = newhire_weeks.objects.get(onboarding=onb, weekid=id)
 		c = newhire_content.objects.filter(newhire_weeks=week).order_by('task_id')
-		return render(request, 'content.html', {'week_no':id, 'content':c, 'week':week, 'title':"The Week"})
+		return render(request, 'content.html', {'week_no':id, 'week':week, 'content':c, 'week':week, 'title':"The Week"})
 
 @login_required(login_url='/login')
 def add_content(request):
@@ -296,6 +319,7 @@ def add_content(request):
 			week = weeks_data.objects.get(weekid=week_id)
 			c = content(weeks_data=week, task_id=task_id, task=title)
 			c.save()
+			audit_logger.objects.create(user=request.user.username, action='**ADD CONTENT:** Week `'+week_id+'` - Task `'+task_id+'` - `'+title+'`')
 			return HttpResponse('')
 	else:
 		logout(request)
@@ -311,6 +335,7 @@ def del_content(request):
 			task = request.POST['task']
 			week = weeks_data.objects.get(weekid=week_id)
 			content.objects.get(weeks_data=week,task=task).delete()
+			audit_logger.objects.create(user=request.user.username, action='**REMOVE CONTENT:** Week `'+week_id+'` - Task `'+task+'`')
 			return HttpResponse('')
 	else:
 		logout(request)
@@ -382,6 +407,7 @@ def content_check(request):
 	else:
 		content.status = False
 	content.save()
+	audit_logger.objects.create(user=request.user.username, action='**WEEK TASK CHECKED:** WEEK - `'+week_no+'`, TASK - `'+content_name+'`')
 	nh_week_progress = newhire_content.objects.filter(newhire_weeks__onboarding__newhire=request.user.username, newhire_weeks__weekid = week_no, status=True).count()
 	nh_content = newhire_content.objects.filter(newhire_weeks__onboarding__newhire=request.user.username, newhire_weeks__weekid = week_no).count()
 	nh_week_perc = round((nh_week_progress/nh_content)*100, 2)
@@ -464,7 +490,7 @@ def view_details(request):
 		''' Targets Done'''
 	return render(request, 'check_form.html', {'title': 'Onboarding Home', 'prof':prof, 'onb':onb, 'usr':usr, 'nh_week':nh_week, 'nh_targets':nh_targets, 'nh_t_progress':nh_t_progress})
 
-
+'''
 def check_accesses(request):
 	if request.method=='POST':
 		name = request.POST['name']
@@ -475,7 +501,7 @@ def check_accesses(request):
 			return render(request, 'eng_access_req.html', {'tabs':access, 'items':items})
 		except:
 			return render(request, 'eng_access_req.html', {'tabs':None, 'items':None})			
-
+'''
 
 def check_weeks(request):
 	if request.method == 'POST':
@@ -515,10 +541,15 @@ def access_req(request):
 		items = access_item.objects.all()
 		return render(request, 'access_req.html', {'tabs': tabs, 'items': items, 'title': "Access Requests"})
 	else:
-		tabs = newhire_access_section.objects.filter(onboarding__newhire=request.user.username)
+		approved_items = Q(newhire_access_item__status='Approved')
+		requested_items = Q(newhire_access_item__status='Requested')
+		tabs = newhire_access_section.objects.filter(onboarding__newhire=request.user.username).annotate(item_count=Count('newhire_access_item')).annotate(approved=Count('newhire_access_item', approved_items)).annotate(requested=Count('newhire_access_item__status',requested_items))
+		approved = sum(tabs.values_list('approved', flat=True))
+		requested = sum(tabs.values_list('requested', flat=True))
+		total = sum(tabs.values_list('item_count' ,flat=True))
+		print(requested, approved, total)
 		items = newhire_access_item.objects.filter(newhire_access_section__onboarding__newhire=request.user.username)
-		print(items)
-		return render(request, 'access_req.html', {'tabs': tabs, 'items': items, 'title': "Access Requests"})
+		return render(request, 'access_req.html', {'tabs': tabs, 'items': items, 'requested':requested, 'approved':approved, 'total':total, 'title': "Access Requests"})
 
 def access_tab(request):
 	if request.user.profile.role=="MANAGER" or request.user.is_superuser:
@@ -526,6 +557,7 @@ def access_tab(request):
 			tab_id = request.POST['tab_id']
 			name= request.POST['name']
 			access_section.objects.create(s_id=tab_id, name=name)
+			audit_logger.objects.create(user=request.user.username, action='**ADD ACCESS SECTION:** `'+name+'`')
 			return HttpResponse('')
 
 def del_tab(request):
@@ -534,6 +566,7 @@ def del_tab(request):
 			name = request.POST['name']
 			print(name)
 			access_section.objects.get(name=name).delete()
+			audit_logger.objects.create(user=request.user.username, action='**REMOVE ACCESS SECTION:** `'+name+'`')
 			return HttpResponse('')
 
 def add_item(request):
@@ -544,6 +577,7 @@ def add_item(request):
 			name = request.POST['name']
 			s = access_section.objects.get(name=section)
 			access_item.objects.create(access_section=s, item_id=item_id, name=name) 
+			audit_logger.objects.create(user=request.user.username, action='**ADD ACCESS ITEM:** SECTION - `'+section+'`, ITEM - `'+name+'`')
 			return HttpResponse('')
 
 def get_items(request):
@@ -561,6 +595,7 @@ def del_item(request):
 			name = request.POST['name']
 			s = access_section.objects.get(name=section)
 			access_item.objects.get(access_section = s, name = name).delete()
+			audit_logger.objects.create(user=request.user.username, action='**REMOVE ACCESS ITEM:** SECTION - `'+section+'`, ITEM - `'+name+'`')
 			return HttpResponse('')
 
 def access_req_update(request):

@@ -36,7 +36,7 @@
 							<td>Role</td>
 							<td><input type="text" id="role" readonly class="form-control-plaintext" value='{{prof.profile.role}}'></td>
 						</tr>
-
+						{% if prof.profile.role == 'NEW_HIRE' %}
 						<tr>
 							<td>Start Date</td>
 							<td><input type="text" id="startdate" readonly class="form-control-plaintext" value="{{prof.profile.startdate|date:'M d, Y'}}"}}></td>
@@ -46,6 +46,7 @@
 							<td>Onboarding Ends</td>
 							<td><input type="text" id="enddate" readonly class="form-control-plaintext" value="{{prof.profile.enddate|date:'M d, Y'}}"></td>
 						</tr>
+						{% endif %}
 
 					</tbody>
 
@@ -75,6 +76,7 @@
 		if (this.style.display != 'none') {
 			$("#firstname").removeAttr("readonly");
 			$("#lastname").removeAttr("readonly");
+			$("#email").removeAttr("readonly");
 			this.style.display = 'none';
 			document.getElementById('submit').style.display = 'block';
 			document.getElementById('cancel').style.display = 'block';
@@ -84,6 +86,7 @@
 		if (this.style.display != 'none') {
 			$("#firstname").attr("readonly", true);
 			$("#lastname").attr("readonly", true);
+			$("#email").attr("readonly", true);
 			this.style.display = 'none';
 			document.getElementById('submit').style.display = 'none';
 			document.getElementById('edit').style.display = 'block';
@@ -98,6 +101,7 @@
 			data: {
 				firstname: $('#firstname').val(),
 				lastname: $('#lastname').val(),
+				email: $('#email').val(),
 				csrfmiddlewaretoken: '{{ csrf_token }}',
 			},
 			success: function(){ 
@@ -106,6 +110,7 @@
 				document.getElementById('edit').style.display = 'block';
 				$("#firstname").attr("readonly", true);
 				$("#lastname").attr("readonly", true);
+				$("#email").attr("readonly", true);
 				var toastElList = [].slice.call(document.querySelectorAll('.toast'))
 				var toastList = toastElList.map(function (toastEl) {
 				  return new bootstrap.Toast(toastEl)

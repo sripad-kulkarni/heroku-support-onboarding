@@ -1,7 +1,24 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-	<div class="container-md reg_page">
+<style>
+     dl
+     {
+         width: 200px;
+         background: #fff;
+         border: 1px solid #000;
+         padding: 5px 15px;
+      }
+
+      dt, dd
+      {
+         display: inline;
+      }       
+</style>
+
+	<div class="container-md access_page">
+
 		<nav>
 		  <div class="nav nav-tabs" id="nav-tab" role="tablist">
 		    <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">&nbsp; <label>Start Here</label> &nbsp;<i class="fab fa-get-pocket"></i></button>
@@ -10,11 +27,18 @@
 			{% endif %}
 		  </div>
 		</nav>
-		<div class="tab-content" id="nav-tabContent">
-			<br>
+		<div class="tab-content" id="nav-tabContent" style="background-image: url({% static 'overview.png' %}); background-size: 50%; background-repeat:no-repeat; background-position: center;">
+			<div style="padding: 25px; padding-top: 20px;">
+				<small class="text-muted">Progress</small>
+				<div class="progress center-block" >
+				  <div class="progress-bar progress-bar-striped bg-success approved" role="progressbar" style="width: 0%;"  aria-valuemin="0" aria-valuemax="100">
+				  </div>
+				  <div class="progress-bar progress-bar-striped bg-warning requested" role="progressbar" style="width: 0%;"aria-valuemin="0" aria-valuemax="100">
+				  </div>
+				</div>
+			</div>
 			
-		  	<div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-		  		<br>
+		  	<div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" >
 		  		{% if not tabs %}
 		  		<hr>
 		  	    <div class="container-md">
@@ -23,11 +47,12 @@
 		  	    <hr>
 		  		{% else %}
 		  		{% for tab in tabs %}
-		  		<div class="accordion" id="accordionPanelsStayOpenExample" style="margin-bottom: 20px;">
+		  		<div class="accordion" id="accordionPanelsStayOpenExample" >
 		  		  <div class="accordion-item">
 		  		    <h2 class="accordion-header" id="panelsStayOpen-headingOne">
-		  		      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-{{ tab.name }}" aria-expanded="true" aria-controls="panelsStayOpen-{{ tab.name }}">
-		  		        {{ tab.name }}
+		  		      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-{{ tab.name }}" aria-expanded="true" aria-controls="panelsStayOpen-{{ tab.name }}" style="clear: both;">
+		  		        {{ tab.name }} &nbsp;
+		  		        <label class="text-muted">[Approved - {{tab.approved}}/{{tab.item_count}}]</label>
 		  		      </button>
 		  		    </h2>
 		  		    <div id="panelsStayOpen-{{ tab.name }}" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
@@ -39,19 +64,19 @@
 		  		  			{% if user.profile.role == "MANAGER" or user.is_superuser or user.profile.role == "ENGINEER" %}
 		  		  			{% if item.access_section.name == tab.name %}
 		  		      	    <tr>
-	  		      	          <td>{{ item.name }}</td>
-	  		      	          </td>
+	  		      	          <td><small class="text-muted">{{ item.name }}</small></td>
 	  		      	        </tr>
 	  		      	        {% endif %}
 		  		  			{% else %}
 		  		  			{% if item.newhire_access_section.name == tab.name %}
 		  		      	    <tr>
-	  		      	          <td>{{ item.name }}</td>
+	  		      	          <td><small class="text-muted">{{ item.name }}</small></td>
 	  		      	          <td class="col-sm-2">
 	  		      	          	<select class="form-select form-select-sm" aria-label="Default select example">
 	  		      	          		<option value="" selected disabled hidden>{{ item.status }}</option>
-	  		      	          	  	<option value="1">Requested</option>
-	  		      	          	  	<option value="2">Approved</option>
+	  		      	          		<option value="1">Not Requested</option>
+	  		      	          	  	<option value="2">Requested</option>
+	  		      	          	  	<option value="3">Approved</option>
 	  		      	          	</select>
 	  		      	          </td>
 	  		      	        </tr>
@@ -308,6 +333,12 @@
 				});
 			});
 
+			var approved_progress = ({{approved}}*100/{{total}}).toPrecision(4);
+			$('.approved').css('width', approved_progress+'%').text("Approved - " + {{approved}}+'/'+{{total}} + " (" + approved_progress + "%)");
+			var requested_progress = ({{requested}}*100/{{total}}).toPrecision(4);
+			$('.requested').css('width', requested_progress+'%').text("Requested - " + {{requested}}+'/'+{{total}} + " (" + requested_progress + "%)");
+			var total_prog = Number(approved_progress) + Number(requested_progress);
+			$('.prog-perc').text( total_prog + "%");
 		})
 
 

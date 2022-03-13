@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 
 {% block content %}
-{% load markdown_extras %}
 
 	{% load static %}
 <style type="text/css">
@@ -41,16 +40,20 @@
 				<tbody>
 				{% if week_data %}
 				{% for week_data in week_data %}
-					<tr>
+				<a href="{% url 'content' week_data.weekid %}">
+					<tr class='clickable-row' data-href="{% url 'content' week_data.weekid %}">
 						<td>{{week_data.weekid}}</td>
-						<td><a href="{% url 'content' week_data.weekid %}">{{week_data.weektitle}}</a> </td>
-						<td>{{ week_data.status }}%</td>
+						<td>{{week_data.weektitle}}</td>
+						<td>
+								{{ week_data.status }}
+						</td>
 						<td class="del_row" style="display: none;">
 							<div class="del_week">
 								<a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Remove"><i class="far fa-trash-alt"></i></a>
 							</div>
 						</td>
 					</tr>
+					</a> 
 				{% endfor %}
 				{% else %}
 					<tr><td colspan="5">
@@ -135,6 +138,10 @@
 				}
 			});
 		});
+
+		$(".clickable-row").click(function() {
+        window.location = $(this).data("href");
+    	});
 	});
 
 	$(document).on('click','.del_week', function(e) {

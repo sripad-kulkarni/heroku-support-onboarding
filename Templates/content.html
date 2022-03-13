@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
+{% load markdown_extras %}
 
 {% block content %}
-{% load markdown_extras %}
 
 <style type="text/css">
 	.week_t tr td:nth-child(2), tr th:nth-child(2) {
@@ -9,6 +9,25 @@
 	}
 	.week_t tr td:nth-child(2) {
 		max-width: 30px
+	}
+	p {
+		margin: 2px;
+	}
+
+	.form-check-input[type=checkbox] {
+	    border-radius: .25em;
+	    height: 20px;
+	    width: 20px;
+	}
+	.form-check-input[type=radio] {
+	    border-radius: 100%;
+	    height: 20px;
+	    width: 20px;
+	}
+	.form-switch .form-check-input[type=checkbox] {
+	    border-radius: 2em;
+	    height: 20px;
+	    width: 40px;
 	}
 </style>
 
@@ -22,11 +41,16 @@
 	<div class="row border" style="padding: 10px;">
 		<div class="col border border border-dark user_table">
 			<div class="row">
-				<div class="col"><h5><strong>Week</strong> <strong id="week_no">{{week_no}}</strong></h5></div>
-				<div class="col-lg-10" style="align-items: center;">
-					<div class="progress" style="white; height: 20px;">
+				<div class="col">
+					<blockquote class="blockquote">
+					  <p>{{ week.weektitle}}</p>
+					  <div class="progress" style="white; height: 20px;">
 					  <div class="progress-bar progress-bar-striped bg-success" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: {{week.status}}%; "><strong>{{week.status}}</strong></div>
 					</div>
+					</blockquote>
+					<figcaption class="blockquote-footer" style="margin-bottom: 5px;">
+					  Week <strong id="week_no">{{week_no}}</strong>
+					</figcaption>
 				</div>
 				{% if user.profile.role == "MANAGER" or user.is_superuser %}
 					<div class="col edit" style="text-align: right; display: block;">
@@ -39,7 +63,7 @@
 				</div>
 				<hr style="margin-top: 0px;">
 
-			<table class="table table-responsive table-hover week_t">
+			<table class="table table-responsive table-hover week_t align-middle">
 				<thead class="thead">
 					<tr>
 						<th scope="col">Task Description</th>
@@ -49,12 +73,17 @@
 				<tbody>
 				{% if content %}
 				{% for content in content %}
-					<tr>
-						<td>{{content.task}}</td>
+						
 						{% if content.status == True %}
-						<td><input id="content_check" class="content_check" class="form-check-input" type="checkbox" id="flexCheckDefault" checked></td>
+						<tr style="background-color: rgba(41,132,112, 0.1);">
+							<td>{{content.task | convert_markdown | safe}}</td>
+							<td><input id="content_check" class="content_check form-check-input" type="checkbox" id="flexCheckDefault" checked></td>
+						</tr>
 						{% else %}
-						<td><input id="content_check" class="content_check" class="form-check-input" type="checkbox" id="flexCheckDefault"></td>
+						<tr>
+							<td>{{content.task | convert_markdown | safe}}</td>
+							<td><input id="content_check" class="content_check form-check-input" type="checkbox" id="flexCheckDefault"></td>
+						</tr>
 						{% endif %}
 						<td class="del_row" style="display: none;">
 							<div class="del_week">
@@ -74,7 +103,9 @@
 			</table>
 
 			{% if user.profile.role == "MANAGER" or user.is_superuser %}
-				<center><button id="add-task" class="btn btn-colour btn-sm add-task" data-bs-toggle="modal" data-bs-target="#exampleModal" style="display: none;">Add Task Item</button></center>
+				<center><button id="add-task" class="btn btn-colour btn-sm add-task" data-bs-toggle="modal" data-bs-target="#exampleModal" style="display: none;">Add Task Item</button><br>
+					<small class="add-task" style="display: none;"><u>Hint</u>: We allow markdown here while adding the content, I have a guide for you <a href="https://www.markdownguide.org/cheat-sheet/" target="_blank">here</a>.</small>
+				</center>
 				<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 					<div class="modal-dialog modal-lg">
 				    	<div class="modal-content">

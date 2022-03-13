@@ -5,6 +5,7 @@ ROLES = (
 )
 
 ACCESS_STATUS = (
+    ("NOT_REQUESTED", "Not Requested"),
     ("REQUESTED", "Requested"),
     ("APPROVED", "Approved"),
 )
