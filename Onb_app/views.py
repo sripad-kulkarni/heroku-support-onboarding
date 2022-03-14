@@ -488,7 +488,17 @@ def view_details(request):
 		else:
 			nh_t_progress = 0
 		''' Targets Done'''
-	return render(request, 'check_form.html', {'title': 'Onboarding Home', 'prof':prof, 'onb':onb, 'usr':usr, 'nh_week':nh_week, 'nh_targets':nh_targets, 'nh_t_progress':nh_t_progress})
+		'''Access Req below'''
+		approved_items = Q(newhire_access_item__status='Approved')
+		requested_items = Q(newhire_access_item__status='Requested')
+		tabs = newhire_access_section.objects.filter(onboarding__newhire=name).annotate(item_count=Count('newhire_access_item')).annotate(approved=Count('newhire_access_item', approved_items)).annotate(requested=Count('newhire_access_item__status',requested_items))
+		approved = sum(tabs.values_list('approved', flat=True))
+		requested = sum(tabs.values_list('requested', flat=True))
+		total = sum(tabs.values_list('item_count' ,flat=True))
+		print(requested, approved, total)
+		items = newhire_access_item.objects.filter(newhire_access_section__onboarding__newhire=name)
+		print(items.values())
+		return render(request, 'check_form.html', {'title': 'Onboarding Home', 'prof':prof, 'onb':onb, 'usr':usr, 'nh_week':nh_week, 'nh_targets':nh_targets, 'nh_t_progress':nh_t_progress, 'tabs':tabs,'items':items ,'requested':requested, 'approved':approved, 'total':total})
 
 '''
 def check_accesses(request):
@@ -527,8 +537,12 @@ def check_targets(request):
 
 def check_content(request):
 	if request.method == 'POST':
-		name=request.POST['name']
+		full_name=request.POST['name']
+		print(full_name)
 		id = request.POST['week_id']
+		p = Profile.objects.annotate(fullname=Concat('firstname', Value(' '), 'lastname')).get(fullname=full_name)
+		name = p.user.username
+		prof = User.objects.get(username=name)
 		onb = onboarding.objects.get(newhire=name)
 		week = newhire_weeks.objects.get(onboarding=onb, weekid=id)
 		c = newhire_content.objects.filter(newhire_weeks=week).order_by('task_id')

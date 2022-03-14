@@ -17,7 +17,7 @@
 								</div>
 							</div>
 							<figcaption class="blockquote-footer">
-							  This is {{prof.profile.firstname}}'s progress of <cite title="Source Title">all weeks</cite>
+							  {{prof.profile.firstname}}'s progress of <cite title="Source Title">all weeks</cite>
 							</figcaption>
 						</div>
 					</div>
@@ -28,15 +28,19 @@
 								<tbody>
 									{% if nh_week %}
 									{% for nh_week in nh_week %}
-									<tr>
+									<tr class='clickable-row'>
 										<td>
 											<small class="">Week {{ nh_week.weekid }} - {{ nh_week.weektitle }}</small>
 											<div class="progress" style="background-color: white;">
 											  <div class="progress-bar progress-bar-striped bg-success" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: {{nh_week.status}}%;">{{nh_week.status}}</div>
 											</div>
 										</td>
-										<td>
-											>
+										<td style="	color: #154e8d;">
+											<center>
+											<button class="btn btn-outline-secondary btn-sm back-overview" onclick="week_content({{ nh_week.weekid }})" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal" >
+												&#10095;</button>
+
+											</center>
 										</td>
 									</tr>
 									{% endfor %}
@@ -49,6 +53,48 @@
 									{% endif %}
 								</tbody>
 							</table>
+						</div>
+					</div>
+					<div class="row home-bg" style="max-height: 300px;">
+						<div class="col">
+							<h6 style="margin-bottom: 10px;">Access Requests</h6><hr style="margin: 2px;">
+					  		{% for tab in tabs %}
+					  		<div class="accordion" id="accordionPanelsStayOpenExample" >
+					  		  <div class="accordion-item">
+					  		    <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+					  		      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-{{ tab.name }}" aria-expanded="true" aria-controls="panelsStayOpen-{{ tab.name }}" style="clear: both;">
+					  		        {{ tab.name }} &nbsp;
+					  		        <label class="text-muted">[Approved - {{tab.approved}}/{{tab.item_count}}]</label>
+					  		      </button>
+					  		    </h2>
+					  		    <div id="panelsStayOpen-{{ tab.name }}" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
+					  		      <div class="accordion-body">
+					  		        
+					  		      	<table class="table table-sm table-responsive table-hover" style="vertical-align: middle; margin-bottom: 0px;">
+					  		      	  <tbody>
+					  		  			{% for item in items %}
+					  		  			{% if item.newhire_access_section.name == tab.name %}
+					  		      	    <tr>
+				  		      	          <td><small class="text-muted">{{ item.name }}</small></td>
+				  		      	          <td class="col-sm-2">
+				  		      	          	{% if item.status == 'Approved' %}
+				  		      	          	<small  style="color: green;">{{ item.status }}</small>
+				  		      	          	{% elif item.status == 'Requested' %}
+				  		      	          	<small style="color: yellow;">{{ item.status }}</small>
+				  		      	          	{% else %}
+				  		      	          	<small  style="color: red;">{{ item.status }}</small>
+				  		      	          	{% endif %}
+				  		      	          </td>
+				  		      	        </tr>
+				  		      	        {% endif %}
+				  		      	  		{% endfor %}
+					  		      	    </tbody>
+					  		      	</table>
+					  		      </div>
+					  		    </div>
+					  		  </div>
+					  		</div>
+					  		{% endfor %}
 						</div>
 					</div>
 				</div>
