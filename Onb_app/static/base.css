@@ -37,6 +37,7 @@ body {
   background-image:url("/static/assets/images/themes/oneSalesforce/banner-brand-default.png"), linear-gradient(to top, rgba(1, 68, 134, 0) 0, #014486);
   background-repeat:repeat-x;
   background-position:top left;
+  min-width: 350px;
 }
 .slds-brand-band:after{
   content:none;

@@ -174,25 +174,31 @@
 
 						</div>
 					</div>-->
-					<div class="row home-bg" style="max-height: 225px">
+					<div class="row home-bg" style="max-height: 300px">
 						<div style="margin-bottom: 10px;">
-							<strong>Resources</strong>
+							<strong>Resources</strong> 										
+
 						</div>
 						<hr>
 						<div class="row">
 							<div class="col">
 								<table class="table table-borderless table-sm table-hover table-responsive">
 									<tbody>
+										{% if resources %}
+										{% for res in resources %}
 										<tr>
-											<td><a href="">Onboarding Queries</a></td>
-											<td><a href="" class="fa fa-duotone fa-pen"></a></td>
-											<td><a href="" class="far fa-trash-alt"></a></td>
+											<td style="width: 90%;"><a href="{{res.value}}" target="_blank">{{res.title}}</a></td>
 										</tr>
+										{% endfor %}
+										{% else %}
+										<tr>
+											<td><small class="text-muted">No resources added yet!</small></td>
+										</tr>
+										{% endif %}
+
 									</tbody>
 								</table>
-								<center><button class="btn btn-outline-secondary btn-sm">New</button></center>
 							</div>
-
 						</div>
 					</div>
 				</div>

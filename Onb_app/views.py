@@ -13,6 +13,10 @@ from django.core import serializers
 from django.db.models import Value
 from django.db.models.functions import Concat
 from django.db.models import Count, Sum
+import requests
+import os
+from django.utils import timezone
+import datetime
 
 # Create your views here.
 
@@ -68,6 +72,7 @@ def logincheck(request):
 	    if user is not None:
 	        if user.is_active:
 	            login(request, user)
+	            requests.post(os.environ['BLOWERIO_URL'] + '/messages', data={'to': '+916309777334', 'message': 'Hi '+user.profile.firstname+", your account was logged in at "+timezone.now()})
 	            return HttpResponseRedirect('/welcome/')
 	        else:
 	        	messages.error(request, "Your account is not active, please contact your manager!")
@@ -174,7 +179,8 @@ def home(request):
 			total = sum(tabs.values_list('item_count' ,flat=True))
 			print(requested, approved, total)
 			items = newhire_access_item.objects.filter(newhire_access_section__onboarding__newhire=request.user.username)
-			return render(request, 'home.html', {'title': 'Onboarding - Home', 'prof':prof, 'onb':onb, 'usr':usr, 'nh_week':nh_week, 'nh_targets':nh_targets, 'nh_t_progress':nh_t_progress, 'tabs':tabs,'items':items ,'requested':requested, 'approved':approved, 'total':total})
+			nh_resources = resources.objects.filter(onboarding__newhire=request.user.username)
+			return render(request, 'home.html', {'title': 'Onboarding - Home', 'prof':prof, 'onb':onb, 'usr':usr, 'nh_week':nh_week, 'nh_targets':nh_targets, 'nh_t_progress':nh_t_progress, 'tabs':tabs,'items':items ,'requested':requested, 'approved':approved, 'total':total, 'resources':nh_resources})
 		except Exception as ex:
 			onb = None
 			print(ex)
@@ -214,7 +220,7 @@ def onb_assign(request):
 			trail_guide = request.POST['trail_guide']
 			onb_buddy = request.POST['onb_buddy']
 			the_manager = request.POST['the_manager']
-			onb = onboarding.objects.filter(newhire=new_hire)
+			onb = onboarding.objects.get(newhire=new_hire)
 			if not onb:
 				onb = onboarding(newhire = new_hire, trailguide = trail_guide, onboardingbuddy = onb_buddy, the_manager=the_manager)
 				onb.save()
@@ -505,8 +511,8 @@ def view_details(request):
 		total = sum(tabs.values_list('item_count' ,flat=True))
 		print(requested, approved, total)
 		items = newhire_access_item.objects.filter(newhire_access_section__onboarding__newhire=name)
-		print(items.values())
-		return render(request, 'check_form.html', {'title': 'Onboarding Home', 'prof':prof, 'onb':onb, 'usr':usr, 'nh_week':nh_week, 'nh_targets':nh_targets, 'nh_t_progress':nh_t_progress, 'tabs':tabs,'items':items ,'requested':requested, 'approved':approved, 'total':total})
+		nh_resources = resources.objects.filter(onboarding__newhire=name)
+		return render(request, 'check_form.html', {'title': 'Onboarding Home', 'prof':prof, 'onb':onb, 'usr':usr, 'nh_week':nh_week, 'nh_targets':nh_targets, 'nh_t_progress':nh_t_progress, 'tabs':tabs,'items':items ,'requested':requested, 'approved':approved, 'total':total, 'resources':nh_resources})
 
 '''
 def check_accesses(request):
@@ -629,3 +635,29 @@ def access_req_update(request):
 		print(item.status)
 		item.save()
 		return HttpResponse()
+
+def add_resource(request):
+	if request.method=='POST':
+		name = request.POST['key']
+		value = request.POST['value']
+		if not value.startswith('http://'):
+			value = "http://" + value
+		print(name, value)
+		onb = onboarding.objects.get(newhire=request.user.username)
+		boo = resources.objects.filter(onboarding = onb, title=name).exists()
+		print(boo)
+		if boo:
+			res = resources.objects.get(onboarding = onb, title=name)
+			res.value = value
+			res.save()
+			print("IF")
+		else:
+			res = resources(onboarding = onb, title=name, value=value)
+			res.save()
+		return HttpResponse('')
+
+def del_resource(request):
+	if request.method == 'POST':
+		name = request.POST['key']
+		resources.objects.get(onboarding__newhire=request.user.username, title=name).delete()
+		return HttpResponse('')

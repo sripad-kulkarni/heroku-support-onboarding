@@ -197,58 +197,74 @@
 
 						</div>
 					</div>-->
-					<div class="row home-bg" style="max-height: 225px">
+					<div class="row home-bg" style="max-height: 300px">
 						<div style="margin-bottom: 10px;">
-							<strong>Resources</strong>
+							<strong>Resources</strong> 										
+							<button class="btn btn-outline-secondary btn-sm" style="float: right; margin-right: 5%; width: 100px;" data-bs-toggle="modal" data-bs-target="#new_link_Modal">New</button>
+
 						</div>
 						<hr>
 						<div class="row">
 							<div class="col">
 								<table class="table table-borderless table-sm table-hover table-responsive">
 									<tbody>
+										{% if resources %}
+										{% for res in resources %}
 										<tr>
-											<td><a href="">Onboarding Queries</a></td>
-											<td><a href="" class="fa fa-duotone fa-pen"></a></td>
-											<td><a href="" class="far fa-trash-alt"></a></td>
+											<td style="width: 90%;"><a href="{{res.value}}" target="_blank">{{res.title}}</a></td>
+											<td style="width: 10% ;"><a href="" class="fa fa-duotone fa-pen" onclick="return edit_res('{{res.title}}', '{{res.value}}');" data-bs-toggle="modal" data-bs-target="#new_link_Modal"></a></td>
+											<td style="width: 10%;"><a href="#" class="far fa-trash-alt del_res"></a></td>
 										</tr>
+										{% endfor %}
+										{% else %}
+										<label>No RES</label>
+										{% endif %}
+
 									</tbody>
 								</table>
-								<center>
-									<button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#new_link_Modal">New</button>
-									<div class="modal fade" id="new_link_Modal" tabindex="-1" aria-labelledby="newlinkModalLabel" aria-hidden="true">
-									  <div class="modal-dialog">
-									    <div class="modal-content">
-									    	<form>
-										      <div class="modal-header">
-										        <h5 class="modal-title" id="newlinkModalLabel">New Resource</h5>
-										        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-										      </div>
-										      <div class="modal-body row g-3 justify-content-center">
-		      	    			      			<div class="col-sm-9">
-		      		    			      		  	<input type="text" id="new_res" class="form-control" placeholder="Title" aria-label="Title" required>
-		      	    			      			</div>
-		      		    			      	  	<div class="col-sm-9">
-		      		    			      	  	  	<input type="text" id="res_val" class="form-control" placeholder="Value" aria-label="Value" required>
-		      		    			      	  	</div>
-										      </div>
-										      <div class="modal-footer">
-										        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-										        <button type="button" class="btn btn-primary create-res">Save changes</button>
-										      </div>
-									    	</form>
-									      
-									    </div>
-									  </div>
-									</div>
-								</center>
 							</div>
-
 						</div>
 					</div>
+				</div>
+				<div class="modal fade" id="new_link_Modal" tabindex="-1" aria-labelledby="newlinkModalLabel" aria-hidden="true">
+				  <div class="modal-dialog">
+				    <div class="modal-content">
+				    	<form id="form" method="POST">
+					      <div class="modal-header">
+					        <h5 class="modal-title" id="newlinkModalLabel">New Resource</h5>
+					        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					      </div>
+					      <div class="modal-body row g-3 justify-content-center">
+				      			<div class="col-sm-9">
+					      		  	<input type="text" id="res_key" class="form-control" placeholder="Title" aria-label="Title" required>
+				      			</div>
+					      	  	<div class="col-sm-9">
+					      	  	  	<input type="text" id="res_val" class="form-control" placeholder="Value" aria-label="Value" required>
+					      	  	</div>
+					      </div>
+					      <div class="modal-footer">
+					        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					        <input type="submit" class="btn btn-primary create-res" value="Save"></button>
+					      </div>
+				    	</form>
+				      
+				    </div>
+				  </div>
 				</div>
 			</div>
 		</div>
 	</div>
+	<div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center w-100">
+	    <div class="toast border-0 position-absolute top-0 toast-bg" data-bs-delay="1500" role="alert" aria-live="assertive" aria-atomic="true" style="opacity: 1 !important;">
+		    <div class="d-flex">
+			    <div class="toast-body">
+			      
+			    </div>
+		    	<button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+		    </div>
+	    </div>
+	</div>
+
 	
 	<script>
 	sd = "{{prof.profile.startdate|date:'M d, Y'}}";
@@ -286,14 +302,69 @@
 	  	console.log(current);
 	  	console.log(countDownDate);
 */	    
-		
-		$('.create_res').on('click', function(){
+		$('#form').on('submit', function(e) {
+			e.preventDefault();
 
+			$.ajax({
+				type: 'POST',
+				url: 'add_resource/',
+				data: {
+					key: $('#res_key').val(),
+					value: $('#res_val').val(),
+					csrfmiddlewaretoken: '{{ csrf_token }}',
+				},
+				success: function() {
+					$('.modal').find('form').trigger('reset');
+					$('.modal').modal('hide');
+					$('div.toast-body').text('Resource added!');
+					var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+					var toastList = toastElList.map(function (toastEl) {
+						return new bootstrap.Toast(toastEl)
+					});
+					toastList.forEach(toast => toast.show());
+					setTimeout(function() {window.location.reload()}, 900);
+				},
+				error: function() {
+					alert('Adding resource failed!')
+				}
 
+			});
+		});
 
-		})
 	});
 
+	function edit_res(key, value) {
+		console.log("HERE");
+		$('#res_key').val(key);
+		$('#res_val').val(value);
+	}
+
+	$('.del_res').on('click', function(e) {
+		e.preventDefault();
+
+		var row = $(this).closest("tr");
+		console.log(row);
+		$.ajax({
+			type: 'POST',
+			url: 'del_resource/',
+			data: {
+				key: row.find("td:eq(0)").text(),
+				csrfmiddlewaretoken: '{{ csrf_token }}',
+			},
+			success: function(){ 
+				$('div.toast-body').text('Resource Deleted!');
+				var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+				var toastList = toastElList.map(function (toastEl) {
+					return new bootstrap.Toast(toastEl)
+				});
+				toastList.forEach(toast => toast.show());
+				setTimeout(function() {window.location.reload()}, 900);
+			},
+			error: function() {
+				alert('Deleting resource failed!')
+			}
+		});
+	})
 	</script>
 
 {% endblock %}

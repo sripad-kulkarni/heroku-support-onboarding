@@ -110,4 +110,3 @@ class resources(models.Model):
     title = models.CharField(max_length=100)
     value = models.CharField(max_length=500)
     
-
