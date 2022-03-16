@@ -48,6 +48,17 @@
 						</tr>
 						{% endif %}
 
+						<tr>
+							<td>Phone</td>
+
+							<td>
+								<div class="input-group">
+									<input type="tel" id="phone" name="phone" readonly class="form-control-plaintext" value="{{prof.profile.phone}}">
+									<small class="text-muted" style="margin: auto;">Format: country code + phone number (ex: +129876543210)</small>
+								</div>
+							</td>
+						</tr>
+
 					</tbody>
 
 				</table>
@@ -77,6 +88,7 @@
 			$("#firstname").removeAttr("readonly");
 			$("#lastname").removeAttr("readonly");
 			$("#email").removeAttr("readonly");
+			$("#phone").removeAttr("readonly");
 			this.style.display = 'none';
 			document.getElementById('submit').style.display = 'block';
 			document.getElementById('cancel').style.display = 'block';
@@ -87,6 +99,7 @@
 			$("#firstname").attr("readonly", true);
 			$("#lastname").attr("readonly", true);
 			$("#email").attr("readonly", true);
+			$("#phone").attr("readonly", true);
 			this.style.display = 'none';
 			document.getElementById('submit').style.display = 'none';
 			document.getElementById('edit').style.display = 'block';
@@ -102,6 +115,7 @@
 				firstname: $('#firstname').val(),
 				lastname: $('#lastname').val(),
 				email: $('#email').val(),
+				phone: $('#phone').val(),
 				csrfmiddlewaretoken: '{{ csrf_token }}',
 			},
 			success: function(){ 
@@ -111,6 +125,7 @@
 				$("#firstname").attr("readonly", true);
 				$("#lastname").attr("readonly", true);
 				$("#email").attr("readonly", true);
+				$("#phone").attr("readonly", true);
 				var toastElList = [].slice.call(document.querySelectorAll('.toast'))
 				var toastList = toastElList.map(function (toastEl) {
 				  return new bootstrap.Toast(toastEl)

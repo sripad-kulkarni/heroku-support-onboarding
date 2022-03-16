@@ -4,6 +4,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .choices import ROLES, ACCESS_STATUS
 import datetime
+from django.core.validators import RegexValidator
 
 # Create your models here.
 
@@ -16,6 +17,8 @@ class Profile(models.Model):
     role = models.CharField(max_length=15, choices=ROLES, default = 'SUPERUSER')
     startdate = models.DateField(max_length=True, default=datetime.datetime.now)
     enddate = models.DateField(max_length=True, default=datetime.datetime.now)
+    phoneNumberRegex = RegexValidator(regex = r"^\+?1?\d{8,15}$")
+    phone = models.CharField(validators = [phoneNumberRegex], max_length = 16, default='')
 
     def __str__(self):
         return self.user.username

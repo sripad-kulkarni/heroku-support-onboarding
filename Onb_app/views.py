@@ -72,7 +72,7 @@ def logincheck(request):
 	    if user is not None:
 	        if user.is_active:
 	            login(request, user)
-	            requests.post(os.environ['BLOWERIO_URL'] + '/messages', data={'to': '+916309777334', 'message': 'Hi '+user.profile.firstname+", your account was logged in"})
+	            requests.post(os.environ['BLOWERIO_URL'] + '/messages', data={'to': user.profile.phone, 'message': 'Hi '+user.profile.firstname+", your account was logged in"})
 	            return HttpResponseRedirect('/welcome/')
 	        else:
 	        	messages.error(request, "Your account is not active, please contact your manager!")
@@ -121,10 +121,12 @@ def updateprofile(request):
 		firstname = request.POST['firstname']
 		lastname = request.POST['lastname']
 		email = request.POST['email']
+		phone = request.POST['phone']
 		user = User.objects.get(username=request.user.username)
 		user.profile.firstname = firstname
 		user.profile.lastname = lastname
 		user.profile.email = email
+		user.profile.phone = phone
 		user.save()
 		print(firstname, lastname, email)
 		audit_logger.objects.create(user=request.user.username, action='UPDATE_PROFILE')
