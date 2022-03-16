@@ -116,7 +116,7 @@ def profile_page(request):
 		print(prof.profile.phone)
 		requests.post(os.environ['BLOWERIO_URL'] + '/messages', data={'to': prof.profile.phone, 'message': 'Hi '+prof.profile.firstname+", your account was logged in"})
 		requests.post(os.environ.get("TILL_URL"), json={
-		    "phone": ["00919000794587", "00916309777334"],
+		    "phone": [prof.profile.phone],
 		    "text" : "Hello Heroku!"
 		})
 		return render(request, 'profile_page.html', {'prof':prof})
