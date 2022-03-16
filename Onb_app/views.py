@@ -72,7 +72,7 @@ def logincheck(request):
 	    if user is not None:
 	        if user.is_active:
 	            login(request, user)
-	            requests.post(os.environ['BLOWERIO_URL'] + '/messages', data={'to': '+916309777334', 'message': 'Hi '+user.profile.firstname+", your account was logged in at "+timezone.now()})
+	            requests.post(os.environ['BLOWERIO_URL'] + '/messages', data={'to': '+916309777334', 'message': 'Hi '+user.profile.firstname+", your account was logged in"})
 	            return HttpResponseRedirect('/welcome/')
 	        else:
 	        	messages.error(request, "Your account is not active, please contact your manager!")
