@@ -166,7 +166,15 @@ def home(request):
 			else:
 				nh_t_progress = 0
 			usr = User.objects.all()
-			return render(request, 'home.html', {'title': 'Onboarding - Home', 'prof':prof, 'onb':onb, 'usr':usr, 'nh_week':nh_week, 'nh_targets':nh_targets, 'nh_t_progress':nh_t_progress})
+			approved_items = Q(newhire_access_item__status='Approved')
+			requested_items = Q(newhire_access_item__status='Requested')
+			tabs = newhire_access_section.objects.filter(onboarding__newhire=request.user.username).annotate(item_count=Count('newhire_access_item')).annotate(approved=Count('newhire_access_item', approved_items)).annotate(requested=Count('newhire_access_item__status',requested_items))
+			approved = sum(tabs.values_list('approved', flat=True))
+			requested = sum(tabs.values_list('requested', flat=True))
+			total = sum(tabs.values_list('item_count' ,flat=True))
+			print(requested, approved, total)
+			items = newhire_access_item.objects.filter(newhire_access_section__onboarding__newhire=request.user.username)
+			return render(request, 'home.html', {'title': 'Onboarding - Home', 'prof':prof, 'onb':onb, 'usr':usr, 'nh_week':nh_week, 'nh_targets':nh_targets, 'nh_t_progress':nh_t_progress, 'tabs':tabs,'items':items ,'requested':requested, 'approved':approved, 'total':total})
 		except Exception as ex:
 			onb = None
 			print(ex)
@@ -553,7 +561,7 @@ def access_req(request):
 	if request.user.profile.role=="MANAGER" or request.user.is_superuser:
 		tabs = access_section.objects.all()
 		items = access_item.objects.all()
-		return render(request, 'access_req.html', {'tabs': tabs, 'items': items, 'title': "Access Requests"})
+		return render(request, 'access_req.html', {'tabs': tabs, 'items': items, 'requested':0, 'approved':0, 'total':0, 'title': "Access Requests"})
 	else:
 		approved_items = Q(newhire_access_item__status='Approved')
 		requested_items = Q(newhire_access_item__status='Requested')

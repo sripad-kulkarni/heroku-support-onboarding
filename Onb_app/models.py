@@ -104,5 +104,10 @@ class audit_logger(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     user = models.CharField(max_length=50)
     action = models.CharField(max_length=250)
+
+class resources(models.Model):
+    onboarding = models.ForeignKey(onboarding, on_delete=models.CASCADE)
+    title = models.CharField(max_length=100)
+    value = models.CharField(max_length=500)
     
 

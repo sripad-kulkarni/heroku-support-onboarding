@@ -17,11 +17,11 @@
 								</div>
 							</div>
 							<figcaption class="blockquote-footer">
-							  {{prof.profile.firstname}}'s progress of <cite title="Source Title">all weeks</cite>
+							  Calculated average progress of <cite title="Source Title">all weeks</cite>
 							</figcaption>
 						</div>
 					</div>
-					<div class="row home-bg" style="max-height: 300px;">
+					<div class="row home-bg" style="max-height: 400px;">
 						<div class="col">
 							<h6 style="margin-bottom: 10px;">Week wise progress</h6><hr style="margin: 2px;">
 							<table class="table align-middle table-responsive table-hover" >
@@ -55,20 +55,20 @@
 							</table>
 						</div>
 					</div>
-					<div class="row home-bg" style="max-height: 300px;">
+					<div class="row home-bg" style="max-height: 400px;">
 						<div class="col">
 							<h6 style="margin-bottom: 10px;">Access Requests</h6><hr style="margin: 2px;">
 					  		{% for tab in tabs %}
-					  		<div class="accordion" id="accordionPanelsStayOpenExample" >
+					  		<div class="accordion accordion-flush" id="accordionFlushExample" style="margin-top: 10px;">
 					  		  <div class="accordion-item">
-					  		    <h2 class="accordion-header" id="panelsStayOpen-headingOne">
-					  		      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-{{ tab.name }}" aria-expanded="true" aria-controls="panelsStayOpen-{{ tab.name }}" style="clear: both;">
+					  		    <h2 class="accordion-header" id="flush-headingOne">
+					  		      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-{{ tab.name }}" aria-expanded="false" aria-controls="flush-{{ tab.name }}" style="clear: both; height: 30px;">
 					  		        {{ tab.name }} &nbsp;
-					  		        <label class="text-muted">[Approved - {{tab.approved}}/{{tab.item_count}}]</label>
+					  		        <small class="text-muted">[Approved - {{tab.approved}}/{{tab.item_count}}]</small>
 					  		      </button>
 					  		    </h2>
-					  		    <div id="panelsStayOpen-{{ tab.name }}" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
-					  		      <div class="accordion-body">
+					  		    <div id="flush-{{ tab.name }}" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+					  		      <div class="accordion-body" style="padding: 0.25rem 1.25rem;">
 					  		        
 					  		      	<table class="table table-sm table-responsive table-hover" style="vertical-align: middle; margin-bottom: 0px;">
 					  		      	  <tbody>
@@ -76,11 +76,11 @@
 					  		  			{% if item.newhire_access_section.name == tab.name %}
 					  		      	    <tr>
 				  		      	          <td><small class="text-muted">{{ item.name }}</small></td>
-				  		      	          <td class="col-sm-2">
+				  		      	          <td class="col-sm-3">
 				  		      	          	{% if item.status == 'Approved' %}
 				  		      	          	<small  style="color: green;">{{ item.status }}</small>
 				  		      	          	{% elif item.status == 'Requested' %}
-				  		      	          	<small style="color: yellow;">{{ item.status }}</small>
+				  		      	          	<small style="color: orange;">{{ item.status }}</small>
 				  		      	          	{% else %}
 				  		      	          	<small  style="color: red;">{{ item.status }}</small>
 				  		      	          	{% endif %}

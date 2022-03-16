@@ -72,7 +72,7 @@
 		  		      	    <tr>
 	  		      	          <td><small class="text-muted">{{ item.name }}</small></td>
 	  		      	          <td class="col-sm-2">
-	  		      	          	<select class="form-select form-select-sm" aria-label="Default select example">
+	  		      	          	<select class="form-select form-select-sm form-select-1" aria-label="Default select example">
 	  		      	          		<option value="" selected disabled hidden>{{ item.status }}</option>
 	  		      	          		<option value="1">Not Requested</option>
 	  		      	          	  	<option value="2">Requested</option>
@@ -306,7 +306,7 @@
 				});
 			})
 
-			$(".form-select").on("change", function(e) {
+			$(".form-select-1").on("change", function(e) {
 
 				e.preventDefault();
 				var row = $(this).closest("tr");
@@ -316,7 +316,6 @@
 					type:'POST',
 					url:'access_req_update/',
 					data: {
-						week_no: $("#week_no").text(),
 						name: row.find("td:eq(0)").text(),
 						value: row.find("td:eq(1) option:selected").text(),
 						csrfmiddlewaretoken: '{{ csrf_token }}',
@@ -339,6 +338,8 @@
 			$('.requested').css('width', requested_progress+'%').text("Requested - " + {{requested}}+'/'+{{total}} + " (" + requested_progress + "%)");
 			var total_prog = Number(approved_progress) + Number(requested_progress);
 			$('.prog-perc').text( total_prog + "%");
+
+			
 		})
 
 
