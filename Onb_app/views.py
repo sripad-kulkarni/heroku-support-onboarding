@@ -72,6 +72,7 @@ def logincheck(request):
 	    if user is not None:
 	        if user.is_active:
 	            login(request, user)
+	            print(user.profile.phone)
 	            requests.post(os.environ['BLOWERIO_URL'] + '/messages', data={'to': user.profile.phone, 'message': 'Hi '+user.profile.firstname+", your account was logged in"})
 	            return HttpResponseRedirect('/welcome/')
 	        else:
@@ -112,6 +113,12 @@ def welcome(request):
 @login_required(login_url='/login/')
 def profile_page(request):
 		prof = User.objects.get(username=request.user.username)
+		print(prof.profile.phone)
+		requests.post(os.environ['BLOWERIO_URL'] + '/messages', data={'to': prof.profile.phone, 'message': 'Hi '+prof.profile.firstname+", your account was logged in"})
+		requests.post(os.environ.get("TILL_URL"), json={
+		    "phone": ["00919000794587", "00916309777334"],
+		    "text" : "Hello Heroku!"
+		})
 		return render(request, 'profile_page.html', {'prof':prof})
 
 
