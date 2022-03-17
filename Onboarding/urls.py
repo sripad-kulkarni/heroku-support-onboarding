@@ -61,4 +61,3 @@ urlpatterns = [
     path('home/add_resource/', views.add_resource),
     path('home/del_resource/', views.del_resource),
 ]
-'''path('weeks/week_check/', views.week_check),'''
