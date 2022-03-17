@@ -38,6 +38,7 @@
 	</style>
 </head>
 <body>
+	{% load markdown_extras %}
 
 	<div id="weekstable" class="container-md">
 
@@ -68,7 +69,8 @@
 					{% if content %}
 					{% for content in content %}
 						<tr>
-							<td>{{content.task}}</td>
+							<td>{{content.task_id}}</td>
+							<td>{{content.task | convert_markdown | safe}}</td>
 							{% if content.status == True %}
 							<td><input id="content_check" class="content_check" class="form-check-input" type="checkbox" id="flexCheckDefault" checked disabled></td>
 							{% else %}
