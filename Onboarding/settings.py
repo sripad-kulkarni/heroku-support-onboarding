@@ -125,11 +125,6 @@ DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True
 '''
 MEDIA_URL= os.environ['FASTLY_CDN_URL'] + '/' 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_SSL_REDIRECT = True
+SECURE_SSL_REDIRECT = True'''
 
 STATIC_URL = os.environ.get('EDGE_URL', '') + '/static/'
-
-STATIC_HOST = os.environ.get("EDGE_URL", "")
-STATIC_URL = STATIC_HOST + "/static/"'''
-
-STATIC_URL = os.environ.get('FASTLY_CDN_URL', '') + '/static/'
