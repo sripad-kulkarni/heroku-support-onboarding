@@ -641,5 +641,11 @@ def add_resource(request):
 def del_resource(request):
 	if request.method == 'POST':
 		name = request.POST['key']
-		resources.objects.get(onboarding__newhire=request.user.username, title=name).delete()
+		if request.user.profile.role == 'MANAGER' or request.user.is_superuser or request.user.profile.role=='ENGINEER':
+			full_name = request.POST['nh_name']
+			p = Profile.objects.annotate(fullname=Concat('firstname', Value(' '), 'lastname')).get(fullname=full_name)
+			nh_name = p.user.username
+		else:
+			nh_name = request.user.username
+		resources.objects.get(onboarding__newhire=nh_name, title=name).delete()
 		return HttpResponse('')
