@@ -72,7 +72,6 @@ def logincheck(request):
 	    if user is not None:
 	        if user.is_active:
 	            login(request, user)
-	            print(user.profile.phone)
 	            return HttpResponseRedirect('/welcome/')
 	        else:
 	        	messages.error(request, "Your account is not active, please contact your manager!")
@@ -112,7 +111,7 @@ def welcome(request):
 @login_required(login_url='/login/')
 def profile_page(request):
 	prof = User.objects.get(username=request.user.username)
-	'''print(prof.profile.phone)
+	'''
 	requests.post(os.environ.get("TILL_URL"), json={
 	    "phone": [prof.profile.phone],
 	    "text" : "Hello Heroku!"
@@ -133,7 +132,6 @@ def updateprofile(request):
 		user.profile.email = email
 		user.profile.phone = phone
 		user.save()
-		print(firstname, lastname, email)
 		audit_logger.objects.create(user=request.user.username, action='UPDATE_PROFILE')
 		return HttpResponse('')
 
@@ -159,22 +157,18 @@ def home(request):
 			nh_week = newhire_weeks.objects.filter(onboarding__newhire=request.user.username)
 			completed = 0
 			count = 0
-			print(nh_week)
 			for nhw in nh_week:
 				completed = completed + newhire_content.objects.filter(newhire_weeks=nhw,status='True').count()
 				count = count + newhire_content.objects.filter(newhire_weeks=nhw).count()
-			print(completed, count)
 			if nh_week.count() > 0:
 				perc = round((completed/count)*100, 2)
 			else:
 				perc = 0.0
-			print(perc)
 			onb.progress = perc
 			nh_targets = newhire_targets.objects.filter(onboarding__newhire=request.user.username)
 			target_achieved = newhire_targets.objects.filter(onboarding__newhire=request.user.username, status=True).count()
 			if nh_targets.count() > 0:
 				nh_t_progress = (target_achieved/nh_targets.count()) * 100
-				print(nh_t_progress)
 			else:
 				nh_t_progress = 0
 			usr = User.objects.all()
@@ -184,13 +178,11 @@ def home(request):
 			approved = sum(tabs.values_list('approved', flat=True))
 			requested = sum(tabs.values_list('requested', flat=True))
 			total = sum(tabs.values_list('item_count' ,flat=True))
-			print(requested, approved, total)
 			items = newhire_access_item.objects.filter(newhire_access_section__onboarding__newhire=request.user.username)
 			nh_resources = resources.objects.filter(onboarding__newhire=request.user.username)
 			return render(request, 'home.html', {'title': 'Onboarding - Home', 'prof':prof, 'onb':onb, 'usr':usr, 'nh_week':nh_week, 'nh_targets':nh_targets, 'nh_t_progress':nh_t_progress, 'tabs':tabs,'items':items ,'requested':requested, 'approved':approved, 'total':total, 'resources':nh_resources})
 		except Exception as ex:
 			onb = None
-			print(ex)
 			return render(request, 'home.html', {'title': 'Onboarding - Home', 'prof':prof, 'onb':onb, 'nh_targets':None})
 
 @login_required(login_url='/login/')
@@ -260,7 +252,6 @@ def onb_assign(request):
 def del_onb(request):
 	if request.method == 'POST':
 		nh_uname = request.POST['col1']
-		print(nh_uname)
 		onboarding.objects.filter(newhire=nh_uname).delete()
 		audit_logger.objects.create(user=request.user.username, action='**REMOVE ASSIGNMENT NEW HIRE** `'+nh_uname+'`')
 		return HttpResponse('')
@@ -278,7 +269,6 @@ def weeks(request):
 			week = newhire_weeks.objects.filter(onboarding=onb).order_by('weekid')
 			user = User.objects.get(username=request.user)
 			content = newhire_content.objects.filter(newhire_weeks__onboarding=onb)
-			print(content)
 			return render(request, 'weeks.html', {'week_data':week, 'user':user, content:'content', 'title': "Onboarding Plan - Weeks"})
 		except:
 			user = User.objects.get(username=request.user)
@@ -308,7 +298,6 @@ def del_week(request):
 	if request.user.profile.role=="MANAGER" or request.user.is_superuser:
 		if request.method == 'POST':
 			week_id = request.POST['week_id']
-			print(week_id)
 			weeks_data.objects.filter(weekid=week_id).delete()
 			audit_logger.objects.create(user=request.user.username, action='**REMOVE WEEEK:** `'+week_id+'`')
 			return HttpResponse('')
@@ -407,7 +396,6 @@ def del_target(request):
 def target_check(request):
 	target_name = request.POST['target_name']
 	target_check = request.POST['target_check']
-	print(target_name, target_check)
 	target = newhire_targets.objects.get(onboarding__newhire=request.user.username, target=target_name)
 	if target_check == 'true':
 		target.status=True
@@ -421,7 +409,6 @@ def content_check(request):
 	content_name = request.POST['content_name']
 	content_check = request.POST['content_check']
 	week_no = request.POST['week_no']
-	print(week_no, content_name, content_check)
 	content = newhire_content.objects.get(newhire_weeks__onboarding__newhire=request.user.username, newhire_weeks__weekid = week_no, task_id = content_name)
 	if content_check == 'true':
 		content.status = True
@@ -432,11 +419,9 @@ def content_check(request):
 	nh_week_progress = newhire_content.objects.filter(newhire_weeks__onboarding__newhire=request.user.username, newhire_weeks__weekid = week_no, status=True).count()
 	nh_content = newhire_content.objects.filter(newhire_weeks__onboarding__newhire=request.user.username, newhire_weeks__weekid = week_no).count()
 	nh_week_perc = round((nh_week_progress/nh_content)*100, 2)
-	print(nh_week_perc)
 	nh_week = newhire_weeks.objects.get(onboarding__newhire=request.user.username, weekid=week_no)
 	nh_week.status = nh_week_perc
 	nh_week.save()
-	print(nh_week.status)
 	return HttpResponse('')
 
 def check_form(request):
@@ -448,11 +433,9 @@ def check_form(request):
 		nh_week = newhire_weeks.objects.filter(onboarding__newhire=name)
 		completed = 0
 		count = 0
-		print(nh_week)
 		for nhw in nh_week:
 			completed = completed + newhire_content.objects.filter(newhire_weeks=nhw, status=True).count()
 			count = count + newhire_content.objects.filter(newhire_weeks=nhw).count()
-		print(completed)
 		'''
 		completed = newhire_weeks.objects.filter(onboarding__newhire=name, status='100.0').count()
 		'''
@@ -461,14 +444,12 @@ def check_form(request):
 		else:
 			perc = 0.0
 		''' weeks done '''
-		print(perc)
 		''' Targets below '''
 		onb.progress = perc
 		nh_targets = newhire_targets.objects.filter(onboarding__newhire=name)
 		target_achieved = newhire_targets.objects.filter(onboarding__newhire=name, status=True).count()
 		if nh_targets.count() > 0:
 			nh_t_progress = (target_achieved/nh_targets.count()) * 100
-			print(nh_t_progress)
 		else:
 			nh_t_progress = 0
 		''' Targets Done'''
@@ -485,11 +466,9 @@ def view_details(request):
 		nh_week = newhire_weeks.objects.filter(onboarding__newhire=name)
 		completed = 0
 		count = 0
-		print(nh_week)
 		for nhw in nh_week:
 			completed = completed + newhire_content.objects.filter(newhire_weeks=nhw, status=True).count()
 			count = count + newhire_content.objects.filter(newhire_weeks=nhw).count()
-		print(completed)
 		'''
 		completed = newhire_weeks.objects.filter(onboarding__newhire=name, status='100.0').count()
 		'''
@@ -498,14 +477,12 @@ def view_details(request):
 		else:
 			perc = 0.0
 		''' weeks done '''
-		print(perc)
 		''' Targets below '''
 		onb.progress = perc
 		nh_targets = newhire_targets.objects.filter(onboarding__newhire=name)
 		target_achieved = newhire_targets.objects.filter(onboarding__newhire=name, status=True).count()
 		if nh_targets.count() > 0:
 			nh_t_progress = (target_achieved/nh_targets.count()) * 100
-			print(nh_t_progress)
 		else:
 			nh_t_progress = 0
 		''' Targets Done'''
@@ -516,7 +493,6 @@ def view_details(request):
 		approved = sum(tabs.values_list('approved', flat=True))
 		requested = sum(tabs.values_list('requested', flat=True))
 		total = sum(tabs.values_list('item_count' ,flat=True))
-		print(requested, approved, total)
 		items = newhire_access_item.objects.filter(newhire_access_section__onboarding__newhire=name)
 		nh_resources = resources.objects.filter(onboarding__newhire=name)
 		return render(request, 'check_form.html', {'title': 'Onboarding Home', 'prof':prof, 'onb':onb, 'usr':usr, 'nh_week':nh_week, 'nh_targets':nh_targets, 'nh_t_progress':nh_t_progress, 'tabs':tabs,'items':items ,'requested':requested, 'approved':approved, 'total':total, 'resources':nh_resources})
@@ -559,7 +535,6 @@ def check_targets(request):
 def check_content(request):
 	if request.method == 'POST':
 		full_name=request.POST['name']
-		print(full_name)
 		id = request.POST['week_id']
 		p = Profile.objects.annotate(fullname=Concat('firstname', Value(' '), 'lastname')).get(fullname=full_name)
 		name = p.user.username
@@ -582,7 +557,6 @@ def access_req(request):
 		approved = sum(tabs.values_list('approved', flat=True))
 		requested = sum(tabs.values_list('requested', flat=True))
 		total = sum(tabs.values_list('item_count' ,flat=True))
-		print(requested, approved, total)
 		items = newhire_access_item.objects.filter(newhire_access_section__onboarding__newhire=request.user.username)
 		return render(request, 'access_req.html', {'tabs': tabs, 'items': items, 'requested':requested, 'approved':approved, 'total':total, 'title': "Access Requests"})
 
@@ -599,7 +573,6 @@ def del_tab(request):
 	if request.user.profile.role=="MANAGER" or request.user.is_superuser:
 		if request.method == 'POST':
 			name = request.POST['name']
-			print(name)
 			access_section.objects.get(name=name).delete()
 			audit_logger.objects.create(user=request.user.username, action='**REMOVE ACCESS SECTION:** `'+name+'`')
 			return HttpResponse('')
@@ -639,25 +612,27 @@ def access_req_update(request):
 		value = request.POST['value']
 		item = newhire_access_item.objects.get(newhire_access_section__onboarding__newhire = request.user.username, name=name)
 		item.status = value
-		print(item.status)
 		item.save()
 		return HttpResponse()
 
 def add_resource(request):
 	if request.method=='POST':
+		if request.user.profile.role == 'MANAGER' or request.user.is_superuser or request.user.profile.role=='ENGINEER':
+			full_name = request.POST['nh_name']
+			p = Profile.objects.annotate(fullname=Concat('firstname', Value(' '), 'lastname')).get(fullname=full_name)
+			nh_name = p.user.username
+		else:
+			nh_name = request.user.username
 		name = request.POST['key']
 		value = request.POST['value']
 		if not value.startswith('http://'):
 			value = "http://" + value
-		print(name, value)
-		onb = onboarding.objects.get(newhire=request.user.username)
-		boo = resources.objects.filter(onboarding = onb, title=name).exists()
-		print(boo)
-		if boo:
+		onb = onboarding.objects.get(newhire=nh_name)
+		temp = resources.objects.filter(onboarding = onb, title=name).exists()
+		if temp:
 			res = resources.objects.get(onboarding = onb, title=name)
 			res.value = value
 			res.save()
-			print("IF")
 		else:
 			res = resources(onboarding = onb, title=name, value=value)
 			res.save()

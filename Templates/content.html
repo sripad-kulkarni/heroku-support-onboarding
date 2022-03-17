@@ -159,7 +159,6 @@
 		$(".fa-calendar-week").addClass("active");
 		$("#form").submit(function(e){
 			e.preventDefault();
-			console.log($("#week_no").text())
 			$.ajax({
 				type: 'POST',
 				url: 'add_content/',
@@ -234,7 +233,6 @@
 
 		e.preventDefault();
 		var row = $(this).closest("tr");
-		console.log(row.find("td:eq(1) input[type='checkbox']").is(':checked'));
 
 		$.ajax({
 			type:'POST',
@@ -255,7 +253,7 @@
 				setTimeout(function() {window.location.reload()}, 900);
 			}
 		});
-		
+
 	});
 </script>
 

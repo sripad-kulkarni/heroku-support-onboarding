@@ -152,7 +152,6 @@
 	$(document).on('click','.del_week', function(e) {
 		e.preventDefault();
 		var row = $(this).closest("tr");
-		console.log(row);
 		$.ajax({
 			type: 'POST',
 			url: 'del_week/',
@@ -212,7 +211,6 @@
 				setTimeout(function() {window.location.reload()}, 900);
 			}
 		});
-		console.log($(".week_check").is(':checked'));
 	});*/
 
 </script>

@@ -247,31 +247,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="modal fade" id="new_link_Modal" tabindex="-1" aria-labelledby="newlinkModalLabel" aria-hidden="true">
-				  <div class="modal-dialog">
-				    <div class="modal-content">
-				    	<form id="form" method="POST">
-					      <div class="modal-header">
-					        <h5 class="modal-title" id="newlinkModalLabel">New Resource</h5>
-					        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-					      </div>
-					      <div class="modal-body row g-3 justify-content-center">
-				      			<div class="col-sm-9">
-					      		  	<input type="text" id="res_key" class="form-control" placeholder="Title" aria-label="Title" required>
-				      			</div>
-					      	  	<div class="col-sm-9">
-					      	  	  	<input type="text" id="res_val" class="form-control" placeholder="Value" aria-label="Value" required>
-					      	  	</div>
-					      </div>
-					      <div class="modal-footer">
-					        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-					        <input type="submit" class="btn btn-primary create-res" value="Save"></button>
-					      </div>
-				    	</form>
-				      
-				    </div>
-				  </div>
-				</div>
+				
 			</div>
 		</div>
 	</div>
@@ -317,12 +293,6 @@
 	  	}
 
 
-/*	  	console.log(period);
-	  	console.log(left);
-	  	console.log(now);
-	  	console.log(current);
-	  	console.log(countDownDate);
-*/	    
 		$('#form').on('submit', function(e) {
 			e.preventDefault();
 
@@ -355,7 +325,6 @@
 	});
 
 	function edit_res(key, value) {
-		console.log("HERE");
 		$('#res_key').val(key);
 		$('#res_val').val(value);
 	}
@@ -364,7 +333,6 @@
 		e.preventDefault();
 
 		var row = $(this).closest("tr");
-		console.log(row);
 		$.ajax({
 			type: 'POST',
 			url: 'del_resource/',
@@ -388,7 +356,6 @@
 
 		function week_content(id){
 			var nh_name = $('#onbModalLabel').text();
-			console.log(nh_name);
 			$.ajax({
 				type: 'POST',
 				url: 'check_content/',

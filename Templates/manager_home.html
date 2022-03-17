@@ -3,7 +3,7 @@
 {% block content %}
 {% load static %}
 
-<div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1" style="background-color: rgba(219, 232, 255, 0.3)!important;">
+<div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1" >
   <div class="modal-dialog modal-xl modal-dialog-centered">
   	<div class="modal-content" style="background-color: rgba(219, 232, 255, 0.8)!important;">
   	  <div class="modal-header" style="border-bottom-color: #a7bac7;">
@@ -26,7 +26,7 @@
     </div>
   </div>
 </div>
-<div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1" style="background-color: rgba(219, 232, 255, 0.3)!important;">
+<div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1" >
   <div class="modal-dialog modal-xl modal-dialog-centered">
  <div class="modal-content" style="background-color: rgba(219, 232, 255, 0.8)!important;">
  	      <div class="modal-header" style="border-bottom-color: #a7bac7;">
@@ -45,7 +45,35 @@
 
       <div class="modal-footer" style="border-top-color: #a7bac7;">
         <button class="btn btn-primary" class="btn btn-outline-secondary btn-sm back-overview" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">&laquo; Back</button>
+
       </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="new_link_Modal" tabindex="-1" aria-labelledby="newlinkModalLabel" aria-hidden="true" >
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+    	<form id="form" method="POST">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="newlinkModalLabel">New Resource</h5>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body row g-3 justify-content-center">
+      			<div class="col-sm-9">
+	      		  	<input type="text" id="res_key" class="form-control" placeholder="Title" aria-label="Title" required>
+      			</div>
+	      	  	<div class="col-sm-9">
+	      	  	  	<input type="text" id="res_val" class="form-control" placeholder="Value" aria-label="Value" required>
+	      	  	</div>
+	      </div>
+	      <div class="modal-footer">
+	      	<button class="btn  btn-outline-secondary" class="btn btn-outline-secondary btn-sm back-overview" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">&laquo; Back</button>
+	        <input type="submit" class="btn btn-outline-primary create-res" value="Save"></button>
+
+	      </div>
+    	</form>
+      
     </div>
   </div>
 </div>
@@ -253,31 +281,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="modal fade" id="new_link_Modal" tabindex="-1" aria-labelledby="newlinkModalLabel" aria-hidden="true">
-	  <div class="modal-dialog">
-	    <div class="modal-content">
-	    	<form id="form" method="POST">
-		      <div class="modal-header">
-		        <h5 class="modal-title" id="newlinkModalLabel">New Resource</h5>
-		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-		      </div>
-		      <div class="modal-body row g-3 justify-content-center">
-	      			<div class="col-sm-9">
-		      		  	<input type="text" id="res_key" class="form-control" placeholder="Title" aria-label="Title" required>
-	      			</div>
-		      	  	<div class="col-sm-9">
-		      	  	  	<input type="text" id="res_val" class="form-control" placeholder="Value" aria-label="Value" required>
-		      	  	</div>
-		      </div>
-		      <div class="modal-footer">
-		        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-		        <input type="submit" class="btn btn-primary create-res" value="Save"></button>
-		      </div>
-	    	</form>
-	      
-	    </div>
-	  </div>
-	</div>
+
 
 	<script type="text/javascript">
 		$(document).ready(function(){
@@ -350,7 +354,6 @@
 				e.preventDefault();
 
 				var nh_name = $(this).closest("div").find("h5").text();
-				console.log(nh_name);
 				$.ajax({
 					type:'POST',
 					url:'view_details/',
@@ -369,7 +372,6 @@
 				e.preventDefault();
 
 				var nh_name = $('#onbModalLabel').text();
-				console.log(nh_name);
 				$.ajax({
 					type:'POST',
 					url:'view_details/',
@@ -384,11 +386,72 @@
 				})
 			})
 
+				$('#form').on('submit', function(e) {
+					e.preventDefault();
+					var nh_name = $('#onbModalLabel').text();
+					$.ajax({
+						type: 'POST',
+						url: 'add_resource/',
+						data: {
+							key: $('#res_key').val(),
+							value: $('#res_val').val(),
+							nh_name: nh_name,
+							csrfmiddlewaretoken: '{{ csrf_token }}',
+						},
+						success: function() {
+							$('.modal').find('form').trigger('reset');
+							$('.modal').modal('hide');
+							$('div.toast-body').text('Resource added!');
+							var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+							var toastList = toastElList.map(function (toastEl) {
+								return new bootstrap.Toast(toastEl)
+							});
+							toastList.forEach(toast => toast.show());
+							setTimeout(function() {window.location.reload()}, 900);
+						},
+						error: function() {
+							alert('Adding resource failed!')
+						}
+
+					});
+				});
+
+			});
+
+			function edit_res(key, value) {
+				$('#res_key').val(key);
+				$('#res_val').val(value);
+			}
+
+			$('.del_res').on('click', function(e) {
+				e.preventDefault();
+
+				var row = $(this).closest("tr");
+				$.ajax({
+					type: 'POST',
+					url: 'del_resource/',
+					data: {
+						key: row.find("td:eq(0)").text(),
+						csrfmiddlewaretoken: '{{ csrf_token }}',
+					},
+					success: function(){ 
+						$('div.toast-body').text('Resource Deleted!');
+						var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+						var toastList = toastElList.map(function (toastEl) {
+							return new bootstrap.Toast(toastEl)
+						});
+						toastList.forEach(toast => toast.show());
+						setTimeout(function() {window.location.reload()}, 900);
+					},
+					error: function() {
+						alert('Deleting resource failed!')
+					}
+				});
+
 		});
 
 		function week_content(id){
 			var nh_name = $('#onbModalLabel').text();
-			console.log(nh_name);
 			$.ajax({
 				type: 'POST',
 				url: 'check_content/',
