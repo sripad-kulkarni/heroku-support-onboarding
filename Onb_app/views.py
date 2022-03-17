@@ -111,13 +111,13 @@ def welcome(request):
 
 @login_required(login_url='/login/')
 def profile_page(request):
-		prof = User.objects.get(username=request.user.username)
-		print(prof.profile.phone)
-		requests.post(os.environ.get("TILL_URL"), json={
-		    "phone": [prof.profile.phone],
-		    "text" : "Hello Heroku!"
-		})
-		return render(request, 'profile_page.html', {'prof':prof})
+	prof = User.objects.get(username=request.user.username)
+	'''print(prof.profile.phone)
+	requests.post(os.environ.get("TILL_URL"), json={
+	    "phone": [prof.profile.phone],
+	    "text" : "Hello Heroku!"
+	})'''
+	return render(request, 'profile_page.html', {'prof':prof})
 
 
 @login_required(login_url='/login')
