@@ -34,7 +34,12 @@
 					<tr>
 						<th scope="col">Week #</th>
 						<th scope="col">Title</th>
-						<th scope="col">Completed</th>
+						
+						<th scope="col">
+							{% if user.profile.role == "NEW_HIRE" %}
+								Completed						
+							{% endif %}
+						</th>
 					</tr>
 				</thead>
 				<tbody>

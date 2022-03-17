@@ -32,7 +32,7 @@ class access_section(models.Model):
 class access_item(models.Model):
     access_section = models.ForeignKey(access_section, on_delete=models.CASCADE)
     item_id = models.IntegerField()
-    name = models.TextField()
+    name = models.TextField(max_length=50000)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -43,7 +43,7 @@ class weeks_data(models.Model):
 class content(models.Model):
     weeks_data = models.ForeignKey(weeks_data, on_delete=models.CASCADE)
     task_id = models.IntegerField()
-    task = models.TextField()
+    task = models.TextField(max_length=50000)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -74,7 +74,7 @@ class newhire_access_section(models.Model):
 class newhire_access_item(models.Model):
     newhire_access_section = models.ForeignKey(newhire_access_section, on_delete=models.CASCADE)
     item_id = models.IntegerField()
-    name = models.TextField()
+    name = models.TextField(max_length=50000)
     status = models.CharField(max_length=15, default = 'Not Requested')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -90,7 +90,7 @@ class newhire_weeks(models.Model):
 class newhire_content(models.Model):
     newhire_weeks = models.ForeignKey(newhire_weeks, on_delete=models.CASCADE)
     task_id = models.IntegerField()
-    task = models.TextField()
+    task = models.TextField(max_length=50000)
     status = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

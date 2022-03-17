@@ -355,7 +355,7 @@ def del_content(request):
 			week_id = request.POST['week_id']
 			task = request.POST['task']
 			week = weeks_data.objects.get(weekid=week_id)
-			content.objects.get(weeks_data=week,task=task).delete()
+			content.objects.get(weeks_data=week,task_id=task).delete()
 			audit_logger.objects.create(user=request.user.username, action='**REMOVE CONTENT:** Week `'+week_id+'` - Task `'+task+'`')
 			return HttpResponse('')
 	else:

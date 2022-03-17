@@ -4,10 +4,10 @@
 {% block content %}
 
 <style type="text/css">
-	.week_t tr td:nth-child(2), tr th:nth-child(2) {
+	.week_t tr td:nth-child(3), tr th:nth-child(3) {
 		text-align: center;
 	}
-	.week_t tr td:nth-child(2) {
+	.week_t tr td:nth-child(3) {
 		max-width: 30px
 	}
 	p {
@@ -43,10 +43,12 @@
 			<div class="row">
 				<div class="col">
 					<blockquote class="blockquote">
-					  <p>{{ week.weektitle}}</p>
+					  <label>{{ week.weektitle}}</label>
+					  {% if user.profile.role == "NEW_HIRE"%}
 					  <div class="progress" style="height: 20px;">
 					  <div class="progress-bar progress-bar-striped bg-success" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: {{week.status}}%; "><strong>{{week.status}}</strong></div>
-					</div>
+						</div>
+						{% endif %}
 					</blockquote>
 					<figcaption class="blockquote-footer" style="margin-bottom: 5px;">
 					  Week <strong id="week_no">{{week_no}}</strong>
@@ -61,11 +63,13 @@
 					</div>
 				{% endif %}
 				</div>
+		
 				<hr style="margin-top: 0px;">
 
 			<table class="table table-responsive table-hover week_t align-middle">
 				<thead class="thead">
 					<tr>
+						<th>Task id</th>
 						<th scope="col">Task Description</th>
 						<th scope="col">Completed</th>
 					</tr>
@@ -76,14 +80,15 @@
 						
 						{% if content.status == True %}
 						<tr style="background-color: rgba(41,132,112, 0.1);">
+							<td>{{content.task_id}}</td>
 							<td>{{content.task | convert_markdown | safe}}</td>
 							<td><input id="content_check" class="content_check form-check-input" type="checkbox" id="flexCheckDefault" checked></td>
 						</tr>
 						{% else %}
 						<tr>
+							<td>{{content.task_id}}</td>
 							<td>{{content.task | convert_markdown | safe}}</td>
 							<td><input id="content_check" class="content_check form-check-input" type="checkbox" id="flexCheckDefault"></td>
-						</tr>
 						{% endif %}
 						<td class="del_row" style="display: none;">
 							<div class="del_week">
@@ -205,7 +210,7 @@
 				setTimeout(function() {window.location.reload()}, 900);
 			},
 			error: function() {
-				alert('Deleting week failed!')
+				alert('Deleting task failed!')
 			}
 		});
 	});
