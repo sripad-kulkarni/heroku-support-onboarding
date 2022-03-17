@@ -242,7 +242,7 @@
 			data: {
 				week_no: $("#week_no").text(),
 				content_name: row.find("td:eq(0)").text(),
-				content_check: row.find("td:eq(1) input[type='checkbox']").is(':checked'),
+				content_check: row.find("td:eq(2) input[type='checkbox']").is(':checked'),
 				csrfmiddlewaretoken: '{{ csrf_token }}',
 			},
 			success: function(){

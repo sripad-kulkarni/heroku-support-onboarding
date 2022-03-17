@@ -422,7 +422,7 @@ def content_check(request):
 	content_check = request.POST['content_check']
 	week_no = request.POST['week_no']
 	print(week_no, content_name, content_check)
-	content = newhire_content.objects.get(newhire_weeks__onboarding__newhire=request.user.username, newhire_weeks__weekid = week_no, task = content_name)
+	content = newhire_content.objects.get(newhire_weeks__onboarding__newhire=request.user.username, newhire_weeks__weekid = week_no, task_id = content_name)
 	if content_check == 'true':
 		content.status = True
 	else:

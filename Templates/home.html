@@ -79,9 +79,8 @@
 										</td>
 										<td style="	color: #154e8d;">
 											<center>
-											<button class="btn btn-outline-secondary btn-sm back-overview week_open">
+											<button class="btn btn-outline-secondary btn-sm back-overview week_open" onclick="location.href='{% url 'content' nh_week.weekid %}'">
 												&#10095;</button>
-
 											</center>
 										</td>
 									</tr>
@@ -228,22 +227,22 @@
 						<hr>
 						<div class="row">
 							<div class="col">
-								<table class="table table-borderless table-sm table-hover table-responsive">
-									<tbody>
-										{% if resources %}
-										{% for res in resources %}
-										<tr>
-											<td style="width: 90%;"><a href="{{res.value}}" target="_blank">{{res.title}}</a></td>
-											<td style="width: 10% ;"><a href="" class="fa fa-duotone fa-pen" onclick="return edit_res('{{res.title}}', '{{res.value}}');" data-bs-toggle="modal" data-bs-target="#new_link_Modal"></a></td>
-											<td style="width: 10%;"><a href="#" class="far fa-trash-alt del_res"></a></td>
-										</tr>
-										{% endfor %}
-										{% else %}
-										<label>No RES</label>
-										{% endif %}
+							<table class="table table-borderless table-sm table-hover table-responsive">
+								<tbody>
+									{% if resources %}
+									{% for res in resources %}
+									<tr>
+										<td style="width: 90%;"><a href="{{res.value}}" target="_blank">{{res.title}}</a></td>
+									</tr>
+									{% endfor %}
+									{% else %}
+									<tr>
+										<td><small class="text-muted">No resources added yet!</small></td>
+									</tr>
+									{% endif %}
 
-									</tbody>
-								</table>
+								</tbody>
+							</table>
 							</div>
 						</div>
 					</div>
@@ -386,6 +385,24 @@
 				alert('Deleting resource failed!')
 			}
 		});
+
+		function week_content(id){
+			var nh_name = $('#onbModalLabel').text();
+			console.log(nh_name);
+			$.ajax({
+				type: 'POST',
+				url: 'check_content/',
+				data: {
+					name: $('#onbModalLabel').text(),
+					week_id: id,
+					csrfmiddlewaretoken: '{{ csrf_token }}',
+				},
+				success: function(data) {
+					$('#onbModalLabel-1').text(nh_name);
+					$('#modal_body-1').html(data);
+				}
+			});
+		};
 	})
 	</script>
 
