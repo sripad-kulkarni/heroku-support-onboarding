@@ -256,9 +256,14 @@
 								<tbody>
 									{% if resources %}
 									{% for res in resources %}
-									<tr>
-										<td style="width: 90%;"><a href="{{res.value}}" target="_blank">{{res.title}}</a></td>
-									</tr>
+											<tr>
+											<td style="width: 90%;"><a href="{{res.value}}" target="_blank">{{res.title}}</a></td>
+											<td style="width: 10% ;">
+												<a href="" class="fa fa-duotone fa-pen" onclick="return edit_res('{{res.title}}', '{{res.value}}');" data-bs-toggle="modal" data-bs-target="#new_link_Modal">		
+												</a>
+											</td>
+											<td style="width: 10%;"><a href="#" class="far fa-trash-alt del_res"></a></td>
+										</tr>
 									{% endfor %}
 									{% else %}
 									<tr>

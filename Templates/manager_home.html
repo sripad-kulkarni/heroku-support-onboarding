@@ -425,6 +425,7 @@
 
 			$('.del_res').on('click', function(e) {
 				e.preventDefault();
+				var nh_name = $('#onbModalLabel').text();
 
 				var row = $(this).closest("tr");
 				$.ajax({
@@ -432,6 +433,7 @@
 					url: 'del_resource/',
 					data: {
 						key: row.find("td:eq(0)").text(),
+						nh_name: nh_name,
 						csrfmiddlewaretoken: '{{ csrf_token }}',
 					},
 					success: function(){ 
