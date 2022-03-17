@@ -227,7 +227,7 @@ def onb_assign(request):
 			trail_guide = request.POST['trail_guide']
 			onb_buddy = request.POST['onb_buddy']
 			the_manager = request.POST['the_manager']
-			onb = onboarding.objects.get(newhire=new_hire)
+			onb = onboarding.objects.filter(newhire=new_hire)
 			if not onb:
 				onb = onboarding(newhire = new_hire, trailguide = trail_guide, onboardingbuddy = onb_buddy, the_manager=the_manager)
 				onb.save()
