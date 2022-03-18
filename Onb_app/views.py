@@ -199,9 +199,9 @@ def audit(request):
 @login_required(login_url='/login/')
 def viewsupportengineers(request):
 	if request.user.profile.role=="MANAGER" or request.user.is_superuser:
-		eng = Profile.objects.filter(role='ENGINEER')
-		manager = Profile.objects.filter(role='MANAGER')
-		nh = Profile.objects.filter(role='NEW_HIRE')
+		eng = Profile.objects.filter(role='ENGINEER').order_by('firstname')
+		manager = Profile.objects.filter(role='MANAGER').order_by('firstname')
+		nh = Profile.objects.filter(role='NEW_HIRE').order_by('firstname')
 		onb = onboarding.objects.all()
 		usr = User.objects.all()
 		return render(request, 'userpage.html', {'eng': eng, 'manager':manager, 'nh':nh, 'onb':onb, 'usr':usr, 'title': "Engineers"})
@@ -613,6 +613,7 @@ def access_req_update(request):
 		item = newhire_access_item.objects.get(newhire_access_section__onboarding__newhire = request.user.username, name=name)
 		item.status = value
 		item.save()
+		audit_logger.objects.create(user=request.user.username, action='**ACCESS REQ UPDATE:**  - `'+name+'` - `'+value+'`')
 		return HttpResponse()
 
 def add_resource(request):
@@ -625,7 +626,7 @@ def add_resource(request):
 			nh_name = request.user.username
 		name = request.POST['key']
 		value = request.POST['value']
-		if not value.startswith('http://'):
+		if not value.startswith('http://') or not value.startswith('https://'):
 			value = "http://" + value
 		onb = onboarding.objects.get(newhire=nh_name)
 		temp = resources.objects.filter(onboarding = onb, title=name).exists()
@@ -636,6 +637,7 @@ def add_resource(request):
 		else:
 			res = resources(onboarding = onb, title=name, value=value)
 			res.save()
+		audit_logger.objects.create(user=request.user.username, action='**ADD RESOURCE:** - `'+name+'` - `'+value+'`')
 		return HttpResponse('')
 
 def del_resource(request):
@@ -648,4 +650,5 @@ def del_resource(request):
 		else:
 			nh_name = request.user.username
 		resources.objects.get(onboarding__newhire=nh_name, title=name).delete()
+		audit_logger.objects.create(user=request.user.username, action='**REMOVE RESOURCE:** - `'+name+'`')
 		return HttpResponse('')

@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 import requests
+import urlparse
+import json
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -128,3 +130,14 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SECURE_SSL_REDIRECT = True'''
 
 STATIC_URL = os.environ.get('EDGE_URL', '') + '/static/'
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_bmemcached.memcached.BMemcached',
+        'LOCATION': os.environ.get('MEMCACHEDCLOUD_SERVERS').split(','),
+        'OPTIONS': {
+                    'username': os.environ.get('MEMCACHEDCLOUD_USERNAME'),
+                    'password': os.environ.get('MEMCACHEDCLOUD_PASSWORD')
+            }
+    }
+}
