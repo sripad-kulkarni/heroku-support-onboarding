@@ -3,25 +3,26 @@
 
 {% block content %}
 
-<div id="weekstable" class="container-md reg_page" style="display: solid;">
+<div id="weekstable" class="container-md reg_page" style="display: solid; ">
 	<div class="row border" style="padding: 10px;">
-		<div class="col border border-dark user_table">
+		<div class="col border border-dark user_table" style="max-height: 70vh; overflow-y: auto;">
 			<div class="row">
 				<div class="col">
 					<h5>Audit Logs</h5>
 				</div>
 			</div>
-			<!--<hr style="margin-top:2px">
+			<hr style="margin-top:2px">
 			<div class="input-group mb-3">
 			  <span class="input-group-text">
-			  	<input type="date" data-placeholder="Date of birth" placeholder="Date" class="datepicker" id="birthday" name="audit-datepicker1"></span>
+			  	<input type="date" data-placeholder="Date of birth" placeholder="Date" class="datepicker" id="from-date" name="audit-datepicker1"></span>
 			  	<span class="input-group-text">
-				<input type="date" class="datepicker" id="birthday" name="audit-datepicker2"></span>
-			  <input type="text" class="form-control audit-search" id="basic-url" aria-describedby="basic-addon3" placeholder="Search input">
-			  <button class="btn btn-outline-secondary" type="button">Search</button>
-			</div>-->
+				<input type="date" class="datepicker" id="to-date" name="audit-datepicker2"></span>
+			  <input type="text" class="form-control audit-search" id="search-text" aria-describedby="basic-addon3" placeholder="Search input">
+			  <button class="btn btn-outline-secondary" id="search" type="button">Search</button>
+			</div>
 			<hr>
-			<table class="table table-hover table-responsive week_t" >
+			<div id="results">
+				 <table class="table table-hover table-responsive week_t mh-80">
 				<thead class="thead">
 					<tr>
 						<th scope="col">When</th>
@@ -39,9 +40,34 @@
 					{% endfor %}
 				</tbody>
 			</table>
+			</div>
+			
 		</div>
 	</div>
 </div>
+<script type="text/javascript">
 
+	$(document).ready(function(){
+
+
+	})
+	$('#search').on('click', function(e) {
+		e.preventDefault();
+		console.log($('#from-date').val())
+		$.ajax({
+			type: 'POST',
+			url: '/audit/',
+			data: {
+				from: $('#from-date').val(),
+				to: $('#to-date').val(),
+				search: $('#search-text').val(),
+				csrfmiddlewaretoken: '{{csrf_token}}',
+			},
+			success: function(data) {
+				$('#results').html(data);
+			}
+		})
+	})
+</script>
 
 {% endblock %}

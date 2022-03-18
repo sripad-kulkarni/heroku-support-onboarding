@@ -188,8 +188,24 @@ def home(request):
 @login_required(login_url='/login/')
 def audit(request):
 	if request.user.profile.role=="MANAGER" or request.user.is_superuser:
-		audit = audit_logger.objects.all()
-		return render(request, 'audit.html', { 'audit':audit, 'title':'Audit Log' })
+		try:
+			from_date = request.POST['from']
+			to_date = request.POST['to']
+			search = request.POST['search']
+			if from_date == '' and to_date == '':
+				if not search == '':
+					audit = reversed(audit_logger.objects.filter(Q(user__contains=search) | Q(action__contains=search)))
+				else:
+					audit = reversed(audit_logger.objects.all())
+			else:
+				if not search == '':
+					audit = reversed(audit_logger.objects.filter(Q(user__contains=search) | Q(action__contains=search), timestamp__range=[from_date,to_date]))
+				else:
+					audit = reversed(audit_logger.objects.filter(timestamp__range=[from_date,to_date]))
+			return render(request, 'results.html', { 'audit':audit, 'title':'Audit Log' })
+		except:
+			audit = reversed(audit_logger.objects.all())
+			return render(request, 'audit.html', { 'audit':audit, 'title':'Audit Log' })
 	else:
 		logout(request)
 		messages.error(request, "Your account does not have sufficient privileges to perform this action. If you think this is an error, please contact your manager.")

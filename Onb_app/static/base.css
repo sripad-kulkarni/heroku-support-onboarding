@@ -10,6 +10,7 @@ body {
 	animation-iteration-count: 1;
 	animation-fill-mode: forwards;
 	margin-bottom: 100px;
+	overflow: scroll;
 }
 
 .slds-brand-band{
