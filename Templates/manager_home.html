@@ -352,7 +352,8 @@
 			$('.view-details').on('click', function(e) {
 				e.preventDefault();
 
-				var nh_name = $(this).closest("div").find("h5").text();
+				var nh_name = $(this).closest("div").find("h4").text();
+				console.log(nh_name)
 				$.ajax({
 					type:'POST',
 					url:'view_details/',
