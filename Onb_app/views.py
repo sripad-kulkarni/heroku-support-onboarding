@@ -463,7 +463,8 @@ def view_details(request):
 		prof = User.objects.get(username=name)
 		onb = onboarding.objects.get(newhire=name)
 		usr = User.objects.all()
-		nh_week = newhire_weeks.objects.filter(onboarding__newhire=name)
+		nh_week = newhire_weeks.objects.filter(onboarding__newhire=name).order_by('weekid')
+		print(nh_week.values())
 		completed = 0
 		count = 0
 		for nhw in nh_week:
