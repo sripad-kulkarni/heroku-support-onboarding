@@ -18,28 +18,28 @@ The most important and the center of the app are our **New Hires** for whom the 
 
 1. Login
 2. NH Cards
-2.1. View Details
-2.2. Basic Details
-2.3. Overall Weeks Progress
-2.4. Week-wise progress
-2.5. Access Requests
-2.6. Resources
+    2.1. View Details
+    2.2. Basic Details
+    2.3. Overall Weeks Progress
+    2.4. Week-wise progress
+    2.5. Access Requests
+    2.6. Resources
 
 The Navigation Bar:
 
 3. Home
 4. Access Request page
-4.1. Access Request tab
-4.2. The **`+`** option
-4.2.1. Add Access Request Section
-4.2.2. Remove Access Request Section
-4.2.3. Add Access Request Item
-4.2.4. Remove Access Request Item
+    4.1. Access Request tab
+    4.2. The **`+`** option
+        4.2.1. Add Access Request Section
+        4.2.2. Remove Access Request Section
+        4.2.3. Add Access Request Item
+        4.2.4. Remove Access Request Item
 5. Weekly Plan
-5.1 Week-wise content
+    5.1 Week-wise content
 6. Users
-6.1. Register New Users
-6.2. Manage Existing Users
+    6.1. Register New Users
+    6.2. Manage Existing Users
 7. Audit Log
 8. My Profile
 9. Logout
@@ -48,12 +48,12 @@ The Navigation Bar:
 
 1. Login
 2. NH Cards
-2.1. View Details
-2.2. Basic Details
-2.3. Overall Weeks Progress
-2.4. Week-wise progress
-2.5. Access Requests
-2.6. Resources
+    2.1. View Details
+    2.2. Basic Details
+    2.3. Overall Weeks Progress
+    2.4. Week-wise progress
+    2.5. Access Requests
+    2.6. Resources
 
 The Navigation Bar:
 
@@ -65,20 +65,20 @@ The Navigation Bar:
 
 1. Login
 2. NH Cards
-2.1. View Details
-2.2. Basic Details
-2.3. Overall Weeks Progress
-2.4. Week-wise progress
-2.5. Access Requests
-2.6. Resources
+    2.1. View Details
+    2.2. Basic Details
+    2.3. Overall Weeks Progress
+    2.4. Week-wise progress
+    2.5. Access Requests
+    2.6. Resources
 
 The Navigation Bar:
 
 3. Home
 4. Access Request page
-4.1. Access Request tab
+    4.1. Access Request tab
 5. Weekly Plan
-5.1 Week-wise content
+    5.1 Week-wise content
 6. My Profile
 7. Logout
  
