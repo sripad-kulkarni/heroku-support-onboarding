@@ -65,12 +65,12 @@ The Navigation Bar:
 
 1. Login
 2. NH Cards
-    2.1. View Details
-    2.2. Basic Details
-    2.3. Overall Weeks Progress
-    2.4. Week-wise progress
-    2.5. Access Requests
-    2.6. Resources
+    1. View Details
+    2. Basic Details
+    3. Overall Weeks Progress
+    4. Week-wise progress
+    5. Access Requests
+    6. Resources
 
 The Navigation Bar:
 
