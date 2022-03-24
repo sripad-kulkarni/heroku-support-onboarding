@@ -56,6 +56,8 @@
 		  		        {{ tab.name }} &nbsp;
 		  		        {% if user.profile.role == "NEW_HIRE" %}
 		  		        <label class="text-muted">[Approved - {{tab.approved}}/{{tab.item_count}}]</label>
+		  		        {% elif %}
+		  		        <br>
 		  		        {% endif %}
 		  		      </button>
 		  		    </h2>
