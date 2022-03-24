@@ -237,9 +237,12 @@
 	  	var left = Math.floor(((countDownDate - now)/ (secondsInADay) * 1) + 1);
 
 	  	var current = (period - left);
-	  	if (current<=period) {
+	  	if (current>0 && current<=period) {
 	  		document.getElementById("demo").innerHTML = "Day " + (current) + " of " + (period) ;
 	  		document.getElementById("demo-a").innerHTML = "Onboarding ends on " + cd ;
+	  	}
+	  	else if (current < 0) {
+	  		document.getElementById("demo").innerHTML = "Onboarding starts on " + cd;
 	  	}
 	  	else {
 	  		document.getElementById("demo").innerHTML = "Onboarding ended on " + cd;
