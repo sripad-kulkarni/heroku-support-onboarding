@@ -28,6 +28,7 @@
 		  </div>
 		</nav>
 		<div class="tab-content" id="nav-tabContent" style="background-image: url({% static 'overview.png' %}); background-size: 50%; background-repeat:no-repeat; background-position: center;">
+			{% if user.profile.role == "NEW_HIRE" %}
 			<div style="padding: 25px; padding-top: 20px;">
 				<small class="text-muted">Progress</small>
 				<div class="progress center-block" >
@@ -37,6 +38,7 @@
 				  </div>
 				</div>
 			</div>
+			{% endif %}
 			
 		  	<div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" >
 		  		{% if not tabs %}
@@ -52,7 +54,9 @@
 		  		    <h2 class="accordion-header" id="panelsStayOpen-headingOne">
 		  		      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-{{ tab.name }}" aria-expanded="true" aria-controls="panelsStayOpen-{{ tab.name }}" style="clear: both;">
 		  		        {{ tab.name }} &nbsp;
+		  		        {% if user.profile.role == "NEW_HIRE" %}
 		  		        <label class="text-muted">[Approved - {{tab.approved}}/{{tab.item_count}}]</label>
+		  		        {% endif %}
 		  		      </button>
 		  		    </h2>
 		  		    <div id="panelsStayOpen-{{ tab.name }}" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
