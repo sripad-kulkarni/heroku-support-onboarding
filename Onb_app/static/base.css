@@ -243,8 +243,7 @@ h1 {
 
 
 .register {
-	min-width: 20px;
-	max-width: 400px;
+	max-width: 500px;
 	margin: auto;
 }
 

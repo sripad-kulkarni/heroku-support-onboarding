@@ -64,12 +64,12 @@
 					<td>{{form.role}}</td>
 					<td><label style="font-size: 10px;">*Required</label></td>
 				</tr>
-				<tr>
+				<tr class='doje'>
 					<td><label>Date of Joining</label></td>
 					<td>{{form.startdate}}</td>
 					<td><label style="font-size: 10px;">*Please enter for New Hires</label></td>
 				</tr>
-				<tr>
+				<tr class='doje'>
 					<td><label>Onboarding End Date</label></td>
 					<td>{{form.enddate}}</td>
 					<td><label style="font-size: 10px;">*Please enter for New Hires</label></td>
@@ -80,6 +80,8 @@
 		    	<button class="btn btn-outline-dark login-input" type="submit">Register</button>
 		  	</div>
 		</form>
+		<br>
+		<small class="text-muted">*Please do not forget to add onboarding start date and end date for new hires.</small>
 		<br>
 		<center>
 		<div class="container-md">
@@ -108,7 +110,20 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$(".fa-users").addClass("active");
+			$('.doje').css('visibility', 'hidden');
 		});
+
+		$('#role').change(function() {
+			var role = $('#role').val();
+			console.log(role);
+			if (role=='NEW_HIRE') {
+				$('.doje').css('visibility', 'visible');
+			}
+			else{
+				$('.doje').css('visibility', 'hidden');
+			}
+		})
+
 	</script>
 
 {% endblock %}

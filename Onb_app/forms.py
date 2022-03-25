@@ -10,8 +10,8 @@ class UserRegisterForm(UserCreationForm):
 	lastname = forms.CharField(max_length=100, required=True)
 	email = forms.EmailField(required=True)
 	role = forms.ChoiceField(choices=ROLES, required=True, widget=forms.Select(attrs={'id':'role'}))
-	startdate = forms.DateField(widget=NumberInput(attrs={'type': 'date'}), required=True)
-	enddate = forms.DateField(widget=NumberInput(attrs={'type': 'date'}), required=True)
+	startdate = forms.DateField(widget=NumberInput(attrs={'type': 'date', 'id':'startdate'}), required=False)
+	enddate = forms.DateField(widget=NumberInput(attrs={'type': 'date', 'id':'enddate'}), required=False)
 
 	class Meta:
 		model = User

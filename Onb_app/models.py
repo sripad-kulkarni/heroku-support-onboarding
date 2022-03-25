@@ -15,8 +15,8 @@ class Profile(models.Model):
     email = models.EmailField(max_length=50)
     firstlogin = models.BooleanField(default=True)
     role = models.CharField(max_length=15, choices=ROLES, default = 'SUPERUSER')
-    startdate = models.DateField(max_length=True, default=datetime.datetime.now)
-    enddate = models.DateField(max_length=True, default=datetime.datetime.now)
+    startdate = models.DateField(max_length=True, blank=True, null=True)
+    enddate = models.DateField(max_length=True, blank=True, null=True)
     phoneNumberRegex = RegexValidator(regex = r"^\+?1?\d{8,15}$")
     phone = models.CharField(validators = [phoneNumberRegex], max_length = 16, default='')
 
