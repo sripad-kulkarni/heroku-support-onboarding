@@ -643,8 +643,10 @@ def add_resource(request):
 			nh_name = request.user.username
 		name = request.POST['key']
 		value = request.POST['value']
-		if not value.startswith('http://') or not value.startswith('https://'):
+		print(value, value.startswith('http://'), value.startswith('https://'))
+		if not value.startswith('http://') and not value.startswith('https://'):
 			value = "http://" + value
+			print(value)
 		onb = onboarding.objects.get(newhire=nh_name)
 		temp = resources.objects.filter(onboarding = onb, title=name).exists()
 		if temp:
