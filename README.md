@@ -84,3 +84,12 @@ The most important and the center of the app are our **New Hires** for whom the 
  
 ## A Guide to all of the Functionalities
 
+#### Login
+
+![login](https://github.com/)
+
+#### NH Cards
+
+![nhcards](https://github.com/)
+
+

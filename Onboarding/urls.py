@@ -32,6 +32,7 @@ urlpatterns = [
     path('profile/', views.profile_page),
     path('audit/', views.audit),
     path('profile/update_profile/', views.updateprofile),
+    path('profile/change_password/', views.change_password),
     path('manage_users/', views.viewsupportengineers),
     path('manage_users/onb_assign/', views.onb_assign),
     path('manage_users/del_onb/', views.del_onb),

@@ -2,6 +2,11 @@
 
 {% block content %}
 
+<style type="text/css">
+	.form-control {
+	}
+</style>
+
 <div class="container-md prof_page" >
 	<div class="row border" style="padding: 10px;">
 		<div class="col border border border-dark user_table">
@@ -15,11 +20,11 @@
 				<table class="table table-hover table-responsive prof_table">
 					<tbody>
 						<tr>
-							<td>Username</td>
+							<td><label class="text-muted">Username</label></td>
 							<td><input type="text" id="username" readonly class="form-control-plaintext" value='{{prof.username}}'></td>
 						</tr>
 						<tr>
-							<td>Name</td>
+							<td><label class="text-muted">Name</label></td>
 							<td>
 								<div class="input-group">
 								  <input type="text" id="firstname" readonly class="form-control-plaintext" value='{{prof.profile.firstname}}'>
@@ -28,28 +33,28 @@
 							</td>
 						</tr>
 						<tr>
-							<td>Email Id</td>
-							<td><input type="text" id="email" readonly class="form-control-plaintext" value='{{prof.profile.email}}' style="width:fit-content;"></td>
+							<td><label class="text-muted">Email Id</label></td>
+							<td ><input type="text" id="email" readonly class="form-control-plaintext" value='{{prof.profile.email}}' style="width:90%;"></td>
 						</tr>
 
 						<tr>
-							<td>Role</td>
+							<td><label class="text-muted">Role</label></td>
 							<td><input type="text" id="role" readonly class="form-control-plaintext" value='{{prof.profile.role}}'></td>
 						</tr>
 						{% if prof.profile.role == 'NEW_HIRE' %}
 						<tr>
-							<td>Start Date</td>
+							<td><label class="text-muted">Start Date</label></td>
 							<td><input type="text" id="startdate" readonly class="form-control-plaintext" value="{{prof.profile.startdate|date:'M d, Y'}}"}}></td>
 						</tr>
 
 						<tr>
-							<td>Onboarding Ends</td>
+							<td><label class="text-muted">Onboarding Ends</label></td>
 							<td><input type="text" id="enddate" readonly class="form-control-plaintext" value="{{prof.profile.enddate|date:'M d, Y'}}"></td>
 						</tr>
 						{% endif %}
 
 						<tr>
-							<td>Phone</td>
+							<td><label class="text-muted">Phone</label></td>
 
 							<td>
 								<div class="input-group">
@@ -67,7 +72,19 @@
 
 			</form>
 
-			<center><input type="button" id="edit" class="edit btn btn-colour btn-sm" value="Edit" style="display: block;"></input></center>
+			<center>
+				<input type="button" id="edit" class="edit btn btn-colour btn-sm" value="Edit" style="display: block;">
+			</center>
+		</div>
+	</div>
+	<hr>
+	<div class="row">
+		<div class="col">
+			<center>
+				<small class="text-muted">We recommend changing your initial password. If you haven't yet, do it now!</small>
+				<br><br>
+				<button type="button" id="change_pass" onclick="location.href='change_password/'" class="btn btn-outline-secondary btn-sm"> Change Password</button>
+			</center>
 		</div>
 	</div>
 </div>

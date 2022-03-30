@@ -1,9 +1,12 @@
+import re
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound, JsonResponse
 import json as simplejson
 from .forms import UserRegisterForm
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
 from .models import *
 from django.contrib.auth.models import User
@@ -17,6 +20,7 @@ import requests
 import os
 from django.utils import timezone
 import datetime
+
 
 # Create your views here.
 
@@ -106,6 +110,7 @@ def welcome(request):
 	else:
 		audit_logger.objects.create(user=request.user.username, action='LOGIN')
 		return HttpResponseRedirect('/home/')
+
 
 
 @login_required(login_url='/login/')
@@ -669,3 +674,20 @@ def del_resource(request):
 		resources.objects.get(onboarding__newhire=nh_name, title=name).delete()
 		audit_logger.objects.create(user=request.user.username, action='**REMOVE RESOURCE:** - `'+name+'`')
 		return HttpResponse('')
+
+@login_required
+def change_password(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			form = PasswordChangeForm(user = request.user, data = request.POST)
+			if form.is_valid():
+				form.save()
+				update_session_auth_hash(request, form.user)
+				messages.success(request, "Your password has been changed successfully!")
+				return redirect('/profile/change_password/')
+		else:
+			form = PasswordChangeForm(request.POST)
+		return render(request, 'change_pass.html', {'form':form})
+	else:
+		messages.error(request, "Please login to perform this action!")
+		return redirect('/login/')
