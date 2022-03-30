@@ -141,20 +141,18 @@ def home(request):
 	if request.user.profile.role=="MANAGER" or request.user.is_superuser:
 		onb = onboarding.objects.all()
 		usr = User.objects.all()
-		nh_week = newhire_weeks.objects.all()
 		target = targets.objects.all()
-		return render(request, 'manager_home.html', {'onb':onb, 'usr':usr, 'nh_week':nh_week, 'target': targets, 'title': "Onboarding - Home"})
+		return render(request, 'manager_home.html', {'onb':onb, 'usr':usr, 'target': targets, 'title': "Onboarding - Home"})
 	elif request.user.profile.role=="ENGINEER":
 		onb = onboarding.objects.filter(Q(onboardingbuddy=request.user.username) | Q(trailguide=request.user.username))
 		usr = User.objects.all()
-		nh_week = newhire_weeks.objects.all()
 		target = targets.objects.all()
-		return render(request, 'manager_home.html', {'onb':onb, 'usr':usr, 'nh_week':nh_week, 'target': targets, 'title': "Onboarding - Home"})
+		return render(request, 'manager_home.html', {'onb':onb, 'usr':usr, 'target': targets, 'title': "Onboarding - Home"})
 	else:
 		prof = User.objects.get(username=request.user.username)
 		try:
 			onb = onboarding.objects.get(newhire=request.user.username)
-			nh_week = newhire_weeks.objects.filter(onboarding__newhire=request.user.username)
+			nh_week = newhire_weeks.objects.filter(onboarding__newhire=request.user.username).order_by('weekid')
 			completed = 0
 			count = 0
 			for nhw in nh_week:
@@ -178,7 +176,7 @@ def home(request):
 			approved = sum(tabs.values_list('approved', flat=True))
 			requested = sum(tabs.values_list('requested', flat=True))
 			total = sum(tabs.values_list('item_count' ,flat=True))
-			items = newhire_access_item.objects.filter(newhire_access_section__onboarding__newhire=request.user.username)
+			items = newhire_access_item.objects.filter(newhire_access_section__onboarding__newhire=request.user.username).order_by('name')
 			nh_resources = resources.objects.filter(onboarding__newhire=request.user.username)
 			return render(request, 'home.html', {'title': 'Onboarding - Home', 'prof':prof, 'onb':onb, 'usr':usr, 'nh_week':nh_week, 'nh_targets':nh_targets, 'nh_t_progress':nh_t_progress, 'tabs':tabs,'items':items ,'requested':requested, 'approved':approved, 'total':total, 'resources':nh_resources})
 		except Exception as ex:
@@ -510,7 +508,7 @@ def view_details(request):
 		approved = sum(tabs.values_list('approved', flat=True))
 		requested = sum(tabs.values_list('requested', flat=True))
 		total = sum(tabs.values_list('item_count' ,flat=True))
-		items = newhire_access_item.objects.filter(newhire_access_section__onboarding__newhire=name)
+		items = newhire_access_item.objects.filter(newhire_access_section__onboarding__newhire=name).order_by('name')
 		nh_resources = resources.objects.filter(onboarding__newhire=name)
 		return render(request, 'check_form.html', {'title': 'Onboarding Home', 'prof':prof, 'onb':onb, 'usr':usr, 'nh_week':nh_week, 'nh_targets':nh_targets, 'nh_t_progress':nh_t_progress, 'tabs':tabs,'items':items ,'requested':requested, 'approved':approved, 'total':total, 'resources':nh_resources})
 
@@ -565,7 +563,7 @@ def check_content(request):
 def access_req(request):
 	if request.user.profile.role=="MANAGER" or request.user.is_superuser:
 		tabs = access_section.objects.all()
-		items = access_item.objects.all()
+		items = access_item.objects.all().order_by('name')
 		return render(request, 'access_req.html', {'tabs': tabs, 'items': items, 'requested':0, 'approved':0, 'total':0, 'title': "Access Requests"})
 	else:
 		approved_items = Q(newhire_access_item__status='Approved')
@@ -574,7 +572,7 @@ def access_req(request):
 		approved = sum(tabs.values_list('approved', flat=True))
 		requested = sum(tabs.values_list('requested', flat=True))
 		total = sum(tabs.values_list('item_count' ,flat=True))
-		items = newhire_access_item.objects.filter(newhire_access_section__onboarding__newhire=request.user.username)
+		items = newhire_access_item.objects.filter(newhire_access_section__onboarding__newhire=request.user.username).order_by('name')
 		return render(request, 'access_req.html', {'tabs': tabs, 'items': items, 'requested':requested, 'approved':approved, 'total':total, 'title': "Access Requests"})
 
 def access_tab(request):
