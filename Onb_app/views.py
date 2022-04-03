@@ -149,6 +149,7 @@ def updateprofile(request):
 		user.profile.firstname = firstname
 		user.profile.lastname = lastname
 		user.profile.email = email
+		user.email = email
 		user.profile.phone = phone
 		user.save()
 		audit_logger.objects.create(user=request.user.username, action='UPDATE_PROFILE')
