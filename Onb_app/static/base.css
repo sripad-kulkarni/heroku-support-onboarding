@@ -193,7 +193,7 @@ body {
 }
 
 .accordion-button {
-	background-color: rgba(219, 232, 255, 0.8)!important;
+	background-color: rgba(167,186,199, 0.5)!important;
 
 }
 
@@ -529,7 +529,8 @@ th {
 }
 
 .toast-bg {
-	background-color: rgba(167, 187, 199, 0.4);
+	background-color: rgba(167, 187, 199, 0.8);
+	z-index: 1051;
 }
 
 .days_total {

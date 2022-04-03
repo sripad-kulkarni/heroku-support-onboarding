@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 import json as simplejson
 from .forms import UserRegisterForm
 from django.contrib.auth import update_session_auth_hash
-from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
 from django.contrib import messages
 from .models import *
 from django.contrib.auth.models import User
@@ -20,7 +20,15 @@ import requests
 import os
 from django.utils import timezone
 import datetime
-
+import math, random
+from django.core.mail import send_mail
+from django.conf import settings
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import EmailMultiAlternatives
+from django.utils.html import strip_tags
 
 # Create your views here.
 
@@ -46,6 +54,11 @@ def register(request):
 		        user.save()
 		        messages.success(request, "User creation successful!")
 		        audit_logger.objects.create(user=request.user.username, action='CREATE_USER: `' + user.username + '`')
+		        subject = 'Welcome To Heroku Support Onboarding'
+		        message = 'Hi {{user.username}},'
+		        email_from = settings.EMAIL_HOST_USER
+		        recipient_list = ['kulsripa@gmail.com',]
+		        send_mail( subject, message, email_from, recipient_list )
 		        return redirect('/register/')
 		    else:
 		        return render(request, 'register.html', {'form': form, 'title': 'Register Users'})
@@ -108,6 +121,7 @@ def welcome(request):
 		else:
 			return render(request, 'welcome_default.html', {'title':'welcome', 'user':user})
 	else:
+		msg = requests.post(os.environ['BLOWERIO_URL'] + '/messages', data={'to': user.profile.phone, 'message': 'Login alert to Heroku Onboarding App'})
 		audit_logger.objects.create(user=request.user.username, action='LOGIN')
 		return HttpResponseRedirect('/home/')
 
@@ -684,6 +698,8 @@ def change_password(request):
 				form.save()
 				update_session_auth_hash(request, form.user)
 				messages.success(request, "Your password has been changed successfully!")
+				msg = requests.post(os.environ['BLOWERIO_URL'] + '/messages', data={'to': request.user.profile.phone, 'message': 'Your password has been changed successfully!'})
+				audit_logger.objects.create(user=request.user.username, action='Password for user`'+request.user.username+'` changed with message `'+msg.text+'`')
 				return redirect('/profile/change_password/')
 		else:
 			form = PasswordChangeForm(request.POST)
@@ -691,3 +707,150 @@ def change_password(request):
 	else:
 		messages.error(request, "Please login to perform this action!")
 		return redirect('/login/')
+
+@login_required
+def nh_onboarded(request):
+	if request.method=='POST':
+		if request.user.profile.role == 'MANAGER' or request.user.is_superuser:
+			full_name = request.POST['username']
+			p = Profile.objects.annotate(fullname=Concat('firstname', Value(' '), 'lastname')).get(fullname=full_name)
+			nh_name = p.user.username
+			onb = onboarding.objects.get(newhire=nh_name)
+			print(p)
+			onb.finished = True
+			p.role = 'ENGINEER'
+			onb.save()
+			p.save()
+			return HttpResponse('')
+		else:
+			logout(request)
+			messages.error(request, "Your account does not have sufficient privileges to perform this action. If you think this is an error, please contact your manager.")
+			return redirect('/error/')
+
+
+
+@login_required
+def nh_not_onboarded(request):
+	if request.method=='POST':
+		if request.user.profile.role == 'MANAGER' or request.user.is_superuser:
+			full_name = request.POST['username']
+			p = Profile.objects.annotate(fullname=Concat('firstname', Value(' '), 'lastname')).get(fullname=full_name)
+			nh_name = p.user.username
+			onb = onboarding.objects.get(newhire=nh_name)
+			print(p)
+			onb.finished = False
+			p.role = 'NEW_HIRE'
+			onb.save()
+			p.save()
+			return HttpResponse('')
+		else:
+			logout(request)
+			messages.error(request, "Your account does not have sufficient privileges to perform this action. If you think this is an error, please contact your manager.")
+			return redirect('/error/')
+
+
+def reset_password(request):
+	if request.method=='POST':
+		form = PasswordResetForm(request.POST)
+		if form.is_valid():
+			data = form.cleaned_data['email']
+			try:
+				result = User.objects.get(email = data)
+			except:
+				messages.warning(request, "We're unable to fetch details for the email requested here. Please recheck and try again!")
+				return render(request, 'reset_password.html', {'form': form})
+			print(result is not None)
+			if result is not None:
+				subject = "Password Reset For Your Heroku Support Onboarding"
+				parameters = {
+					'email': result.email,
+					'domain': os.environ.get('HOST'),
+					'site_name': 'Heroku Support Onboarding',
+					'uid': urlsafe_base64_encode(force_bytes(result.pk)),
+					'token': default_token_generator.make_token(result),
+					'protocol': 'https',
+					'firstname': result.profile.firstname,
+				}
+				html_message = render_to_string('reset_password_email_template.html', parameters)
+				plain_message = strip_tags(html_message)
+				email = EmailMultiAlternatives(subject, plain_message, 'heroku-support-onboarding', [result.email])
+				email.attach_alternative(html_message, "text/html")
+				email.send()
+				return redirect('/reset_password_sent/')		
+	form = PasswordResetForm()
+	return render(request, 'reset_password.html', {'form': form})
+
+def reset_password_sent(request):
+	return render(request, 'reset_password_sent.html')
+
+def reset_password_input(request):
+	return render(request, 'reset_password_input.html')
+
+def reset_password_done(request):
+	return render(request, 'reset_password_done.html')
+
+
+
+
+
+
+
+
+
+
+'''
+def generate_otp(request):
+	if request.user.is_authenticated:
+		return redirect('/home/')
+	else:
+		return render(request, 'otp.html')
+
+def generateOTP() :
+    digits = "0123456789"
+    OTP = ""
+    for i in range(4) :
+        OTP += digits[math.floor(random.random() * 10)]
+    return OTP
+
+def send_otp(request):
+	phone=request.POST['phone']
+	email = request.POST['email']
+	username = request.POST['username']
+	print(phone, email, username)
+	result = User.objects.get(username=username)
+	if result is not None:
+		if result.profile.email == email and phone == phone:
+			o=generateOTP()
+			htmlgen = 'Your OTP is '+o
+			msg = requests.post(os.environ['BLOWERIO_URL'] + '/messages', data={'to': phone, 'message': htmlgen})
+			print(msg.text, htmlgen)
+			return HttpResponse(o)
+	return HttpResponseNotFound()
+
+def reset_password(request):
+	if request.method=='POST':
+		username = request.POST['username']
+		result = User.objects.get(username=username)
+		print('Hello', username)
+		print(result)
+		form = SetPasswordForm(user=result, data=request.POST)
+		print(form.is_valid())
+		if form.is_valid():
+			form.save()
+			messages.success(request, "Your password has been changed successfully!")
+			msg = requests.post(os.environ['BLOWERIO_URL'] + '/messages', data={'to': result.profile.phone, 'message': 'Your password has been changed successfully!'})
+			audit_logger.objects.create(user=result.username, action='Password for user`'+result.username+'` changed with message `'+msg.text+'`')
+			return redirect('/login/')
+	else:
+		form = SetPasswordForm(user='')
+	return render(request, 'reset_pass.html', {'form': form, 'username':username})
+
+
+email_from = settings.EMAIL_HOST_USER
+				recipient_list = [data]
+				send_mail(subject, email_template_name, email_from, recipient_list)
+				return redirect('/password_reset_sent/')
+'''
+
+
+

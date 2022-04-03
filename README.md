@@ -6,7 +6,7 @@ The app is designed to make the onboarding process easier allowing new hires, on
 
 Drilling down to the functionalities of the app, we have three different roles for login at the moment, the **'Manager/Lead', 'Onboarding Buddy/Trail Guide' and the 'New Hire'** themselves.
 
-**Managers/Leads** hold the highest level of access where they can register users, create and modify the onboarding plan, add and remove the access requests, assign trail guides, onboarding buddies and onboarding managers to the new hires along with the plan, and have a audit trail logs to track down the activity inside the app. They enjoy with a dashboard which makes their job super easy to track progress with just one click after their login. We'll read through these features in more detail later. 
+**Managers/Leads** hold the highest level of access where they can register users, create and modify the onboarding plan, add and remove the access requests, assign trail guides, onboarding buddies and onboarding managers to the new hires along with the plan, and have a audit trail logs to track down the activity inside the app.
 
 **Trail Guides**, after being assigned to their respective new hires, would also get a similar dashboard as of the managers/leads but as fine graining access is relevant, the app allows them to see the new hires only assigned to them. This would allow them to track the progress and keep in sync with the new hires.
 
@@ -42,6 +42,7 @@ The most important and the center of the app are our **New Hires** for whom the 
     2. Manage Existing Users
 7. Audit Log
 8. My Profile
+    1. Change Password
 9. Logout
  
 ### Trail Guides/Onboarding Buddies:
@@ -52,13 +53,14 @@ The most important and the center of the app are our **New Hires** for whom the 
     2. Basic Details
     3. Overall Weeks Progress
     4. Week-wise progress
-    2.5. Access Requests
-    2.6. Resources
+    5. Access Requests
+    6. Resources
 
 **The Navigation Bar:**
 
 3. Home
 4. My Profile
+    1. Change Password
 5. Logout
 
 ### New Hires:
@@ -80,16 +82,9 @@ The most important and the center of the app are our **New Hires** for whom the 
 5. Weekly Plan
     1 Week-wise content
 6. My Profile
+    1. Change Password
 7. Logout
  
-## A Guide to all of the Functionalities
 
-#### Login
-
-![login](https://github.com/)
-
-#### NH Cards
-
-![nhcards](https://github.com/)
 
 

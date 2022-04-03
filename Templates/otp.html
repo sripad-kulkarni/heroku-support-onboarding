@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style type="text/css">
+	.input-group-text {
+		width: 100px;
+	}
+</style>
+{% if form.errors %}
+<center>
+<div class="alert alert-danger" role="alert">
+	<div style="display: inline-block;">
+	<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
+	  <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+	</svg>
+	<label class="alert-heading">Something went wrong!</label>
+	</div>
+	<br>
+	<br>
+	<ul  style="text-align: left; font-size: clamp(0.5vw, 0.7rem, 0.9vw);">
+		{% for key,value in form.errors.items %}
+		<li class="">{{ value | striptags}}</li>
+		{% endfor %}
+	</ul>
+</div>
+</center>
+{% endif %}
+{% if messages %}
+<center>
+		<div class="container-md">
+	<br>
+		{% for message in messages %}
+		{% if message.tags == 'success' %}
+		<div class="alert alert-success alert-dismissible fade show" role="alert">
+	  		<strong>{{ message }}</strong>
+	  		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+		{% else %}
+		<div class="alert alert-danger alert-dismissible fade show" role="alert">
+	  		<strong>{{ message }}</strong>
+	  		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+		{% endif %}
+		{% endfor %}
+	<br>
+</div>
+</center>
+
+{% endif %}
+
+
+<div class="container-md prof_page">
+	<br>
+	<h5>Reset Password</h5>
+	<hr>
+	<div class="input-group mb-3">
+	  <span class="input-group-text">Email</span>
+	  <input type="email" class="form-control" id="email">
+	</div>
+	<div class="input-group mb-3">
+	  <span class="input-group-text">Username</span>
+	  <input type="text" class="form-control" id="username">
+	</div>
+	<div class="input-group mb-3">
+	  <span class="input-group-text">Phone</span>
+	  <input type="text" class="form-control" id="phone">
+	</div>
+
+	<center>
+		<button class="btn btn-outline-secondary btn-sm" id='generate_otp'>
+			Generate OTP
+		</button>
+	</center>
+	<hr>
+	<div class="input-group verify-section" style="visibility: hidden;">
+		<input class="form-control" type="number" id='otp'>
+		<button class="btn btn-outline-secondary" id='verify_otp'>
+			Verify OTP
+		</button>
+	</div>
+<br>
+</div>
+<div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center w-100">
+    <div class="toast border-0 position-fixed top-0 toast-bg" data-bs-delay="1500" role="alert" aria-live="assertive" aria-atomic="true" style="opacity: 1 !important;">
+	    <div class="d-flex">
+		    <div class="toast-body">
+		      
+		    </div>
+	    	<button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+	    </div>
+    </div>
+</div>
+
+<script>
+
+
+	$(document).ready(function() {
+		var otp_from_back="";
+
+		$('#generate_otp').on('click', function () {
+
+			var phone = $('#phone').val();
+			var email = $('#email').val();
+			var username = $('#username').val();
+
+			$.ajax({
+				type: 'POST',
+				url: '/send_otp/',
+				data: {
+					'email': email,
+					'username': username,
+					'phone': phone,
+					"csrfmiddlewaretoken":"{{csrf_token}}",
+				},
+				success: function (data) {
+					otp_from_back = data;
+					$('div.toast-body').text('OTP sent successfully');
+					var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+					var toastList = toastElList.map(function (toastEl) {
+					return new bootstrap.Toast(toastEl)
+					});
+					toastList.forEach(toast => toast.show());
+					$('.verify-section').css('visibility', 'visible');
+				},
+				error: function() {
+					alert("Please enter correct details!");	
+				}
+			});
+
+		});
+		
+		$('#verify_otp').on('click', function(){
+			var user_otp = $('#otp').val();
+			var username = $('#username').val();
+			console.log(user_otp);
+			console.log(otp_from_back);
+			if (user_otp == otp_from_back){
+				alert("Success!")
+		    }
+			else{
+				alert("Failed!");
+			}
+		});
+		
+
+	});
+ </script>
+
+{% endblock %}

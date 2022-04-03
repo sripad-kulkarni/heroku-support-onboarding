@@ -35,6 +35,7 @@ DEBUG = os.environ.get('DJANGO_DEBUG')
 ALLOWED_HOSTS = ['heroku-support-onb-staging.herokuapp.com', 'heroku-support-onboarding.herokuapp.com', '127.0.0.1']
 
 
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -143,3 +144,11 @@ CACHES = {
 
 import dj_database_url
 DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
+
+EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND')
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_USE_TLS = True
+EMAIL_PORT = os.environ.get('EMAIL_PORT')
+EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD')
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')

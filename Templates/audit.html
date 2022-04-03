@@ -3,8 +3,6 @@
 
 {% block content %}
 
-				<i class="fas fa-solid fa-angles-down"></i>
-
 <div id="weekstable" class="container-md reg_page" style="display: solid;">
 	<div class="row border" style="padding: 10px;">
 		<div class="col border border-dark user_table" >
@@ -49,210 +47,208 @@
 			
 		</div>
 	</div>
-
-</div>
-
-
-
-<div class="container-md reg_page">
-	<div class="row border"  style="padding: 10px;">
-		<div class="col border border-dark user_table">
-			<center>
-				<i class="fa-solid fa-angles-down"></i>
-				<h4 id="scrolltext"></h4>
-				<i class="fa-solid fa-angles-down"></i>
-			</center>	
-		</div>
-	</div>
-</div>
-
-
-<div class="container-md reg_page timezone">
-	<div class="row border" style="padding: 10px;">
-		<div class="col border border-dark user_table" >
-			<div style="">
-				<div class="row">
-					<div class="col">
-						<h5>Time Zones</h5>
+	<hr>
+	<div class="accordion" id="accordionExample">
+	  <div class="accordion-item">
+	    <h2 class="accordion-header" id="headingOne">
+	      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+	        Timezones
+	      </button>
+	    </h2>
+	    <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+	      <div class="accordion-body">
+			<div class=" timezone">
+				<div class="row border" style="padding: 10px;">
+					<div class="col border border-dark user_table" >
+						<div style="">
+							<div class="row">
+								<div class="col">
+									<h5>Time Zones</h5>
+								</div>
+							</div>
+							<hr style="margin-top:2px">
+						</div>
+						<div id="results" style="max-height: 50vh; overflow: scroll;">
+							<table class="table table-hover table-responsive">
+								<thead valign="bottom">
+									<tr>
+										<th>Abbreviation</th>
+										<th>Name</th>
+										<th>Relative to UTC</th>
+									</tr>
+								</thead>
+								<tbody valign="top">
+									<tr>
+										<td >UTC</td>
+										<td >Universal Coordinated Time</td>
+										<td >UTC</td>
+									</tr>
+									<tr>
+										<td >GMT</td>
+										<td >Greenwich Mean Time</td>
+										<td >UTC</td>
+									</tr>
+									<tr>
+										<td >ECT</td>
+										<td >European Central Time</td>
+										<td >UTC+1:00</td>
+									</tr>
+									<tr>
+										<td >EET</td>
+										<td >Eastern European Time</td>
+										<td >UTC+2:00</td>
+									</tr>
+									<tr>
+										<td >ART</td>
+										<td >(Arabic) Egypt Standard Time</td>
+										<td >UTC+2:00</td>
+									</tr>
+									<tr>
+										<td >EAT</td>
+										<td >Eastern African Time</td>
+										<td >UTC+3:00</td>
+									</tr>
+									<tr>
+									<td >MET</td>
+									<td >Middle East Time</td>
+									<td >UTC+3:30</td>
+									</tr>
+									<tr>
+									<td >NET</td>
+									<td >Near East Time</td>
+									<td >UTC+4:00</td>
+									</tr>
+									<tr>
+									<td >PLT</td>
+									<td >Pakistan Lahore Time</td>
+									<td >UTC+5:00</td>
+									</tr>
+									<tr>
+									<td >IST</td>
+									<td >India Standard Time</td>
+									<td >UTC+5:30</td>
+									</tr>
+									<tr>
+									<td >BST</td>
+									<td >Bangladesh Standard Time</td>
+									<td >UTC+6:00</td>
+									</tr>
+									<tr>
+									<td >VST</td>
+									<td >Vietnam Standard Time</td>
+									<td >UTC+7:00</td>
+									</tr>
+									<tr>
+									<td >CTT</td>
+									<td >China Taiwan Time</td>
+									<td >UTC+8:00</td>
+									</tr>
+									<tr>
+									<td >JST</td>
+									<td >Japan Standard Time</td>
+									<td >UTC+9:00</td>
+									</tr>
+									<tr>
+									<td >ACT</td>
+									<td >Australia Central Time</td>
+									<td >UTC+9:30</td>
+									</tr>
+									<tr>
+									<td >AET</td>
+									<td >Australia Eastern Time</td>
+									<td >UTC+10:00</td>
+									</tr>
+									<tr>
+									<td >SST</td>
+									<td >Solomon Standard Time</td>
+									<td >UTC+11:00</td>
+									</tr>
+									<tr>
+									<td >NST</td>
+									<td >New Zealand Standard Time</td>
+									<td >UTC+12:00</td>
+									</tr>
+									<tr>
+									<td >MIT</td>
+									<td >Midway Islands Time</td>
+									<td >UTC-11:00</td>
+									</tr>
+									<tr>
+									<td >HST</td>
+									<td >Hawaii Standard Time</td>
+									<td >UTC-10:00</td>
+									</tr>
+									<tr>
+									<td >AST</td>
+									<td >Alaska Standard Time</td>
+									<td >UTC-9:00</td>
+									</tr>
+									<tr>
+									<td >PST</td>
+									<td >Pacific Standard Time</td>
+									<td >UTC-8:00</td>
+									</tr>
+									<tr>
+									<td >PNT</td>
+									<td >Phoenix Standard Time</td>
+									<td >UTC-7:00</td>
+									</tr>
+									<tr>
+									<td >MST</td>
+									<td >Mountain Standard Time</td>
+									<td >UTC-7:00</td>
+									</tr>
+									<tr>
+									<td >CST</td>
+									<td >Central Standard Time</td>
+									<td >UTC-6:00</td>
+									</tr>
+									<tr>
+									<td >EST</td>
+									<td >Eastern Standard Time</td>
+									<td >UTC-5:00</td>
+									</tr>
+									<tr>
+									<td >IET</td>
+									<td >Indiana Eastern Standard Time</td>
+									<td >UTC-5:00</td>
+									</tr>
+									<tr>
+									<td >PRT</td>
+									<td >Puerto Rico and US Virgin Islands Time</td>
+									<td >UTC-4:00</td>
+									</tr>
+									<tr>
+									<td >CNT</td>
+									<td >Canada Newfoundland Time</td>
+									<td >UTC-3:30</td>
+									</tr>
+									<tr>
+									<td >AGT</td>
+									<td >Argentina Standard Time</td>
+									<td >UTC-3:00</td>
+									</tr>
+									<tr>
+									<td >BET</td>
+									<td >Brazil Eastern Time</td>
+									<td >UTC-3:00</td>
+									</tr>
+									<tr>
+									<td >CAT</td>
+									<td >Central African Time</td>
+									<td >UTC-1:00</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>	
 					</div>
 				</div>
-				<hr style="margin-top:2px">
 			</div>
-			<div id="results" style="max-height: 50vh; overflow: scroll;">
-				<table class="table table-hover table-responsive">
-					<thead valign="bottom">
-						<tr>
-							<th>Abbreviation</th>
-							<th>Name</th>
-							<th>Relative to UTC</th>
-						</tr>
-					</thead>
-					<tbody valign="top">
-						<tr>
-							<td >UTC</td>
-							<td >Universal Coordinated Time</td>
-							<td >UTC</td>
-						</tr>
-						<tr>
-							<td >GMT</td>
-							<td >Greenwich Mean Time</td>
-							<td >UTC</td>
-						</tr>
-						<tr>
-							<td >ECT</td>
-							<td >European Central Time</td>
-							<td >UTC+1:00</td>
-						</tr>
-						<tr>
-							<td >EET</td>
-							<td >Eastern European Time</td>
-							<td >UTC+2:00</td>
-						</tr>
-						<tr>
-							<td >ART</td>
-							<td >(Arabic) Egypt Standard Time</td>
-							<td >UTC+2:00</td>
-						</tr>
-						<tr>
-							<td >EAT</td>
-							<td >Eastern African Time</td>
-							<td >UTC+3:00</td>
-						</tr>
-						<tr>
-						<td >MET</td>
-						<td >Middle East Time</td>
-						<td >UTC+3:30</td>
-						</tr>
-						<tr>
-						<td >NET</td>
-						<td >Near East Time</td>
-						<td >UTC+4:00</td>
-						</tr>
-						<tr>
-						<td >PLT</td>
-						<td >Pakistan Lahore Time</td>
-						<td >UTC+5:00</td>
-						</tr>
-						<tr>
-						<td >IST</td>
-						<td >India Standard Time</td>
-						<td >UTC+5:30</td>
-						</tr>
-						<tr>
-						<td >BST</td>
-						<td >Bangladesh Standard Time</td>
-						<td >UTC+6:00</td>
-						</tr>
-						<tr>
-						<td >VST</td>
-						<td >Vietnam Standard Time</td>
-						<td >UTC+7:00</td>
-						</tr>
-						<tr>
-						<td >CTT</td>
-						<td >China Taiwan Time</td>
-						<td >UTC+8:00</td>
-						</tr>
-						<tr>
-						<td >JST</td>
-						<td >Japan Standard Time</td>
-						<td >UTC+9:00</td>
-						</tr>
-						<tr>
-						<td >ACT</td>
-						<td >Australia Central Time</td>
-						<td >UTC+9:30</td>
-						</tr>
-						<tr>
-						<td >AET</td>
-						<td >Australia Eastern Time</td>
-						<td >UTC+10:00</td>
-						</tr>
-						<tr>
-						<td >SST</td>
-						<td >Solomon Standard Time</td>
-						<td >UTC+11:00</td>
-						</tr>
-						<tr>
-						<td >NST</td>
-						<td >New Zealand Standard Time</td>
-						<td >UTC+12:00</td>
-						</tr>
-						<tr>
-						<td >MIT</td>
-						<td >Midway Islands Time</td>
-						<td >UTC-11:00</td>
-						</tr>
-						<tr>
-						<td >HST</td>
-						<td >Hawaii Standard Time</td>
-						<td >UTC-10:00</td>
-						</tr>
-						<tr>
-						<td >AST</td>
-						<td >Alaska Standard Time</td>
-						<td >UTC-9:00</td>
-						</tr>
-						<tr>
-						<td >PST</td>
-						<td >Pacific Standard Time</td>
-						<td >UTC-8:00</td>
-						</tr>
-						<tr>
-						<td >PNT</td>
-						<td >Phoenix Standard Time</td>
-						<td >UTC-7:00</td>
-						</tr>
-						<tr>
-						<td >MST</td>
-						<td >Mountain Standard Time</td>
-						<td >UTC-7:00</td>
-						</tr>
-						<tr>
-						<td >CST</td>
-						<td >Central Standard Time</td>
-						<td >UTC-6:00</td>
-						</tr>
-						<tr>
-						<td >EST</td>
-						<td >Eastern Standard Time</td>
-						<td >UTC-5:00</td>
-						</tr>
-						<tr>
-						<td >IET</td>
-						<td >Indiana Eastern Standard Time</td>
-						<td >UTC-5:00</td>
-						</tr>
-						<tr>
-						<td >PRT</td>
-						<td >Puerto Rico and US Virgin Islands Time</td>
-						<td >UTC-4:00</td>
-						</tr>
-						<tr>
-						<td >CNT</td>
-						<td >Canada Newfoundland Time</td>
-						<td >UTC-3:30</td>
-						</tr>
-						<tr>
-						<td >AGT</td>
-						<td >Argentina Standard Time</td>
-						<td >UTC-3:00</td>
-						</tr>
-						<tr>
-						<td >BET</td>
-						<td >Brazil Eastern Time</td>
-						<td >UTC-3:00</td>
-						</tr>
-						<tr>
-						<td >CAT</td>
-						<td >Central African Time</td>
-						<td >UTC-1:00</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>	
-		</div>
+	      </div>
+	    </div>
+	  </div>
 	</div>
+	<br>
 </div>
 
 <script type="text/javascript">

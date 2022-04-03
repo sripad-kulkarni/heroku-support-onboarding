@@ -59,7 +59,7 @@ class onboarding(models.Model):
     onboardingbuddy = models.CharField(max_length=50)
     the_manager = models.CharField(max_length=50)
     progress = models.FloatField(default=0.0)
-    active = models.BooleanField(default=False)
+    finished = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
