@@ -756,7 +756,7 @@ def reset_password(request):
 		if form.is_valid():
 			data = form.cleaned_data['email']
 			try:
-				result = Profile.objects.get(email = data)
+				result = User.objects.get(email = data)
 			except:
 				messages.warning(request, "We're unable to fetch details for the email requested here. Please recheck and try again!")
 				return render(request, 'reset_password.html', {'form': form})
