@@ -40,24 +40,24 @@ def test(request):
 def register(request):
 	u = User.objects.get(username=request.user.username)
 	if u.profile.role=="MANAGER" or request.user.is_superuser:
-	    form = UserRegisterForm(request.POST)
-	    if request.method == 'POST':
-		    if form.is_valid():
-		        user = form.save()
-		        user.refresh_from_db()
-		        user.profile.firstname = form.cleaned_data.get('firstname')
-		        user.profile.lastname = form.cleaned_data.get('lastname')
-		        user.profile.email = form.cleaned_data.get('email')
-		        user.profile.role = form.cleaned_data.get('role')
-		        user.profile.startdate = form.cleaned_data.get('startdate')
-		        user.profile.enddate = form.cleaned_data.get('enddate')
-		        user.save()
-		        messages.success(request, "User creation successful!")
-		        audit_logger.objects.create(user=request.user.username, action='CREATE_USER: `' + user.username + '`')
-		        subject = "Password Reset For Your Heroku Support Onboarding"
+		form = UserRegisterForm(request.POST)
+		if request.method == 'POST':
+			if form.is_valid():
+				user = form.save()
+				user.refresh_from_db()
+				user.profile.firstname = form.cleaned_data.get('firstname')
+				user.profile.lastname = form.cleaned_data.get('lastname')
+				user.profile.email = form.cleaned_data.get('email')
+				user.profile.role = form.cleaned_data.get('role')
+				user.profile.startdate = form.cleaned_data.get('startdate')
+				user.profile.enddate = form.cleaned_data.get('enddate')
+				user.save()
+				messages.success(request, "User Creation Successful!")
+				audit_logger.objects.create(user=request.user.username, action='CREATE_USER: `' + user.username + '`')
+				subject = "Your Heroku Support Onboarding Account Is Ready"
 				parameters = {
 					'email': user.email,
-					'domain': os.environ.get('HOST'),
+					'domain':os.environ.get('HOST'),
 					'site_name': 'Heroku Support Onboarding',
 					'uid': urlsafe_base64_encode(force_bytes(user.pk)),
 					'token': default_token_generator.make_token(user),
@@ -69,12 +69,12 @@ def register(request):
 				email = EmailMultiAlternatives(subject, plain_message, 'heroku-support-onboarding', [user.email])
 				email.attach_alternative(html_message, "text/html")
 				email.send()
-		        return redirect('/register/')
-		    else:
-		        return render(request, 'register.html', {'form': form, 'title': 'Register Users'})
-	    else:
-    		form = UserRegisterForm()
-    		return render(request, 'register.html', {'form': form, 'title': 'Register Users'})
+				return redirect('/register/')
+			else:
+				return render(request, 'register.html', {'form': form, 'title': 'Register Users'})
+		else:
+			form = UserRegisterForm()
+			return render(request, 'register.html', {'form':form, 'title': 'Register Users'})
 	else:
 		logout(request)
 		messages.error(request, "Your account does not have sufficient privileges to perform this action. If you think this is an error, please contact your manager.")
