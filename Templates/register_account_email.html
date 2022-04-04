@@ -49,14 +49,14 @@
 			<div class="col user_table">
 				<h4>Hello {{ firstname }},</h4>
 				<hr>
-				<p>We received a request to reset the password for your account at <a href="{{ protocol }}://{{ domain }}/">Heroku Support Onboarding Portal</a>. To initiate the password reset process for your account, click the link below.</p>
+				<p>Your account has been created with <a href="{{ protocol }}://{{ domain }}/">Heroku Support Onboarding Portal</a>. To start using your account, please use the below URL:</p>
 
-				{{ protocol }}://{{ domain }}{% url 'password_reset_confirm' uidb64=uid token=token %}
+				{{ protocol }}://{{ domain }}/
 				<br>
 				<p class="text-muted">
-				This link can only be used once. If you need to reset your password again, please visit {{ protocol }}://{{domain}} and request another reset.
+				You'll be provided with an initial password to login. Please make sure to change your password after your first login to ensure your account security.
 				</p>
-				<p>If you did not make this request, please reach out to Sripad Kulkarni on Slack or email them at sripad.kulkarni@salesforce.com.</p>
+				<p>For all further queries, please reach out to Sripad Kulkarni on Slack or email them at sripad.kulkarni@salesforce.com.</p>
 				<br>
 				<strong>Sincerely,</strong><br>
 				<strong>Onboarding Portal Team</strong><br>

@@ -54,11 +54,21 @@ def register(request):
 		        user.save()
 		        messages.success(request, "User creation successful!")
 		        audit_logger.objects.create(user=request.user.username, action='CREATE_USER: `' + user.username + '`')
-		        subject = 'Welcome To Heroku Support Onboarding'
-		        message = 'Hi {{user.username}},'
-		        email_from = settings.EMAIL_HOST_USER
-		        recipient_list = ['kulsripa@gmail.com',]
-		        send_mail( subject, message, email_from, recipient_list )
+		        subject = "Password Reset For Your Heroku Support Onboarding"
+				parameters = {
+					'email': user.email,
+					'domain': os.environ.get('HOST'),
+					'site_name': 'Heroku Support Onboarding',
+					'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+					'token': default_token_generator.make_token(user),
+					'protocol': 'https',
+					'firstname': user.profile.firstname,
+				}
+				html_message = render_to_string('register_account_email.html', parameters)
+				plain_message = strip_tags(html_message)
+				email = EmailMultiAlternatives(subject, plain_message, 'heroku-support-onboarding', [user.email])
+				email.attach_alternative(html_message, "text/html")
+				email.send()
 		        return redirect('/register/')
 		    else:
 		        return render(request, 'register.html', {'form': form, 'title': 'Register Users'})
