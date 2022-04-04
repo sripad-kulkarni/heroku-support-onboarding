@@ -52,6 +52,8 @@ def register(request):
 				user.profile.startdate = form.cleaned_data.get('startdate')
 				user.profile.enddate = form.cleaned_data.get('enddate')
 				user.save()
+				password = form.cleaned_data.get('password2')
+				print(password)
 				messages.success(request, "User Creation Successful!")
 				audit_logger.objects.create(user=request.user.username, action='CREATE_USER: `' + user.username + '`')
 				subject = "Your Heroku Support Onboarding Account Is Ready"
@@ -63,6 +65,8 @@ def register(request):
 					'token': default_token_generator.make_token(user),
 					'protocol': 'https',
 					'firstname': user.profile.firstname,
+					'username': user.username,
+					'password': password,
 				}
 				html_message = render_to_string('register_account_email.html', parameters)
 				plain_message = strip_tags(html_message)
