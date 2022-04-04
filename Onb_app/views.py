@@ -84,11 +84,13 @@ def logincheck(request):
 	if request.POST:
 	    username = request.POST['username']
 	    password = request.POST['password']
-
 	    user = authenticate(request, username=username, password=password)
 	    if user is not None:
 	        if user.is_active:
 	            login(request, user)
+	            timestamp = datetime.datetime.now()
+	            sms_message = 'Login alert to Heroku Onboarding App at %s +00:00 (UTC)' % timestamp
+	            msg = requests.post(os.environ['BLOWERIO_URL'] + '/messages', data={'to': user.profile.phone, 'message': sms_message})
 	            return HttpResponseRedirect('/welcome/')
 	        else:
 	        	messages.error(request, "Your account is not active, please contact your manager!")
@@ -121,7 +123,6 @@ def welcome(request):
 		else:
 			return render(request, 'welcome_default.html', {'title':'welcome', 'user':user})
 	else:
-		msg = requests.post(os.environ['BLOWERIO_URL'] + '/messages', data={'to': user.profile.phone, 'message': 'Login alert to Heroku Onboarding App'})
 		audit_logger.objects.create(user=request.user.username, action='LOGIN')
 		return HttpResponseRedirect('/home/')
 
