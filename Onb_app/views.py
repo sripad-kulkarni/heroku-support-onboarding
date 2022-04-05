@@ -727,7 +727,7 @@ def change_password(request):
 @login_required
 def nh_onboarded(request):
 	if request.method=='POST':
-		if request.user.profile.role == 'MANAGER' or request.user.profile.role == 'ENGINEER' or request.user.is_superuser:
+		if request.user.profile.role == 'MANAGER' or request.user.is_superuser:
 			full_name = request.POST['username']
 			p = Profile.objects.annotate(fullname=Concat('firstname', Value(' '), 'lastname')).get(fullname=full_name)
 			nh_name = p.user.username
