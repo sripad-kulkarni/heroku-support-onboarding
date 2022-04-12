@@ -146,7 +146,7 @@ body {
 }
 
 .login {
-	background-color: rgba(250, 243, 243, 0.3);
+	background-color: rgba(238,244,255, 0.8	)!important;
 	color: black;
 	vertical-align: center;
 	text-align: center;
@@ -211,13 +211,13 @@ body {
 }
 
 .login-input:hover {
-	background-color: black;
-	color: white;
+	background-color: rgba(219, 232, 255, 0.8	)!important;
+	color: black;
 }
 
 .login-input:focus {
-	background-color: black;
-	color: white;
+	background-color: rgba(219, 232, 255, 0.8	)!important;
+	color: black;
 }
 
 .title {
@@ -467,6 +467,7 @@ th {
 }
 
 .prof_page {
+	background-color: rgba(238,244,255, 0.8	)!important;
 	margin: auto;
 	margin-top: 5%;
 	min-width: fit-content;

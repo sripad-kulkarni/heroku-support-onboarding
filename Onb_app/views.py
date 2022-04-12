@@ -53,7 +53,6 @@ def register(request):
 				user.profile.enddate = form.cleaned_data.get('enddate')
 				user.save()
 				password = form.cleaned_data.get('password2')
-				print(password)
 				messages.success(request, "User Creation Successful!")
 				audit_logger.objects.create(user=request.user.username, action='CREATE_USER: `' + user.username + '`')
 				subject = "Your Heroku Support Onboarding Account Is Ready"
@@ -513,7 +512,6 @@ def view_details(request):
 		onb = onboarding.objects.get(newhire=name)
 		usr = User.objects.all()
 		nh_week = newhire_weeks.objects.filter(onboarding__newhire=name).order_by('weekid')
-		print(nh_week.values())
 		completed = 0
 		count = 0
 		for nhw in nh_week:
@@ -676,10 +674,8 @@ def add_resource(request):
 			nh_name = request.user.username
 		name = request.POST['key']
 		value = request.POST['value']
-		print(value, value.startswith('http://'), value.startswith('https://'))
 		if not value.startswith('http://') and not value.startswith('https://'):
 			value = "http://" + value
-			print(value)
 		onb = onboarding.objects.get(newhire=nh_name)
 		temp = resources.objects.filter(onboarding = onb, title=name).exists()
 		if temp:
@@ -732,7 +728,6 @@ def nh_onboarded(request):
 			p = Profile.objects.annotate(fullname=Concat('firstname', Value(' '), 'lastname')).get(fullname=full_name)
 			nh_name = p.user.username
 			onb = onboarding.objects.get(newhire=nh_name)
-			print(p)
 			onb.finished = True
 			p.role = 'ENGINEER'
 			onb.save()
@@ -753,7 +748,6 @@ def nh_not_onboarded(request):
 			p = Profile.objects.annotate(fullname=Concat('firstname', Value(' '), 'lastname')).get(fullname=full_name)
 			nh_name = p.user.username
 			onb = onboarding.objects.get(newhire=nh_name)
-			print(p)
 			onb.finished = False
 			p.role = 'NEW_HIRE'
 			onb.save()
@@ -775,7 +769,6 @@ def reset_password(request):
 			except:
 				messages.warning(request, "We're unable to fetch details for the email requested here. Please recheck and try again!")
 				return render(request, 'reset_password.html', {'form': form})
-			print(result is not None)
 			if result is not None:
 				subject = "Password Reset For Your Heroku Support Onboarding"
 				parameters = {

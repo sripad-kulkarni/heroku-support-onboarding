@@ -206,7 +206,7 @@
 							</div>
 						</div>
 					</div>
-
+					{% if user.profile.role == 'MANAGER' or user.is_superuser %}
 					<div class="row home-bg" style="max-height: 300px">
 						<div style="margin-bottom: 10px;">
 							<strong>Onboarding State</strong> 					
@@ -224,7 +224,7 @@
 							</div>
 						</div>
 					</div>
-
+					{% endif %}
 				</div>
 			</div>
 		</div>

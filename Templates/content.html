@@ -71,31 +71,31 @@
 					<tr>
 						<th>Task id</th>
 						<th scope="col">Task Description</th>
+						{% if user.profile.role == 'NEW_HIRE' %}
 						<th scope="col">Completed</th>
+						{% endif %}
 					</tr>
 				</thead>
 				<tbody>
 				{% if content %}
 				{% for content in content %}
 						
-						{% if content.status == True %}
 						<tr style="background-color: rgba(41,132,112, 0.1);">
 							<td>{{content.task_id}}</td>
 							<td>{{content.task | convert_markdown | safe}}</td>
+						{% if user.profile.role == 'NEW_HIRE' %}
+						{% if content.status == True %}
 							<td><input id="content_check" class="content_check form-check-input" type="checkbox" id="flexCheckDefault" checked></td>
-						</tr>
 						{% else %}
-						<tr>
-							<td>{{content.task_id}}</td>
-							<td>{{content.task | convert_markdown | safe}}</td>
 							<td><input id="content_check" class="content_check form-check-input" type="checkbox" id="flexCheckDefault"></td>
 						{% endif %}
-						<td class="del_row" style="display: none;">
-							<div class="del_week">
-								<a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Remove"><i class="far fa-trash-alt"></i></a>
-							</div>
-						</td>
-					</tr>
+						{% endif %}
+							<td class="del_row" style="display: none;">
+								<div class="del_week">
+									<a data-bs-toggle="tooltip" data-bs-placement="bottom" title="Remove"><i class="far fa-trash-alt"></i></a>
+								</div>
+							</td>
+						</tr>
 				{% endfor %}
 				{% else %}
 					<tr><td colspan="5">
